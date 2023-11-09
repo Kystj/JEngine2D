@@ -6,12 +6,12 @@
 
 import engine.UI.EngineWindow;
 
+/**
+ * The engines main class
+ */
 public class EngineMain {
-
     public static void main(String[] args) {
-        // Initialize the engine
         EngineWindow engine = EngineWindow.get();
-        // Run the engine
         engine.run();
     }
 }

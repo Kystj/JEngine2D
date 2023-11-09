@@ -7,6 +7,8 @@ package engine.UI;
 
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
+import engine.inputs.Shortcuts;
+import engine.managers.SceneManager;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -18,18 +20,27 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+/**
+ * The main window class for JEngine2D
+ */
 public class EngineWindow {
 
-    // Window handle and specifics
     private static EngineWindow engine = null;
+
     private long glfwWindow;
     private int windowWidth;
     private int windowHeight;
-    private final String title = "JEngine2D";
 
-    // ImGui layer
-    private ImGuiController imGuiController;
+    SceneManager sceneManager = new SceneManager(); //TODO: TESTING ONLY
 
+    /**
+     * ImGui controller
+     */
+    private final ImGuiController imGuiController = new ImGuiController();
+
+    /**
+     * Create a EngineWindow instance using the singleton pattern
+     */
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
             EngineWindow.engine = new EngineWindow();
@@ -37,22 +48,21 @@ public class EngineWindow {
         return EngineWindow.engine;
     }
 
+    /**
+     * Run JEngine2D
+     */
     public void run() {
         System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
         init();
         tick();
 
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(glfwWindow);
-        glfwDestroyWindow(glfwWindow);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        terminateProgram();
     }
 
-    // Initialize the engine
+    /**
+     * Initialize the engine and openGL
+     */
     private void init() {
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
@@ -85,7 +95,8 @@ public class EngineWindow {
 
 
         // Create the Window
-        glfwWindow = glfwCreateWindow(windowWidth, windowHeight, this.title, NULL, NULL);
+        String title = "JEngine2D";
+        glfwWindow = glfwCreateWindow(windowWidth, windowHeight, title, NULL, NULL);
         if (glfwWindow == NULL)
             throw new IllegalStateException("Failed to create the GLFW window");
 
@@ -114,31 +125,35 @@ public class EngineWindow {
         // Enable alpha blending
         glEnable(GL_BLEND);
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+
+        loadEngineConfigs();
     }
 
-    // The engines update loop
+    /**
+     * Load the engine configurations at program start up Initialize ImGui.
+     */
+    private void loadEngineConfigs() {
+        sceneManager.changeScene(glfwWindow);
+        imGuiController.initImGui(glfwWindow);
+    }
+
+    /**
+     * Begin the engines update loop
+     */
     public void tick() {
 
         double startTime = glfwGetTime();
         double endTime;
         float deltaTime = -1;
 
-        while(!glfwWindowShouldClose(glfwWindow)) {
+        while (!glfwWindowShouldClose(glfwWindow)) {
 
-            glfwPollEvents();
+            pollUserEvents();
+            sceneManager.renderScene();
+            imGuiController.tick(deltaTime);
             glfwSwapBuffers(glfwWindow);
 
 
-
-
-
-
-
-
-
-
-
-            // Update delta time
             endTime = glfwGetTime();
             deltaTime = (float) (endTime - startTime);
             startTime = endTime;
@@ -147,7 +162,30 @@ public class EngineWindow {
         }
     }
 
-    // Gets the default screen size of the monitor
+    /**
+     * Check for user input
+     */
+    private void pollUserEvents() {
+        glfwPollEvents();
+        Shortcuts.tick();
+    }
+
+    /**
+     * Terminate and cleanup
+     */
+    public void terminateProgram() {
+        // Free the window callbacks and destroy the window
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        // Terminate GLFW and free the error callback
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
+    }
+
+    /**
+     * Gets the default screen size of the monitor
+     */
     private Vector2f getDefaultScreenSize() {
         // Get the primary monitor
         long primaryMonitor = glfwGetPrimaryMonitor();
@@ -168,24 +206,55 @@ public class EngineWindow {
         return size;
     }
 
-    // Prints the window dimensions to the console
+    /**
+     * Prints the window dimensions to the console
+     */
     private void displayWindowDimensions() {
         System.out.println("Screen Width: " + this.windowWidth);
         System.out.println("Screen Height: " + this.windowHeight);
         System.out.println("Aspect Ratio: " + (float) windowWidth / windowHeight);
     }
 
+    /**
+     * Frames per second counter
+     */
     private void FPSCounter(float deltaTime) {
         System.out.println("FPS: " + (int) (1.0 / deltaTime));
     }
 
+    /**
+     * Terminate the engine and cleanup ImGui
+     */
     private void closeEngine() {
-        if(glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+        // TODO: Change this to a function and use a modifier
+        if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS &&
+                glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)  {
+
+            imGuiController.destroy();
             glfwSetWindowShouldClose(glfwWindow, true);
             System.out.println("Engine terminated");
         }
     }
 
+    /**
+     * Get a reference to the glfw window
+     */
+    public long getWindowPointer() {
+        return glfwWindow;
+    }
 
+    /**
+     * Get window width
+     */
+    public int getWindowWidth() {
+        return windowWidth;
+    }
+
+    /**
+     * Get window height
+     */
+    public int getWindowHeight() {
+        return windowHeight;
+    }
 }
 /*End of EngineWindow class*/

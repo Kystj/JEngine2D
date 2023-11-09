@@ -3,7 +3,7 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine;
+package engine.scenes;
 
 import engine.graphics.Renderer;
 
@@ -14,7 +14,8 @@ public class Scene {
     public Scene(long glfwWindow) {
         this.renderer = new Renderer(glfwWindow);
     }
-    public void update() {
+
+    public void tick() {
 
     }
 
