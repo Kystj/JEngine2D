@@ -1,0 +1,63 @@
+import org.gradle.internal.os.OperatingSystem
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+project.ext.lwjglVersion = "3.3.3"
+project.ext.jomlVersion = "1.10.5"
+
+switch (OperatingSystem.current()) {
+    case OperatingSystem.LINUX:
+        project.ext.lwjglNatives = "natives-linux"
+        break
+    case OperatingSystem.MAC_OS:
+        project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+        break
+    case OperatingSystem.WINDOWS:
+        project.ext.lwjglNatives = "natives-windows"
+        break
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+
+    // LWJGL
+    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
+
+    implementation 'org.lwjgl:lwjgl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-assimp:3.3.1'
+    implementation 'org.lwjgl:lwjgl-glfw:3.3.1'
+    implementation 'org.lwjgl:lwjgl-nfd:3.3.1'
+    implementation 'org.lwjgl:lwjgl-openal:3.3.1'
+    implementation 'org.lwjgl:lwjgl-opengl:3.3.1'
+    implementation 'org.lwjgl:lwjgl-shaderc:3.3.1'
+    implementation 'org.lwjgl:lwjgl-stb:3.3.1'
+    runtimeOnly "org.lwjgl:lwjgl:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-assimp:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-glfw:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-nfd:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-openal:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-opengl:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-shaderc:3.3.1"
+    runtimeOnly "org.lwjgl:lwjgl-stb:3.3.1"
+    implementation "org.joml:joml:1.10.5"
+
+    // ImGui
+    implementation fileTree('libs') {include '*.jar'}
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.10.1'
+}
+
+test {
+    useJUnitPlatform()
+}
