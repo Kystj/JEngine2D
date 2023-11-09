@@ -7,6 +7,6 @@ This is a simple 2D game engine written in Java that utilizes GLFW for window ma
 
 Acknowledgments:
 
-    GLFW: https://www.glfw.org/
-    ImGui: https://github.com/ocornut/imgui
-    SpaiR ImGui: https://github.com/SpaiR/imgui-java
+GLFW: https://www.glfw.org/
+ImGui: https://github.com/ocornut/imgui
+SpaiR ImGui: https://github.com/SpaiR/imgui-java
