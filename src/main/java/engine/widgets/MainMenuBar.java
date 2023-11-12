@@ -15,6 +15,10 @@ public class MainMenuBar {
 
     BugReportUI bugReportUI = new BugReportUI();
 
+    // TODO: Deal with the duplication of these two classes found in the shortcut handler
+    private final HelpMenu helpMenu = new HelpMenu();
+    private final PreferencesMenu preferencesMenu = new PreferencesMenu();
+
     /**
      * The menu bars update method
      */
@@ -36,15 +40,22 @@ public class MainMenuBar {
             preferencesMenuItem();
             ImGui.endMenu();
         }
+        isPrefWindowOpen();
     }
 
     /**
      * Selectable preferences option in the Project menu items drop window
      */
     private void preferencesMenuItem() {
-        if (ImGui.menuItem("Preferences", "Ctrl+P")) {
-            //TODO: Implement preferences window and shortcuts
-            System.out.println("Opening preferences...");
+        if (ImGui.menuItem("Preferences", "Ctrl+P")) preferencesMenu.setOpen(true);
+    }
+
+    /**
+     * Opens the Preferences window if the preferencesMenu.isOpen() is true
+     */
+    private void isPrefWindowOpen() {
+        if (preferencesMenu.isOpen()) {
+            preferencesMenu.tick();
         }
     }
 
@@ -67,7 +78,6 @@ public class MainMenuBar {
             System.out.println("Loading...");
         }
     }
-
 
 
     /**

@@ -1,15 +1,15 @@
 /*
- Title: HelpMenu
+ Title: PreferencesMenu
  Date: 2023-11-11
  Author: Kyle St John
  */
 package engine.widgets;
 
-public class HelpMenu extends Menu {
+public class PreferencesMenu extends Menu {
 
-    public HelpMenu() {
+    public PreferencesMenu() {
         this.fileName = "";
-        this.menuName = "Help";
+        this.menuName = "Preferences";
         readFile();
     }
 
@@ -38,4 +38,4 @@ public class HelpMenu extends Menu {
         super.setOpen(open);
     }
 }
-/*End of HelpMenu class*/
+/*End of PreferencesMenu class*/

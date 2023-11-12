@@ -7,15 +7,17 @@ package engine.managers;
 
 import engine.inputs.KeyInputs;
 import engine.widgets.HelpMenu;
+import engine.widgets.PreferencesMenu;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 /**
  * This class contains all the keyboard shortcut options
  */
-public class ShortcutManager {
+public class ShortcutHandler {
 
     private final HelpMenu helpMenu = new HelpMenu();
+    private final PreferencesMenu preferencesMenu = new PreferencesMenu();
 
     /**
      * Check for input and call shortcut functionality This method is called in the
@@ -23,7 +25,7 @@ public class ShortcutManager {
      */
     public void tick() {
         projectShortcuts();
-        helpShortcuts();
+        helpShortcut();
         debugShortcuts();
     }
 
@@ -34,8 +36,8 @@ public class ShortcutManager {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
             if (KeyInputs.keyPressed(GLFW_KEY_S)) saveShortcut();
             if (KeyInputs.keyPressed(GLFW_KEY_L)) loadShortcut();
-            if (KeyInputs.keyPressed(GLFW_KEY_P)) preferencesShortcut();
         }
+        preferencesShortcut();
     }
 
     /**
@@ -55,23 +57,28 @@ public class ShortcutManager {
     }
 
     /**
-     * The shortcut function to load the current project
+     * The shortcut function to load the preferences for the Editor and current project
      */
     private void preferencesShortcut() {
-        //TODO: Implement the open preferences method and call here
-        System.out.println("Opening Preferences.....");
+        if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
+            if (KeyInputs.keyPressed(GLFW_KEY_P)) preferencesMenu.setOpen(true);
+        }
+        preferencesMenu.tick();
     }
 
     /**
      * The shortcut function to load the Help options
      */
-    private void helpShortcuts() {
+    private void helpShortcut() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
             if (KeyInputs.keyPressed(GLFW_KEY_H)) helpMenu.setOpen(true);
         }
         helpMenu.tick();
     }
 
+    /**
+     * The shortcut function for the Debug options
+     */
     private static void debugShortcuts() {
         // TODO: Implement debug shortcuts
     }

@@ -5,7 +5,7 @@
  */
 package engine.UI;
 
-import engine.managers.ShortcutManager;
+import engine.managers.ShortcutHandler;
 import engine.widgets.MainMenuBar;
 import imgui.ImGui;
 import imgui.ImGuiIO;
@@ -24,8 +24,7 @@ public class ImGuiController {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     MainMenuBar mainMenuBar = new MainMenuBar();
-    ShortcutManager shortcutManager = new ShortcutManager();
-
+    ShortcutHandler shortcutHandler = new ShortcutHandler();
 
     /**
      * Initialize ImGui context and configs
@@ -77,7 +76,7 @@ public class ImGuiController {
      */
     private void updateWidgets() {
         mainMenuBar.tick();
-        shortcutManager.tick();
+        shortcutHandler.tick();
     }
 
     /**
