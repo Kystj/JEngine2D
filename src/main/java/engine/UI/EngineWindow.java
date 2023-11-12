@@ -7,7 +7,6 @@ package engine.UI;
 
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
-import engine.inputs.Shortcuts;
 import engine.managers.SceneManager;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
@@ -167,7 +166,6 @@ public class EngineWindow {
      */
     private void pollUserEvents() {
         glfwPollEvents();
-        Shortcuts.tick();
     }
 
     /**
@@ -228,7 +226,7 @@ public class EngineWindow {
     private void closeEngine() {
         // TODO: Change this to a function and use a modifier
         if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS &&
-                glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)  {
+                glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
 
             imGuiController.destroy();
             glfwSetWindowShouldClose(glfwWindow, true);

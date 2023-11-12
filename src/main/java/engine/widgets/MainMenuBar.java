@@ -3,7 +3,7 @@
  Date: 2023-11-08
  Author: Kyle St John
  */
-package engine.jimgui;
+package engine.widgets;
 
 import engine.debug.BugReportUI;
 import imgui.ImGui;
@@ -83,7 +83,6 @@ public class MainMenuBar {
             if (ImGui.menuItem("Open Report")) {
                 bugReportUI.setLoadReport(true);
             }
-
             ImGui.endMenu();
         }
         bugReportUI.tick();

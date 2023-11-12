@@ -7,7 +7,7 @@ package engine.debug;
 
 import engine.UI.EngineWindow;
 import engine.inputs.MouseInputs;
-import engine.jimgui.ImGuiCustom;
+import engine.widgets.ImGuiCustom;
 import engine.managers.BugReportManager;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -61,6 +61,7 @@ public class BugReportUI {
         }
         generateNewReport = ImGuiCustom.closeButton();
     }
+
     private void loadReportInformation() {
         if (loadReport) {
             ImGui.begin("Reports");

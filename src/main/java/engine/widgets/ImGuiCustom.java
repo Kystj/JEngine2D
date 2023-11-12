@@ -3,7 +3,7 @@
  Date: 2023-11-09
  Author: Kyle St John
  */
-package engine.jimgui;
+package engine.widgets;
 
 import imgui.ImGui;
 
@@ -12,5 +12,6 @@ public class ImGuiCustom {
     public static boolean closeButton() {
         return !ImGui.button("Close", 50.0f, 20.0f);
     }
+
 }
 /*End of ImGuiCustom class*/

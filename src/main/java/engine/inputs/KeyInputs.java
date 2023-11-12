@@ -23,6 +23,7 @@ public class KeyInputs {
         }
     }
 
+
     public static boolean keyPressed(int keyCode) {
         return keyCodes[keyCode];
     }

@@ -5,7 +5,8 @@
  */
 package engine.UI;
 
-import engine.jimgui.MainMenuBar;
+import engine.managers.ShortcutManager;
+import engine.widgets.MainMenuBar;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.*;
@@ -23,6 +24,8 @@ public class ImGuiController {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     MainMenuBar mainMenuBar = new MainMenuBar();
+    ShortcutManager shortcutManager = new ShortcutManager();
+
 
     /**
      * Initialize ImGui context and configs
@@ -74,6 +77,7 @@ public class ImGuiController {
      */
     private void updateWidgets() {
         mainMenuBar.tick();
+        shortcutManager.tick();
     }
 
     /**
