@@ -5,19 +5,14 @@
  */
 package engine.debug;
 
-import engine.UI.EngineWindow;
 import engine.inputs.MouseInputs;
-import engine.widgets.ImGuiCustom;
 import engine.managers.BugReportManager;
+import engine.widgets.ImGuiCustom;
 import imgui.ImGui;
-import imgui.ImVec2;
-import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImString;
 
-import static engine.settings.EConstants.POPUP_WIN_SIZE;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-
 public class BugReportUI {
+
     private boolean showPopup = false;
 
     private boolean loadReport = false;
@@ -40,7 +35,7 @@ public class BugReportUI {
         if (generateNewReport) {
             ImGui.begin("Debug");
             generateReportFields();
-            resetFields();
+            saveAndResetFields();
             ImGui.end();
         }
     }
@@ -71,46 +66,15 @@ public class BugReportUI {
         }
     }
 
-    private void resetFields() {
+    private void saveAndResetFields() {
         if (this.showPopup) {
-            runPopup();
+            ImGuiCustom.activatePopup("Saving!");
             imGuiBugName.set("");
             imGuiBugDescription.set("");
         }
-    }
-
-    private void runPopup() {
-        ImGui.openPopup("Saving");
-        centrePopup();
-        // AlwaysAutoResize ensures the window resizes itself based on its content
-        if (ImGui.beginPopup("Saving", ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar)) {
-            centrePopupText();
-        }
-        closePopup();
-        ImGui.endPopup();
-    }
-
-    private void centrePopupText() {
-        ImVec2 textSize = ImGui.calcTextSize("Saved!");
-        ImVec2 centerPos = new ImVec2(new ImVec2((POPUP_WIN_SIZE.x - textSize.x) * 0.5f,
-                (POPUP_WIN_SIZE.y - textSize.y) * 0.5f));
-        // Allows me to manually set where the next UI element will be drawn
-        ImGui.setCursorPos(centerPos.x, centerPos.y);
-        ImGui.text("Saved!");
-    }
-
-    private void centrePopup() {
-        ImVec2 popupPos = new ImVec2((EngineWindow.get().getWindowWidth() * 0.5f),
-                (EngineWindow.get().getWindowHeight() * 0.5f));
-        ImGui.setNextWindowSize(POPUP_WIN_SIZE.x, POPUP_WIN_SIZE.y);
-        ImGui.setNextWindowPos(popupPos.x, popupPos.y);
-    }
-
-    private void closePopup() {
-        if (MouseInputs.getMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
-            ImGui.closeCurrentPopup();
-            showPopup = false;
-        }
+       if (MouseInputs.getMouseButtonPressed(0)) {
+          showPopup = false;
+       }
     }
 
     public void setGenerateNewReport(boolean generateNewReport) {

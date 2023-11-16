@@ -15,45 +15,54 @@ public class Shader {
 
     String vertexShaderSrc = "#version 330 core\n" +
             "layout (location = 0) in vec3 aPos;\n" +
-            "\n" +
+            "out vec4 vertexColor;\n" +
             "void main()\n" +
             "{\n" +
             "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +
+            "    vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" +
             "}";
 
     String fragmentShaderSrc = "#version 330 core\n" +
             "out vec4 FragColor;\n" +
-            "\n" +
+            "in vec4 vertexColor;\n" +
             "void main()\n" +
             "{\n" +
-            "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n" +
-            "} ";
+            "    FragColor = vertexColor;\n" +
+            "}";
 
     int vertexShaderID, fragmentShaderID;
 
     int shaderProgramID;
 
     /**
+     * Call to to compile and link shader methods
+     */
+    public void compileAndLinkShaders() {
+        compile();
+        link();
+    }
+
+    /**
      * Compile the vertex and fragment shaders and check for errors in the compilation process
      */
-    public void compile() {
+    private void compile() {
         // Create vertex shader then compile and check for errors
         vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertexShaderID, vertexShaderSrc);
         glCompileShader(vertexShaderID);
-        checkShaderStatus(vertexShaderID);
+        checkShaderStatus(vertexShaderID, "Vertex");
 
         // Create the fragment shader then compile and check for errors
         fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragmentShaderID, fragmentShaderSrc);
-        glCompileShader(vertexShaderID);
-        checkShaderStatus(fragmentShaderID);
+        glCompileShader(fragmentShaderID);
+        checkShaderStatus(fragmentShaderID, "Fragment");
     }
 
     /**
      * Link the shaders and create a shader program
      */
-    public void link() {
+    private void link() {
         // Create the shader program
         shaderProgramID = glCreateProgram();
 
@@ -72,6 +81,8 @@ public class Shader {
             System.out.println(glGetShaderInfoLog(shaderProgramID, len));
             assert false : "";
         }
+        // Preform cleanup on the shader objects
+        cleanup();
     }
 
     /**
@@ -84,14 +95,29 @@ public class Shader {
     /**
      * Check if a shader has compiled successfully
      */
-    private void checkShaderStatus(int shaderID) {
+    private void checkShaderStatus(int shaderID, String shaderType) {
         int compilationSuccess = glGetShaderi(shaderID, GL_COMPILE_STATUS);
         if (compilationSuccess == GL_FALSE) {
             int len = glGetShaderi(shaderID, GL_INFO_LOG_LENGTH);
-            System.out.println("ERROR: Vertex shader compilation failed.");
+            System.out.println("ERROR: " + shaderType + " shader compilation failed.");
             System.out.println(glGetShaderInfoLog(shaderID, len));
             assert false : "";
         }
+    }
+
+    /**
+     * Delete the shaders after they have been linked into the program object
+     */
+    private void cleanup() {
+        glDeleteShader(vertexShaderID);
+        glDeleteShader(fragmentShaderID);
+    }
+
+    /**
+     * Removes the current shader set in glUseProgram and sets it to 0 (no shader)
+     */
+    public void detatch() {
+        glUseProgram(0);
     }
 }
 /*End of Shader class*/

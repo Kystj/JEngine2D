@@ -23,43 +23,36 @@ import java.util.Map;
 
 public class BugReportManager {
 
-    private static Map<BugReport, Boolean> bugReports = new HashMap<>();
+    private static final Map<BugReport, Boolean> bugReports = new HashMap<>();
     private static final String bugDirectoryPath = "bugs/";
     private static final BugReport selectedReport = new BugReport("Error", "No file found");
 
+    public static boolean showSelectedReport = false;
+
     public static void displayBugReports() {
-            boolean showSelectedReport = false;
 
-            for (Map.Entry<BugReport, Boolean> entry : bugReports.entrySet()) {
-                if (ImGui.button(entry.getKey().getBugID())) {
-                    selectedReport.setBugID(entry.getKey().getBugID());
-                    selectedReport.setBugDescription(entry.getKey().getBugDescription());
-                    showSelectedReport = true;
-                }
-
-                ImGui.sameLine();
-
-                if (ImGui.checkbox("##" + entry.getKey(), entry.getValue())) {
-                    entry.setValue(!entry.getValue()); // Toggle the checkbox value
-                }
+        for (Map.Entry<BugReport, Boolean> entry : bugReports.entrySet()) {
+            if (ImGui.button(entry.getKey().getBugID())) {
+                selectedReport.setBugID(entry.getKey().getBugID());
+                selectedReport.setBugDescription(entry.getKey().getBugDescription());
+                showSelectedReport = true;
             }
-            if (showSelectedReport) {
-                ImGui.begin("Details");
-                ImGui.text(selectedReport.getBugDescription());
-                ImGui.spacing();
-                if (ImGui.button("close")) {
-                    showSelectedReport = false;
-                }
-                ImGui.sameLine();
-                if (ImGui.button("delete")) {
-                    String fileName = bugDirectoryPath + selectedReport.getBugID() + ".json";
-                    deleteBugReport(fileName);
-                    System.out.println(fileName);
-                    bugReports.entrySet().removeIf(entry -> entry.getKey().getBugID().equals(selectedReport.getBugID()));
-                    showSelectedReport = false;
-                }
-                ImGui.end();
+        }
+        if (showSelectedReport) {
+            ImGui.text(selectedReport.getBugDescription());
+            ImGui.spacing();
+            if (ImGui.button("close")) {
+                showSelectedReport = false;
             }
+            ImGui.sameLine();
+            if (ImGui.button("delete")) {
+                String fileName = bugDirectoryPath + selectedReport.getBugID() + ".json";
+                deleteBugReport(fileName);
+                System.out.println(fileName);
+                bugReports.entrySet().removeIf(entry -> entry.getKey().getBugID().equals(selectedReport.getBugID()));
+                showSelectedReport = false;
+            }
+        }
     }
 
     public static void saveBugReport(String bugName, String bugDescription) {
@@ -110,7 +103,6 @@ public class BugReportManager {
     }
 
     public static void deleteBugReport(String path) {
-
         File fileToDelete = new File(path);
 
         if (fileToDelete.exists()) {

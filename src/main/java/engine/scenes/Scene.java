@@ -19,6 +19,10 @@ public class Scene {
 
     }
 
+    public void init() {
+        renderer.init();
+    }
+
     public void render() {
         renderer.render();
     }

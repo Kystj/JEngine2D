@@ -15,7 +15,6 @@ public class MainMenuBar {
 
     BugReportUI bugReportUI = new BugReportUI();
 
-    // TODO: Deal with the duplication of these two classes found in the shortcut handler
     private final HelpMenu helpMenu = new HelpMenu();
     private final PreferencesMenu preferencesMenu = new PreferencesMenu();
 
@@ -40,32 +39,51 @@ public class MainMenuBar {
             preferencesMenuItem();
             ImGui.endMenu();
         }
-        isPrefWindowOpen();
+        checkWidgetStatus();
     }
 
     /**
-     * Selectable preferences option in the Project menu items drop window
+     * Check the status of the various widgets or windows that may be open
      */
-    private void preferencesMenuItem() {
-        if (ImGui.menuItem("Preferences", "Ctrl+P")) preferencesMenu.setOpen(true);
+    private void checkWidgetStatus() {
+        updatePreferenceWindow();
+        updateHelpWindow();
     }
 
     /**
      * Opens the Preferences window if the preferencesMenu.isOpen() is true
      */
-    private void isPrefWindowOpen() {
+    private void updatePreferenceWindow() {
         if (preferencesMenu.isOpen()) {
             preferencesMenu.tick();
         }
     }
 
     /**
+     * Opens the Help window if helpMenu.isOpen() is true
+     */
+    private void updateHelpWindow() {
+        if (helpMenu.isOpen()) {
+            helpMenu.tick();
+        }
+    }
+
+    /**
+     * Selectable preferences option in the Project menu items drop window
+     */
+    private void preferencesMenuItem() {
+        if (ImGui.menuItem("Preferences", "Ctrl+p")) preferencesMenu.setOpen(true);
+            // TODO: Implement preferences
+            System.out.println("Preferences...");
+    }
+
+    /**
      * Selectable save option in the Project menu items drop window
      */
     private void saveMenuItem() {
-        if (ImGui.menuItem("Save", "Ctrl+S")) {
-            //TODO: Implement save and shortcuts
-            System.out.println("Saving....");
+        if (ImGui.menuItem("Save", "Ctrl+s")) {
+            // TODO: Implement save
+            System.out.println("Saving...");
         }
     }
 
@@ -73,10 +91,16 @@ public class MainMenuBar {
      * Selectable load option in the Project menu items drop window
      */
     private void loadMenuItem() {
-        if (ImGui.menuItem("Load", "Ctrl+O")) {
+        if (ImGui.menuItem("Load", "Ctrl+o")) {
             //TODO: Implement load and shortcuts
             System.out.println("Loading...");
         }
+    }
+
+    private void helpMenuItem() {
+        if (ImGui.menuItem("Help", "Ctrl+h")) helpMenu.setOpen(true);
+            //TODO: Implement load and shortcuts
+            System.out.println("Loading...");
     }
 
 
@@ -103,7 +127,7 @@ public class MainMenuBar {
      */
     private void helpMenu() {
         if (ImGui.beginMenu("Help")) {
-            //TODO: Implement help window and shortcuts
+            helpMenuItem();
             System.out.println("Opening help menu...");
             ImGui.endMenu();
         }

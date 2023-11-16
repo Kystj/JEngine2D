@@ -14,6 +14,7 @@ public class SceneManager {
 
     public void changeScene(long glfwWindow) {
         currentScene = new Scene(glfwWindow);
+        currentScene.init();
     }
 
     public void renderScene() {
