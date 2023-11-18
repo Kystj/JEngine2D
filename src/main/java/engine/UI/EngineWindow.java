@@ -5,6 +5,8 @@
  */
 package engine.UI;
 
+
+import engine.graphics.Framebuffer;
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
 import engine.managers.SceneManager;
@@ -13,6 +15,8 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+
+import java.util.Objects;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -31,6 +35,7 @@ public class EngineWindow {
     private int windowHeight;
 
     SceneManager sceneManager = new SceneManager(); //TODO: TESTING ONLY
+    Framebuffer framebuffer;
 
     /**
      * ImGui controller
@@ -134,6 +139,9 @@ public class EngineWindow {
     private void loadEngineConfigs() {
         sceneManager.changeScene(glfwWindow);
         imGuiController.initImGui(glfwWindow);
+
+        // TODO: Improve this
+        this.framebuffer = new Framebuffer(windowWidth, windowHeight);
     }
 
     /**
@@ -148,10 +156,11 @@ public class EngineWindow {
         while (!glfwWindowShouldClose(glfwWindow)) {
 
             pollUserEvents();
+
             sceneManager.renderScene();
+
             imGuiController.tick(deltaTime);
             glfwSwapBuffers(glfwWindow);
-
 
             endTime = glfwGetTime();
             deltaTime = (float) (endTime - startTime);
@@ -178,7 +187,7 @@ public class EngineWindow {
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     /**
@@ -253,6 +262,17 @@ public class EngineWindow {
      */
     public int getWindowHeight() {
         return windowHeight;
+    }
+
+    /**
+     * Get the texture bound to the EngineWindows Framebuffer object
+     */
+    public int getFramebufferTexID() {
+        return framebuffer.getFBTextureID();
+    }
+
+    public Framebuffer getFramebuffer() {
+        return framebuffer;
     }
 }
 /*End of EngineWindow class*/

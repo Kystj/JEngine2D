@@ -5,6 +5,12 @@
  */
 package engine.graphics;
 
+import org.joml.Vector4f;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import static org.lwjgl.opengl.GL20.*;
 
 /**
@@ -13,26 +19,54 @@ import static org.lwjgl.opengl.GL20.*;
  */
 public class Shader {
 
-    String vertexShaderSrc = "#version 330 core\n" +
-            "layout (location = 0) in vec3 aPos;\n" +
-            "out vec4 vertexColor;\n" +
-            "void main()\n" +
-            "{\n" +
-            "    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n" +
-            "    vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n" +
-            "}";
+    private String vertexShaderSrc;
+    private String fragmentShaderSrc;
+    private int vertexShaderID, fragmentShaderID;
+    private int shaderProgramID;
+    private boolean isShaderBound = false;
 
-    String fragmentShaderSrc = "#version 330 core\n" +
-            "out vec4 FragColor;\n" +
-            "in vec4 vertexColor;\n" +
-            "void main()\n" +
-            "{\n" +
-            "    FragColor = vertexColor;\n" +
-            "}";
+    public Shader(String filepath) {
+        init(filepath);
+    }
 
-    int vertexShaderID, fragmentShaderID;
+    /**
+     * Load the vertex and fragment shader information from a specified file
+     */
+    protected void init(String filepath) {
+        try {
+            String source = new String(Files.readAllBytes(Paths.get(filepath)));
+            String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
-    int shaderProgramID;
+            // Find the first pattern after #type 'pattern'
+            int index = source.indexOf("#type") + 6;
+            int eol = source.indexOf("\r\n", index);
+            String firstPattern = source.substring(index, eol).trim();
+
+            // Find the second pattern after #type 'pattern'
+            index = source.indexOf("#type", eol) + 6;
+            eol = source.indexOf("\r\n", index);
+            String secondPattern = source.substring(index, eol).trim();
+
+            if (firstPattern.equals("vertex")) {
+                vertexShaderSrc = splitString[1];
+            } else if (firstPattern.equals("fragment")) {
+                fragmentShaderSrc = splitString[1];
+            } else {
+                throw new IOException("Unexpected token '" + firstPattern + "'");
+            }
+
+            if (secondPattern.equals("vertex")) {
+                vertexShaderSrc = splitString[2];
+            } else if (secondPattern.equals("fragment")) {
+                fragmentShaderSrc = splitString[2];
+            } else {
+                throw new IOException("Unexpected token '" + secondPattern + "'");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            assert false : "Error: Could not open file for shader: '" + filepath + "'";
+        }
+    }
 
     /**
      * Call to to compile and link shader methods
@@ -41,6 +75,7 @@ public class Shader {
         compile();
         link();
     }
+
 
     /**
      * Compile the vertex and fragment shaders and check for errors in the compilation process
@@ -89,8 +124,27 @@ public class Shader {
      * Tell openGl to use this shader program
      */
     public void use() {
-        glUseProgram(shaderProgramID);
+        if (!isShaderBound) {
+            glUseProgram(shaderProgramID);
+            isShaderBound = true;
+        }
     }
+
+    public void uploadVec4f(String uniformName, Vector4f vec) {
+        int uniformLocation = glGetUniformLocation(shaderProgramID, uniformName);
+        use();
+        glUniform4f(uniformLocation, vec.x, vec.y, vec.z, vec.w);
+    }
+
+    /**
+     * Get the location of and upload a texture uniform variable
+     */
+    public void uploadTexture(String varName, int slot) {
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        use();
+        glUniform1i(varLocation, slot);
+    }
+
 
     /**
      * Check if a shader has compiled successfully
@@ -118,6 +172,12 @@ public class Shader {
      */
     public void detatch() {
         glUseProgram(0);
+        isShaderBound = false;
+    }
+
+    //TODO: Delete this
+    public int getShaderProgramID() {
+        return shaderProgramID;
     }
 }
 /*End of Shader class*/

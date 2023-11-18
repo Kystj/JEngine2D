@@ -6,7 +6,7 @@
 package engine.managers;
 
 import engine.objects.GameObject;
-import engine.scenes.Scene;
+import engine.scene.Scene;
 
 public class SceneManager {
 

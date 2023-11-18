@@ -11,6 +11,7 @@ import org.lwjgl.opengl.GL11;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static engine.settings.EConstants.*;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL15.*;
@@ -23,23 +24,22 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
  */
 public class Renderer {
 
-    Shader shader = new Shader();
+    Shader shader = new Shader("shaders/default.glsl");
+    Texture texture = new Texture("textures/container.jpg");
 
     private final float[] vertices = {
-            // first triangle
-            -0.9f, -0.5f, 0.0f,  // left
-            -0.0f, -0.5f, 0.0f,  // right
-            -0.45f, 0.5f, 0.0f,  // top
-            // second triangle
-            0.0f, -0.5f, 0.0f,  // left
-            0.9f, -0.5f, 0.0f,  // right
-            0.45f, 0.5f, 0.0f   // top
+            // positions          // colors           // texture cords
+            0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
+            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // bottom left
+            -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
     };
 
     private final int[] indices = {
-            0, 1, 3,   // first triangle
-            1, 2, 3    // second triangle
+            2, 1, 3, // first triangle
+            3, 1, 2  // second triangle
     };
+
 
     private int vaoID;
 
@@ -79,10 +79,20 @@ public class Renderer {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
-        // Enable buffer attribute pointers
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+        // Add the vertex attribute pointers
+        int vertexSizeBytes = VA_POS_SIZE_BYTES + VA_COLOR_SIZE_BYTES + VA_UV_SIZE_BYTES;
+
+        // Activate the position attribute pointer
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, vertexSizeBytes, 0);
         glEnableVertexAttribArray(0);
 
+        // Activate the color attribute pointer
+        glVertexAttribPointer(1, 3, GL_FLOAT, false, vertexSizeBytes, VA_POS_SIZE_BYTES);
+        glEnableVertexAttribArray(1);
+
+        // Activate the color attribute pointer
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, vertexSizeBytes, (VA_COLOR_SIZE_BYTES + VA_POS_SIZE_BYTES));
+        glEnableVertexAttribArray(2);
     }
 
     /**
@@ -91,21 +101,45 @@ public class Renderer {
     public void render() {
         clear();
 
+        // Activate the shader
         shader.use();
 
+        texture.bind();
         glBindVertexArray(vaoID);
-        glEnableVertexAttribArray(0);
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        enableVertexAttributes();
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 3);
 
-        glDisableVertexAttribArray(0);
+        disableVertexAttributes();
+
         glBindVertexArray(0);
+        texture.unbind();
 
+        // Deactivate the shader
         shader.detatch();
-
     }
 
-    /** Draws in wireframe mode. Can be toggled on and off*/
+    /**
+     * Enables the various vertex attributes needed for rendering
+     */
+    private void enableVertexAttributes() {
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
+        glEnableVertexAttribArray(2);
+    }
+
+    /**
+     * Disables the various vertex attributes no longer needed for rendering
+     */
+    private void disableVertexAttributes() {
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
+        glDisableVertexAttribArray(2);
+    }
+
+    /**
+     * Draws in wireframe mode. Can be toggled on and off
+     */
     private void setWireframeMode(boolean active) {
         // TODO: Add as an option in the editor window
         glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
@@ -115,6 +149,7 @@ public class Renderer {
      * Clears the color and depth buffers
      */
     private void clear() {
+        glClearColor(0,0,0,0);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 

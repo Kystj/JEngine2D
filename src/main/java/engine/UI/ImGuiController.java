@@ -5,6 +5,7 @@
  */
 package engine.UI;
 
+import engine.editor.Viewport;
 import engine.managers.ShortcutHandler;
 import engine.widgets.MainMenuBar;
 import imgui.ImGui;
@@ -25,6 +26,7 @@ public class ImGuiController {
 
     MainMenuBar mainMenuBar = new MainMenuBar();
     ShortcutHandler shortcutHandler = new ShortcutHandler();
+    Viewport viewport = new Viewport();
 
     /**
      * Initialize ImGui context and configs
@@ -66,8 +68,8 @@ public class ImGuiController {
     public void tick(float deltaTime) {
         startFrame(deltaTime);
         enableDocking();
-        ImGui.showDemoWindow();
         updateWidgets();
+        ImGui.showDemoWindow();
         endFrame();
     }
 
@@ -77,6 +79,7 @@ public class ImGuiController {
     private void updateWidgets() {
         mainMenuBar.tick();
         shortcutHandler.tick();
+        viewport.tick();
     }
 
     /**
