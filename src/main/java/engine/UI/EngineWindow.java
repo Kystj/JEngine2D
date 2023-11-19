@@ -34,7 +34,6 @@ public class EngineWindow {
     private int windowWidth;
     private int windowHeight;
 
-    SceneManager sceneManager = new SceneManager(); //TODO: TESTING ONLY
     Framebuffer framebuffer;
 
     /**
@@ -109,6 +108,11 @@ public class EngineWindow {
         glfwSetCursorPosCallback(glfwWindow, MouseInputs::mousePosCallback);
         glfwSetScrollCallback(glfwWindow, MouseInputs::mouseScrollCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseInputs::mouseButtonCallback);
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            get().setWindowWidth(newWidth);
+            get().setWindowHeight(newHeight);
+        });
+
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(glfwWindow);
@@ -137,11 +141,13 @@ public class EngineWindow {
      * Load the engine configurations at program start up Initialize ImGui.
      */
     private void loadEngineConfigs() {
-        sceneManager.changeScene(glfwWindow);
-        imGuiController.initImGui(glfwWindow);
-
         // TODO: Improve this
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
+        glViewport(0, 0, windowWidth, windowHeight);
+
+
+        imGuiController.initImGui(glfwWindow);
+        SceneManager.changeScene(glfwWindow);
     }
 
     /**
@@ -157,9 +163,9 @@ public class EngineWindow {
 
             pollUserEvents();
 
-            sceneManager.renderScene();
+            editorModeTick(deltaTime);
+            //renderPlay(deltaTime);
 
-            imGuiController.tick(deltaTime);
             glfwSwapBuffers(glfwWindow);
 
             endTime = glfwGetTime();
@@ -168,6 +174,23 @@ public class EngineWindow {
 
             closeEngine();
         }
+    }
+
+    /**
+     * Render and play the game without the editor (Plays the game in full screen mode)
+     */
+    private void playMode(float deltaTime) {
+        SceneManager.renderScene();
+    }
+
+    /**
+     * Render the game with the editor (The game can still be played from the viewport)
+     */
+    private void editorModeTick(float deltaTime) {
+        this.framebuffer.bind();
+        SceneManager.renderScene();
+        this.framebuffer.unBind();
+        imGuiController.tick(deltaTime);
     }
 
     /**
@@ -273,6 +296,14 @@ public class EngineWindow {
 
     public Framebuffer getFramebuffer() {
         return framebuffer;
+    }
+
+    public void setWindowWidth(int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public void setWindowHeight(int windowHeight) {
+        this.windowHeight = windowHeight;
     }
 }
 /*End of EngineWindow class*/

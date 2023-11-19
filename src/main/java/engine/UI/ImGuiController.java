@@ -49,17 +49,7 @@ public class ImGuiController {
         io.setConfigFlags(ImGuiConfigFlags.DockingEnable);
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
-        io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
         //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
-    }
-
-    /**
-     * Cleanup and destroy the ImGui and its context
-     */
-    public void destroy() {
-        imGuiGl3.dispose();
-        imGuiGlfw.dispose();
-        ImGui.destroyContext();
     }
 
     /**
@@ -68,9 +58,17 @@ public class ImGuiController {
     public void tick(float deltaTime) {
         startFrame(deltaTime);
         enableDocking();
+        updateViewport();
         updateWidgets();
         ImGui.showDemoWindow();
         endFrame();
+    }
+
+    /**
+     * Update the viewport and its functions
+     */
+    private void updateViewport() {
+        viewport.tick();
     }
 
     /**
@@ -79,7 +77,6 @@ public class ImGuiController {
     private void updateWidgets() {
         mainMenuBar.tick();
         shortcutHandler.tick();
-        viewport.tick();
     }
 
     /**
@@ -130,17 +127,27 @@ public class ImGuiController {
     }
 
     /**
+     * Cleanup and destroy the ImGui and its context
+     */
+    public void destroy() {
+        imGuiGl3.dispose();
+        imGuiGlfw.dispose();
+        ImGui.destroyContext();
+    }
+
+    /**
      * Push custom ImGui style options
      */
     private void pushCustomStyleVars() {
-        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 12);
+        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 12f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0f, 0f);
     }
 
     /**
      * Pop custom ImGui style options
      */
     private void popCustomStyleVars() {
-        ImGui.popStyleVar();
+        ImGui.popStyleVar(2);
     }
 }
 /*End of ImGuiLayer class*/

@@ -10,29 +10,29 @@ import engine.scene.Scene;
 
 public class SceneManager {
 
-    private Scene currentScene;
+    private static Scene currentScene;
 
-    public void changeScene(long glfwWindow) {
+    public static void changeScene(long glfwWindow) {
         currentScene = new Scene(glfwWindow);
         currentScene.init();
     }
 
-    public void renderScene() {
+    public static void renderScene() {
         currentScene.render();
     }
 
-    public void setCurrentScene(Scene scene) {
+    public static void setCurrentScene(Scene scene) {
         if (currentScene != null) {
             currentScene.cleanup();
         }
         currentScene = scene;
     }
 
-    public void addGameObject(GameObject gameObject) {
+    public static void addGameObject(GameObject gameObject) {
         //TODO: Implement
     }
 
-    public void removeGameObject(GameObject gameObject) {
+    public static void removeGameObject(GameObject gameObject) {
         //TODO: Implement
     }
 

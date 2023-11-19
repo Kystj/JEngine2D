@@ -103,8 +103,8 @@ public class Renderer {
 
         // Activate the shader
         shader.use();
-
         texture.bind();
+
         glBindVertexArray(vaoID);
 
         enableVertexAttributes();
@@ -149,7 +149,7 @@ public class Renderer {
      * Clears the color and depth buffers
      */
     private void clear() {
-        glClearColor(0,0,0,0);
+        glClearColor(1,0,0,0);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 

@@ -15,7 +15,7 @@ public class Viewport {
         ImGui.begin("Game Viewport", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse);
 
         int textureId = EngineWindow.get().getFramebufferTexID();
-        ImGui.image(textureId, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
+        ImGui.image(textureId, 1000, 1000, 0, 1, 1, 0);
 
         ImGui.end();
     }
