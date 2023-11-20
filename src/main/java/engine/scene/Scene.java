@@ -11,8 +11,8 @@ public class Scene {
 
     Renderer renderer;
 
-    public Scene(long glfwWindow) {
-        this.renderer = new Renderer(glfwWindow);
+    public Scene() {
+        this.renderer = new Renderer();
     }
 
     public void tick() {

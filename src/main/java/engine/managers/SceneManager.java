@@ -12,8 +12,8 @@ public class SceneManager {
 
     private static Scene currentScene;
 
-    public static void changeScene(long glfwWindow) {
-        currentScene = new Scene(glfwWindow);
+    public static void changeScene() {
+        currentScene = new Scene();
         currentScene.init();
     }
 
@@ -35,7 +35,5 @@ public class SceneManager {
     public static void removeGameObject(GameObject gameObject) {
         //TODO: Implement
     }
-
-    // Other scene management methods
 }
 /*End of SceneManager class*/

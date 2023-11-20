@@ -42,13 +42,7 @@ public class Renderer {
 
 
     private int vaoID;
-
-    /**
-     * Constructor for the renderer class. Sets glClearColor to black
-     */
-    public Renderer(long glfwWindow) {
-        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    }
+    
 
     /**
      * Initialize the VAO, VBO, amd EBO buffer objects
@@ -149,7 +143,7 @@ public class Renderer {
      * Clears the color and depth buffers
      */
     private void clear() {
-        glClearColor(1,0,0,0);
+        glClearColor(0,0,0,0);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 

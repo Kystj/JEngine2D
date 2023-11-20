@@ -6,10 +6,15 @@
 package engine.UI;
 
 
+import engine.eventsystem.Event;
+import engine.eventsystem.EventDispatcher;
+import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
 import engine.managers.SceneManager;
+import engine.objects.GameObject;
+import engine.settings.EConstants.EventType;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -26,7 +31,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 /**
  * The main window class for JEngine2D
  */
-public class EngineWindow {
+public class EngineWindow implements EventListener {
 
     private static EngineWindow engine = null;
 
@@ -34,12 +39,11 @@ public class EngineWindow {
     private int windowWidth;
     private int windowHeight;
 
-    Framebuffer framebuffer;
+    private Framebuffer framebuffer;
 
-    /**
-     * ImGui controller
-     */
     private final ImGuiController imGuiController = new ImGuiController();
+
+    private int engineMode = 0; // 0: Editor. 1: Full play
 
     /**
      * Create a EngineWindow instance using the singleton pattern
@@ -141,13 +145,20 @@ public class EngineWindow {
      * Load the engine configurations at program start up Initialize ImGui.
      */
     private void loadEngineConfigs() {
-        // TODO: Improve this
+        // Initialize the frame buffer
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
         glViewport(0, 0, windowWidth, windowHeight);
 
-
+        // Initialize ImGui functionality
         imGuiController.initImGui(glfwWindow);
-        SceneManager.changeScene(glfwWindow);
+
+        // Add the various events the EngineWindow should respond to and register it as a listener
+        EventDispatcher.addListener(EventType.Play, this);
+        EventDispatcher.addListener(EventType.Stop, this);
+        EventDispatcher.addListener(EventType.FullPlay, this);
+
+        // Load the Editor Scene at launch
+        SceneManager.changeScene();
     }
 
     /**
@@ -162,10 +173,7 @@ public class EngineWindow {
         while (!glfwWindowShouldClose(glfwWindow)) {
 
             pollUserEvents();
-
-            editorModeTick(deltaTime);
-            //renderPlay(deltaTime);
-
+            updateEngineMode(deltaTime);
             glfwSwapBuffers(glfwWindow);
 
             endTime = glfwGetTime();
@@ -177,10 +185,31 @@ public class EngineWindow {
     }
 
     /**
-     * Render and play the game without the editor (Plays the game in full screen mode)
+     * The method updateEngineMode takes a deltaTime parameter and switches between different engine modes (0, 1, or 2),
+     * invoking corresponding tick methods (editorModeTick, playModeTick, or fullPlayModeTick) based on the current
+     * engine mode.
      */
-    private void playMode(float deltaTime) {
+    private void updateEngineMode(float deltaTime) {
+        switch (engineMode) {
+            case 0:
+                editorModeTick(deltaTime);
+                break;
+            case 1:
+                fullPlayModeTick(deltaTime);
+                break;
+            default:
+                assert false : "No play mode selected";
+        }
+    }
+
+    /**
+     * Render and play the game in fullscreen mode without the editor
+     */
+    private void fullPlayModeTick(float deltaTime) {
         SceneManager.renderScene();
+        if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
+            engineMode = 0;
+        }
     }
 
     /**
@@ -294,16 +323,48 @@ public class EngineWindow {
         return framebuffer.getFBTextureID();
     }
 
-    public Framebuffer getFramebuffer() {
-        return framebuffer;
-    }
-
+    /**
+     * Change the window width
+     */
     public void setWindowWidth(int windowWidth) {
         this.windowWidth = windowWidth;
     }
 
+    /**
+     * Change the window height
+     */
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
+    }
+
+    /**
+     * The onEvent method, implemented as part of an EventListener interface, responds to incoming events
+     */
+    @Override
+    public void onEvent(GameObject gameObject, Event event) {
+
+    }
+
+    /**
+     * The onEvent method, implemented as part of an EventListener interface, responds to incoming events by switching
+     * the engineMode based on the event type
+     */
+    @Override
+    public void onEvent(Event event) {
+        switch (event.getEventType()) {
+            case Play:
+                engineMode = 0;
+                System.out.println("Playing...");
+                break;
+            case Stop:
+                engineMode = 0;
+                System.out.println("Stopping...");
+                break;
+            case FullPlay:
+                engineMode = 1;
+                System.out.println("Launching full play mode...");
+                break;
+        }
     }
 }
 /*End of EngineWindow class*/
