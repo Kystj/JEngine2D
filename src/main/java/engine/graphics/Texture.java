@@ -11,8 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.stb.STBImage.stbi_image_free;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.stb.STBImage.*;
 
 /**
  * This class encapsulates all the functionality needed to read a texture from a file,
@@ -36,9 +35,11 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        // Defines a 2D texture with RGBA Channels
+        // Defines a 2D texture with RGBA Channels and generates the image
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+
+       // stbi_set_flip_vertically_on_load(true);
     }
 
     /**
@@ -84,6 +85,9 @@ public class Texture {
         } else {
             assert false : "Error: Could not load texture with path: '" + filePath + "'";
         }
+      /*  OpenGL expects the 0.0 coordinate on the y-axis to be on the bottom side of the image, but images
+        usually have 0.0 at the top of the y-axis. Luckily for us, stb_image.h can flip the y-axis during image loading*/
+        stbi_set_flip_vertically_on_load(true);
         stbi_image_free(image);
     }
 

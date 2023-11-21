@@ -25,14 +25,15 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class Renderer {
 
     Shader shader = new Shader("shaders/default.glsl");
-    Texture texture = new Texture("textures/container.jpg");
+    Texture texture1 = new Texture("textures/container.jpg");
+    Texture texture2 = new Texture("textures/awesomeface.png");
 
     private final float[] vertices = {
             // positions          // colors           // texture cords
-            0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-            0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,   // bottom left
-            -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f    // top left
+             0.5f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,   // top right
+             0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,    1.0f, 0.0f,   // bottom right
+            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    0.0f, 0.0f,   // bottom left
+            -0.5f, 0.5f, 0.0f,   1.0f, 1.0f, 0.0f,    0.0f, 1.0f    // top left
     };
 
     private final int[] indices = {
@@ -87,6 +88,12 @@ public class Renderer {
         // Activate the color attribute pointer
         glVertexAttribPointer(2, 2, GL_FLOAT, false, vertexSizeBytes, (VA_COLOR_SIZE_BYTES + VA_POS_SIZE_BYTES));
         glEnableVertexAttribArray(2);
+
+        // Set the texture samplers
+        shader.uploadTexture("texture1", 0);
+        shader.uploadTexture("texture2", 1);
+
+
     }
 
     /**
@@ -97,7 +104,13 @@ public class Renderer {
 
         // Activate the shader
         shader.use();
-        texture.bind();
+        /*Activate texture unit 0 and bind the texture. // After activating a texture unit, a subsequent glBindTexture
+         call will bind that texture to the currently active texture unit. Texture unit GL_TEXTURE0 is always by
+        default activated*/
+        glActiveTexture(GL_TEXTURE0);
+        texture1.bind();
+        glActiveTexture(GL_TEXTURE1);
+        texture2.bind();
 
         glBindVertexArray(vaoID);
 
@@ -107,7 +120,7 @@ public class Renderer {
         disableVertexAttributes();
 
         glBindVertexArray(0);
-        texture.unbind();
+        texture1.unbind();
 
         // Deactivate the shader
         shader.detatch();

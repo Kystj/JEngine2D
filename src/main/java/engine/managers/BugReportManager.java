@@ -47,8 +47,8 @@ public class BugReportManager {
             ImGui.sameLine();
             if (ImGui.button("delete")) {
                 String fileName = bugDirectoryPath + selectedReport.getBugID() + ".json";
-                deleteBugReport(fileName);
                 System.out.println(fileName);
+                deleteBugReport(fileName);
                 bugReports.entrySet().removeIf(entry -> entry.getKey().getBugID().equals(selectedReport.getBugID()));
                 showSelectedReport = false;
             }
@@ -63,7 +63,7 @@ public class BugReportManager {
                 .registerTypeAdapter(BugReport.class, new BugTypeAdapter())
                 .create();
 
-        String fileName = bugName.replace(" ", "_");
+        String fileName = bugName.replace(" ", "");
         String pathName = "bugs/" + fileName + ".json"; // Construct the filename
 
         try (FileWriter writer = new FileWriter(pathName)) {

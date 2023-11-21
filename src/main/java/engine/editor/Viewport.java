@@ -15,7 +15,6 @@ import imgui.flag.ImGuiWindowFlags;
 public class Viewport {
 
     private boolean playing = false;
-    private boolean fullPlay = false;
 
     public void tick() {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
@@ -23,7 +22,7 @@ public class Viewport {
 
         viewportsMenuBar();
         int textureId = EngineWindow.get().getFramebufferTexID();
-        ImGui.image(textureId, 1000, 1000, 0, 1, 1, 0);
+        ImGui.image(textureId, EngineWindow.get().getWindowWidth(),EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
 
         ImGui.end();
     }
@@ -44,7 +43,6 @@ public class Viewport {
         if (ImGui.menuItem("Launch", "")) {
             EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
         }
-
         ImGui.endMenuBar();
     }
 }
