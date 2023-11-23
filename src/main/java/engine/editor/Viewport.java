@@ -17,14 +17,17 @@ public class Viewport {
     private boolean playing = false;
 
     public void tick() {
+
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+
 
         viewportsMenuBar();
         int textureId = EngineWindow.get().getFramebufferTexID();
         ImGui.image(textureId, EngineWindow.get().getWindowWidth(),EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
 
         ImGui.end();
+
     }
 
     private void viewportsMenuBar() {

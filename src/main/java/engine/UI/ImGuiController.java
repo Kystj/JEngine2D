@@ -141,13 +141,14 @@ public class ImGuiController {
     private void pushCustomStyleVars() {
         ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 12f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0f, 0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowTitleAlign,0.5f, 0.5f);
     }
 
     /**
      * Pop custom ImGui style options
      */
     private void popCustomStyleVars() {
-        ImGui.popStyleVar(2);
+        ImGui.popStyleVar(3);
     }
 }
 /*End of ImGuiLayer class*/
