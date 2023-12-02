@@ -1,30 +1,27 @@
 #type vertex
 #version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-layout (location = 2) in vec2 aTexCoord;
+layout (location=0) in vec3 aPos;
+layout (location=1) in vec4 aColor;
 
-out vec3 ourColor;
-out vec2 TexCoord;
+uniform mat4 uProjection;
+uniform mat4 uView;
+
+out vec4 fColor;
 
 void main()
 {
-    gl_Position = vec4(aPos, 1.0);
-    ourColor = aColor;
-    TexCoord = aTexCoord;
+    fColor = aColor;
+    gl_Position = uProjection * uView * vec4(aPos, 1.0);
 }
 
 #type fragment
 #version 330 core
 
-out vec4 FragColor;
-in vec3 ourColor;
-in vec2 TexCoord;
+in vec4 fColor;
 
-uniform sampler2D texture1;
-uniform sampler2D texture2;
+out vec4 color;
 
 void main()
 {
-    FragColor = mix(texture(texture1, TexCoord), texture(texture2, vec2(1.0 - TexCoord.x, TexCoord.y)), 0.2) * vec4(ourColor, 1);
+    color = fColor;
 }

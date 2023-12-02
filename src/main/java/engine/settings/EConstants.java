@@ -12,7 +12,7 @@ public interface EConstants {
 
     // VA = Vertex Attributes
     int VA_POS_SIZE_BYTES = 3 * Float.BYTES;
-    int VA_COLOR_SIZE_BYTES = 3 * Float.BYTES;
+    int VA_COLOR_SIZE_BYTES = 4 * Float.BYTES;
     int VA_UV_SIZE_BYTES = 2 * Float.BYTES;
 
     // Color constants

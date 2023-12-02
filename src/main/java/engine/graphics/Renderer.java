@@ -11,7 +11,8 @@ import org.lwjgl.opengl.GL11;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static engine.settings.EConstants.*;
+import static engine.settings.EConstants.VA_COLOR_SIZE_BYTES;
+import static engine.settings.EConstants.VA_POS_SIZE_BYTES;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL15.*;
@@ -25,20 +26,29 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class Renderer {
 
     Shader shader = new Shader("shaders/default.glsl");
-    Texture texture1 = new Texture("textures/container.jpg");
-    Texture texture2 = new Texture("textures/awesomeface.png");
+ /*   Texture texture1 = new Texture("textures/container.jpg");
+    Texture texture2 = new Texture("textures/awesomeface.png");*/
+    OrthographicCamera camera;
 
-    private final float[] vertices = {
-            // positions          // colors           // texture cords
-             0.5f, 0.5f, 0.0f,   1.0f, 0.0f, 0.0f,    1.0f, 1.0f,   // top right
-             0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,    1.0f, 0.0f,   // bottom right
-            -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, 1.0f,    0.0f, 0.0f,   // bottom left
-            -0.5f, 0.5f, 0.0f,   1.0f, 1.0f, 0.0f,    0.0f, 1.0f    // top left
+
+    private float[] vertices = {
+            // position               // color
+            100.5f, 0.5f, 0.0f,       1.0f, 0.0f, 0.0f, 1.0f, // Bottom right 0
+            0.5f,  100.5f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f, // Top left     1
+            100.5f,  100.5f, 0.0f ,      1.0f, 0.0f, 1.0f, 1.0f, // Top right    2
+            0.5f, 0.5f, 0.0f,       1.0f, 1.0f, 0.0f, 1.0f, // Bottom left  3
     };
 
-    private final int[] indices = {
-            2, 1, 3, // first triangle
-            3, 1, 2  // second triangle
+    // IMPORTANT: Must be in counter-clockwise order
+    private int[] indices = {
+            /*
+                    x        x
+
+
+                    x        x
+             */
+            2, 1, 0, // Top right triangle
+            0, 1, 3 // bottom left triangle
     };
 
 
@@ -49,6 +59,8 @@ public class Renderer {
      * Initialize the VAO, VBO, amd EBO buffer objects
      */
     public void init() {
+        camera = new OrthographicCamera();
+
         // Compile and link the shader
         shader.compileAndLinkShaders();
 
@@ -75,7 +87,7 @@ public class Renderer {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
 
         // Add the vertex attribute pointers
-        int vertexSizeBytes = VA_POS_SIZE_BYTES + VA_COLOR_SIZE_BYTES + VA_UV_SIZE_BYTES;
+        int vertexSizeBytes = VA_POS_SIZE_BYTES + VA_COLOR_SIZE_BYTES;
 
         // Activate the position attribute pointer
         glVertexAttribPointer(0, 3, GL_FLOAT, false, vertexSizeBytes, 0);
@@ -85,13 +97,13 @@ public class Renderer {
         glVertexAttribPointer(1, 3, GL_FLOAT, false, vertexSizeBytes, VA_POS_SIZE_BYTES);
         glEnableVertexAttribArray(1);
 
-        // Activate the color attribute pointer
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, vertexSizeBytes, (VA_COLOR_SIZE_BYTES + VA_POS_SIZE_BYTES));
-        glEnableVertexAttribArray(2);
+        // UV Coordinates
+/*        glVertexAttribPointer(2, 2, GL_FLOAT, false, vertexSizeBytes, (VA_COLOR_SIZE_BYTES + VA_POS_SIZE_BYTES));
+        glEnableVertexAttribArray(2);*/
 
         // Set the texture samplers
-        shader.uploadTexture("texture1", 0);
-        shader.uploadTexture("texture2", 1);
+    /*    shader.uploadTexture("texture1", 0);
+        shader.uploadTexture("texture2", 1);*/
 
 
     }
@@ -104,23 +116,32 @@ public class Renderer {
 
         // Activate the shader
         shader.use();
+
+        camera.position.x -= 0.01;
+        camera.position.y -= 0.01;
+
+        shader.uploadMat4f("uView", camera.calculateViewMatrix());
+        shader.uploadMat4f("uProjection", camera.getProjectionMatrix());
+
+
         /*Activate texture unit 0 and bind the texture. // After activating a texture unit, a subsequent glBindTexture
          call will bind that texture to the currently active texture unit. Texture unit GL_TEXTURE0 is always by
         default activated*/
-        glActiveTexture(GL_TEXTURE0);
+/*        glActiveTexture(GL_TEXTURE0);
         texture1.bind();
         glActiveTexture(GL_TEXTURE1);
-        texture2.bind();
+        texture2.bind();*/
 
         glBindVertexArray(vaoID);
 
         enableVertexAttributes();
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 3);
+        glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
+
 
         disableVertexAttributes();
 
         glBindVertexArray(0);
-        texture1.unbind();
+        /*texture1.unbind();*/
 
         // Deactivate the shader
         shader.detatch();
@@ -132,7 +153,7 @@ public class Renderer {
     private void enableVertexAttributes() {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
+        /*glEnableVertexAttribArray(2);*/
     }
 
     /**
@@ -141,7 +162,7 @@ public class Renderer {
     private void disableVertexAttributes() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
+       /* glDisableVertexAttribArray(2);*/
     }
 
     /**
