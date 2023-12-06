@@ -29,8 +29,8 @@ public class OrthographicCamera {
 
     public void setOrthographicProjection() {
         projectionMatrix.identity();
-        projectionMatrix.ortho(0.0f, 32.0f * 40.0f, 0.0f, 32.0f * 21.0f,
-                0.0f, 100.0f);
+        float size = 32.0f * 48.0f; // Choose a size for the square
+        projectionMatrix.ortho(0.0f, size, 0.0f, size, 0.0f, 50.0f);
         }
 
 
