@@ -40,6 +40,9 @@ public interface EConstants {
         FullPlay
     }
 
+    // Rendering
+    int MAX_BATCH_SIZE = 1000;
+
 
     // Physics constants
     enum BodyType {

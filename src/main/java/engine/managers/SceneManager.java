@@ -5,7 +5,6 @@
  */
 package engine.managers;
 
-import engine.objects.GameObject;
 import engine.scene.Scene;
 
 public class SceneManager {
@@ -26,14 +25,6 @@ public class SceneManager {
             currentScene.cleanup();
         }
         currentScene = scene;
-    }
-
-    public static void addGameObject(GameObject gameObject) {
-        //TODO: Implement
-    }
-
-    public static void removeGameObject(GameObject gameObject) {
-        //TODO: Implement
     }
 }
 /*End of SceneManager class*/

@@ -42,6 +42,8 @@ public class Framebuffer {
     }
 
     public void bind() {
+        glClearColor(1,1,1,0);
+        glClear(GL_COLOR_BUFFER_BIT);
         glBindFramebuffer(GL_FRAMEBUFFER, frameBufferID);
     }
 

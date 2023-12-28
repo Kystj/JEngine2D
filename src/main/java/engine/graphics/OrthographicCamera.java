@@ -13,7 +13,7 @@ public class OrthographicCamera {
 
     private Matrix4f viewMatrix = new Matrix4f();
     private Matrix4f projectionMatrix = new Matrix4f();
-    protected Vector2f position;
+    public Vector2f position;
 
     /**  Creates an orthographic projection with a custom camera position*/
     public OrthographicCamera(Vector2f position) {

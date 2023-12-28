@@ -173,6 +173,7 @@ public class EngineWindow implements EventListener {
         while (!glfwWindowShouldClose(glfwWindow)) {
 
             pollUserEvents();
+
             updateEngineMode(deltaTime);
             glfwSwapBuffers(glfwWindow);
 

@@ -60,7 +60,7 @@ public class ImGuiController {
         enableDocking();
         updateViewport();
         updateWidgets();
-        ImGui.showDemoWindow();
+        //ImGui.showDemoWindow();
         endFrame();
     }
 
