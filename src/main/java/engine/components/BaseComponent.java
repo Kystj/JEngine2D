@@ -12,7 +12,12 @@ public abstract class BaseComponent {
     // Properties (data fields) representing the state of the entity
     private int entityId;
 
-    private GameObject owningGameObject =  null;
+    public GameObject owningGameObject =  null;
+
+    public GameObject getOwningGameObject() {
+        return owningGameObject;
+    }
+
 
     public void init() {
         // Initialize the component

@@ -14,8 +14,8 @@ import org.joml.Vector2f;
  */
 public class Transform {
 
-    private Vector2f position;
-    private Vector2f scale;
+    public Vector2f position;
+    public Vector2f scale;
     private float rotation = 0;
     private int zIndex;
 

@@ -1,162 +1,216 @@
 /*
- Title: BatchRenderer
- Date: 2023-12-18
+ Title: BatchRendererTest
+ Date: 2024-01-02
  Author: Kyle St John
  */
 package engine.graphics;
 
+import engine.UI.EngineWindow;
 import engine.components.Sprite;
-import org.lwjgl.BufferUtils;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
 import static engine.settings.EConstants.MAX_BATCH_SIZE;
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
+import static engine.settings.EConstants.VERTEX_SIZE;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
+import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
+import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class BatchRenderer {
 
-    Shader shader = new Shader("shaders/default.glsl");
-    Texture texture1 = new Texture("textures/container.jpg");
-    Texture texture2 = new Texture("textures/trippy.png");
-    OrthographicCamera camera; // TODO: Should get a reference from the scene
-
-    private int vaoID;
-    private int capacity = 0;
+    private final Sprite[] sprites = new Sprite[MAX_BATCH_SIZE];
+    private int numSprites = 0;
+    private boolean bBatchHasRoom = true;
+    private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * VERTEX_SIZE];
+    private int vaoID, vboID;
+    private final Shader shader = new Shader("shaders/default.glsl");
 
     public BatchRenderer() {
-        this.batchZIndex = 1;
         init();
     }
 
-    private float[] vertices = {
-            // position               // color                  // UV Coordinates
-            100,   0f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,     1, 0, // Bottom right 0
-            0f, 100, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f,     0, 1, // Top left     1
-            100, 100, 0.0f ,    1.0f, 0.0f, 1.0f, 1.0f,     1, 1, // Top right    2
-            0f,   0f, 0.0f,       1.0f, 1.0f, 0.0f, 1.0f,     0, 0,  // Bottom left  3
-
-            // position               // color                  // UV Coordinates
-            -100,   0f, 0.0f,     1.0f, 0.0f, 0.0f, 1.0f,     1, 0, // Bottom right 0
-            0f, -100, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f,     0, 1, // Top left     1
-            -100, -100, 0.0f ,    1.0f, 0.0f, 1.0f, 1.0f,     1, 1, // Top right    2
-            0f,   0f, 0.0f,       1.0f, 1.0f, 0.0f, 1.0f,     0, 0  // Bottom left  3
-    };
-
-    // IMPORTANT: Must be in counter-clockwise order
-    private int[] indices = {
-            // Indices for two squares
-            2, 1, 0, // Top right triangle (First square)
-            0, 1, 3, // Bottom left triangle (First square)
-            6, 5, 4, // Top right triangle (Second square)
-            4, 5, 7  // Bottom left triangle (Second square)
-    };
-    private int batchZIndex;
-
-
-    /** Initialize the VAO, VBO, amd EBO buffer objects*/
+    // Create all the data on the GPU
     public void init() {
-        // VA = Vertex Attributes
-        int VA_POS_SIZE_BYTES = 3 * Float.BYTES;
-        int VA_COLOR_SIZE_BYTES = 4 * Float.BYTES;
-        int VA_UV_SIZE_BYTES = 2 * Float.BYTES;
-
-        // Initialize the orthographic camera
-        camera = new OrthographicCamera();
-
-        // Compile and link the shader
+        // Compile and link shaders
         shader.compileAndLinkShaders();
 
-        // Create the VAO
+        // Generate and bind a Vertex Array Object
         vaoID = glGenVertexArrays();
         glBindVertexArray(vaoID);
 
-        // Create a float buffer of vertices
-        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.length);
-        vertexBuffer.put(vertices).flip();
-
-        // Create VBO upload the vertex buffer
-        int vboID = glGenBuffers();
+        // Create and generate a VBO
+        vboID = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, (long) vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
-        // Create an int buffer of indices
-        IntBuffer elementBuffer = BufferUtils.createIntBuffer(indices.length);
-        elementBuffer.put(indices).flip();
-
-        // Create an element buffer object
+        // Create and upload indices buffer
         int eboID = glGenBuffers();
+        int[] indices = generateIndices();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, elementBuffer, GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-        // Add the vertex attribute pointers
-        int vertexSizeBytes = VA_POS_SIZE_BYTES + VA_COLOR_SIZE_BYTES + VA_UV_SIZE_BYTES;
+        // Attribute values
+        int vertexSizeBytes = VERTEX_SIZE * Float.BYTES;
+        int posAttribOffset = 0;
+        int posAttribSize = 2;
+        int colorAttribOffset = posAttribOffset + posAttribSize * Float.BYTES;
+        int colorAttribSize = 4;
 
-        // Activate the position attribute pointer
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, vertexSizeBytes, 0);
+        // Enable attributes
+            // Position
+        glVertexAttribPointer(0, posAttribSize, GL_FLOAT, false, vertexSizeBytes, posAttribOffset);
         glEnableVertexAttribArray(0);
 
-        // Activate the color attribute pointer
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, vertexSizeBytes, VA_POS_SIZE_BYTES);
+            // Color
+        glVertexAttribPointer(1, colorAttribSize, GL_FLOAT, false, vertexSizeBytes, colorAttribOffset);
         glEnableVertexAttribArray(1);
-
-        // UV Coordinates
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, vertexSizeBytes, (VA_COLOR_SIZE_BYTES + VA_POS_SIZE_BYTES));
-        glEnableVertexAttribArray(2);
     }
 
+    public void addSprite(Sprite spr) {
+        // Get index and add renderObject
+        int index = this.numSprites;
+        this.sprites[index] = spr;
+        this.numSprites++;
 
-    /**
-     * Update the renderer
-     */
+        // Update the vertex attribute array
+        updateVertexAttribArray(index);
+
+        if (numSprites >= MAX_BATCH_SIZE) {
+            this.bBatchHasRoom = false;
+        }
+    }
+
     public void render() {
-        clear();
+        // For now, we will rebuffer all data every frame
+        glBindBuffer(GL_ARRAY_BUFFER, vboID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
 
-        camera.position.x = -250;
-        camera.position.y = -250;
-
-        // Activate the shader
+        // Use shader
         shader.use();
-
-        // Set the texture samplers
-        shader.uploadTexture("texture1", 0);
-        shader.uploadTexture("texture2", 1);
-
-        // Activate texture unit 0 and bind the texture.
-        glActiveTexture(GL_TEXTURE0);
-        texture1.bind();
-        glActiveTexture(GL_TEXTURE1);
-        texture2.bind();
-
-        shader.uploadMat4f("uView", camera.calculateViewMatrix());
-        shader.uploadMat4f("uProjection", camera.getProjectionMatrix());
-
+        shader.uploadMat4f("uProjection", EngineWindow.getCurrentScene().getOrthoCamera().getProjectionMatrix());
+        shader.uploadMat4f("uView", EngineWindow.getCurrentScene().getOrthoCamera().calculateViewMatrix());
 
         glBindVertexArray(vaoID);
+        glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
 
-        enableVertexAttributes();
+        glDrawElements(GL_TRIANGLES, this.numSprites * 6, GL_UNSIGNED_INT, 0);
 
-        glDrawElements(GL_TRIANGLES, indices.length, GL_UNSIGNED_INT, 0);
-
-        disableVertexAttributes();
-
+        glDisableVertexAttribArray(0);
+        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
 
-        // Deactivate the shader
         shader.detatch();
     }
 
-    public void addQuad(Sprite spr) {
-        capacity++;
+    private void updateVertexAttribArray(int index) {
+        // Method 0
+        Sprite sprite = this.sprites[index];
+
+        // Find offset within array (4 vertices per sprite)
+        int offset = index * 4 * VERTEX_SIZE;
+
+        Vector4f color = sprite.getColor();
+
+        // Add vertices with the appropriate properties
+        float xAdd = 1.0f;
+        float yAdd = 1.0f;
+        for (int i = 0; i < 4; i++) {
+            if (i == 1) {
+                yAdd = 0.0f;
+            } else if (i == 2) {
+                xAdd = 0.0f;
+            } else if (i == 3) {
+                yAdd = 1.0f;
+            }
+
+            // Load position
+            vertices[offset] = sprite.owningGameObject.transform.position.x + (xAdd * sprite.owningGameObject.transform.scale.x);
+            vertices[offset + 1] = sprite.owningGameObject.transform.position.y + (yAdd * sprite.owningGameObject.transform.scale.y);
+
+            // Load color
+            vertices[offset + 2] = color.x;
+            vertices[offset + 3] = color.y;
+            vertices[offset + 4] = color.z;
+            vertices[offset + 5] = color.w;
+
+            offset += VERTEX_SIZE;
+        }
+    // Method 1
+   /*     Sprite sprite = sprites[index];
+        GameObject gameObject = sprite.getOwningGameObject();
+        Transform transform = gameObject.getTransform();
+        Vector4f color = sprite.getColor();
+        int offset = index * 4 * VERTEX_SIZE;
+        float[] xOffsets = {1.0f, 0.0f, 0.0f, 1.0f};
+        float[] yOffsets = {1.0f, 0.0f, 1.0f, 1.0f};
+        for (int i = 0; i < 4; i++) {
+            float x = transform.getPosition().x + (xOffsets[i] * transform.getScale().x);
+            float y = transform.getPosition().y + (yOffsets[i] * transform.getScale().y);
+            vertices[offset] = x;
+            vertices[offset + 1] = y;
+            vertices[offset + 2] = color.x;
+            vertices[offset + 3] = color.y;
+            vertices[offset + 4] = color.z;
+            vertices[offset + 5] = color.w;
+            offset += VERTEX_SIZE;
+        }*/
+
+        // Method 3
+       /* Sprite sprite = this.sprites[index];
+
+        // Find offset within array (4 vertices per sprite)
+        int offset = index * 4 * VERTEX_SIZE;
+
+        Vector4f color = sprite.getColor();
+        Transform transform = sprite.owningGameObject.transform;
+
+        // Add vertices with the appropriate properties
+        for (int i = 0; i < 4; i++) {
+            float xAdd = (i == 1 || i == 2) ? 0.0f : 1.0f;
+            float yAdd = (i == 1 || i == 3) ? 0.0f : 1.0f;
+
+            // Load position
+            vertices[offset] = transform.position.x + (xAdd * transform.scale.x);
+            vertices[offset + 1] = transform.position.y + (yAdd * transform.scale.y);
+
+            // Load color
+            vertices[offset + 2] = color.x;
+            vertices[offset + 3] = color.y;
+            vertices[offset + 4] = color.z;
+            vertices[offset + 5] = color.w;
+
+            offset += VERTEX_SIZE;
+        }*/
     }
 
-    public boolean isBatchFull() {
-        return capacity >= MAX_BATCH_SIZE;
+    private int[] generateIndices() {
+        // 6 indices per quad (3 per triangle)
+        int[] elements = new int[6 * MAX_BATCH_SIZE];
+        for (int i = 0; i < MAX_BATCH_SIZE; i++) {
+            loadElementIndices(elements, i);
+        }
+
+        return elements;
+    }
+
+    private void loadElementIndices(int[] elements, int index) {
+        int offsetArrayIndex = 6 * index;
+        int offset = 4 * index;
+
+        // 3, 2, 0, 0, 2, 1        7, 6, 4, 4, 6, 5
+        // Triangle 1
+        elements[offsetArrayIndex] = offset + 3;
+        elements[offsetArrayIndex + 1] = offset + 2;
+        elements[offsetArrayIndex + 2] = offset;
+
+        // Triangle 2
+        elements[offsetArrayIndex + 3] = offset;
+        elements[offsetArrayIndex + 4] = offset + 2;
+        elements[offsetArrayIndex + 5] = offset + 1;
     }
 
 
@@ -166,7 +220,7 @@ public class BatchRenderer {
     private void enableVertexAttributes() {
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        glEnableVertexAttribArray(2);
+        //glEnableVertexAttribArray(2);
     }
 
     /**
@@ -175,7 +229,7 @@ public class BatchRenderer {
     private void disableVertexAttributes() {
         glDisableVertexAttribArray(0);
         glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(2);
+        //glDisableVertexAttribArray(2);
     }
 
     /**
@@ -199,6 +253,10 @@ public class BatchRenderer {
      */
     public void cleanup() {
         // TODO: Implement renderer clean up code
+    }
+
+    public boolean hasRoom() {
+        return this.bBatchHasRoom;
     }
 }
 /*End of BatchRenderer class*/

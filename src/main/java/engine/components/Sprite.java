@@ -5,6 +5,7 @@
  */
 package engine.components;
 
+import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 
@@ -27,8 +28,17 @@ public class Sprite extends BaseComponent {
         super.tick(deltaTime);
     }
 
+
     public Vector4f getColor() {
         return this.color;
+    }
+
+   public Vector2f getSpriteSize() {
+        return this.getOwningGameObject().getTransform().getScale();
+   }
+
+    public Vector2f getSpritePos() {
+        return this.getOwningGameObject().getTransform().getPosition();
     }
 }
 /*End of Sprite class*/

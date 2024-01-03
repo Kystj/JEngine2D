@@ -75,6 +75,8 @@ public class Shader {
      * Call to to compile and link shader methods
      */
     public void compileAndLinkShaders() {
+        System.out.println("Compiling shaders...");
+        System.out.println("Linking shaders...");
         compile();
         link();
     }

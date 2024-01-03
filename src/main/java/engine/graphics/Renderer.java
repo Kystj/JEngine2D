@@ -17,20 +17,24 @@ import java.util.List;
 public class Renderer {
 
     private final List<BatchRenderer> batchRendererList = new ArrayList<>();
-    private BatchRenderer batchRenderer = new BatchRenderer();
+
 
     /**
      * Call the render() method on each render Batch object in the batch renderer list
      */
     public void render() {
-        batchRenderer.render();
+        System.out.println("Rendering batches");
+        for (BatchRenderer batch : batchRendererList) {
+            batch.render();
+        }
+        System.out.println(batchRendererList.size());
     }
 
-    public void addSpriteToBatch(Sprite sprite) {
+    private void addSpriteToBatch(Sprite sprite) {
         boolean added = false;
         for (BatchRenderer batch : batchRendererList) {
-            if (!batch.isBatchFull()) {
-                batch.addQuad(sprite);
+            if (batch.hasRoom()) {
+                batch.addSprite(sprite);
                 added = true;
                 break;
             }
@@ -38,9 +42,8 @@ public class Renderer {
 
         if (!added) {
             BatchRenderer batch = new BatchRenderer();
-            batch.init();
             batchRendererList.add(batch);
-            batch.addQuad(sprite);
+            batch.addSprite(sprite);
         }
     }
 

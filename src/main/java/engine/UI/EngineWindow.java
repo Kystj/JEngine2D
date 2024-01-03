@@ -12,8 +12,9 @@ import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
-import engine.managers.SceneManager;
 import engine.objects.GameObject;
+import engine.scene.Editor;
+import engine.scene.Scene;
 import engine.settings.EConstants.EventType;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
@@ -44,6 +45,7 @@ public class EngineWindow implements EventListener {
     private final ImGuiController imGuiController = new ImGuiController();
 
     private int engineMode = 0; // 0: Editor. 1: Full play
+    private static Scene currentScene;
 
     /**
      * Create a EngineWindow instance using the singleton pattern
@@ -98,7 +100,7 @@ public class EngineWindow implements EventListener {
         this.windowHeight = (int) getDefaultScreenSize().y;
 
         // Prints the Window size to the console
-        displayWindowDimensions();
+        printWindowDimensions();
 
 
         // Create the Window
@@ -158,7 +160,7 @@ public class EngineWindow implements EventListener {
         EventDispatcher.addListener(EventType.FullPlay, this);
 
         // Load the Editor Scene at launch
-        SceneManager.changeScene();
+        changeScene(0);
     }
 
     /**
@@ -185,6 +187,22 @@ public class EngineWindow implements EventListener {
         }
     }
 
+    public void changeScene(int newScene) {
+        switch (newScene) {
+            case 0:
+                currentScene = new Editor();
+                currentScene.init();
+                break;
+            case 1:
+                // Full play scene
+                System.out.println("Full play scene");
+                break;
+            default:
+                assert false : "Unknown scene '" + newScene + "'";
+                break;
+        }
+    }
+
     /**
      * The method updateEngineMode takes a deltaTime parameter and switches between different engine modes (0, 1, or 2),
      * invoking corresponding tick methods (editorModeTick, playModeTick, or fullPlayModeTick) based on the current
@@ -207,7 +225,7 @@ public class EngineWindow implements EventListener {
      * Render and play the game in fullscreen mode without the editor
      */
     private void fullPlayModeTick(float deltaTime) {
-        SceneManager.renderScene();
+        currentScene.render();
         if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
             engineMode = 0;
         }
@@ -218,9 +236,14 @@ public class EngineWindow implements EventListener {
      */
     private void editorModeTick(float deltaTime) {
         this.framebuffer.bind();
-        SceneManager.renderScene();
+        currentScene.render();
         this.framebuffer.unBind();
         imGuiController.tick(deltaTime);
+    }
+
+    /** Get the currently bound scene*/
+    public static Scene getCurrentScene() {
+        return currentScene;
     }
 
     /**
@@ -269,7 +292,7 @@ public class EngineWindow implements EventListener {
     /**
      * Prints the window dimensions to the console
      */
-    private void displayWindowDimensions() {
+    private void printWindowDimensions() {
         System.out.println("Screen Width: " + this.windowWidth);
         System.out.println("Screen Height: " + this.windowHeight);
         System.out.println("Aspect Ratio: " + (float) windowWidth / windowHeight);

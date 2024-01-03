@@ -17,11 +17,9 @@ public class Editor extends Scene {
     @Override
     public void init() {
         super.init();
+        System.out.println("Running editor scene");
 
-        this.orthoCamera = new OrthographicCamera();
-
-        orthoCamera.position.x = -250;
-        orthoCamera.position.y = -250;
+        this.orthoCamera = new OrthographicCamera(new Vector2f(-250,-250));
 
         int xOffset = 10;
         int yOffset = 10;
@@ -46,8 +44,10 @@ public class Editor extends Scene {
 
 
     @Override
-    public void tick() {
-        super.tick();
+    public void tick(float deltaTime) {
+        super.tick(deltaTime);
+
+        this.renderer.render();
     }
 
 }

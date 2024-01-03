@@ -15,7 +15,7 @@ public class GameObject {
 
     private final String name;
     private final List<BaseComponent> componentsList = new ArrayList<>();
-    private Transform transform;
+    public Transform transform;
 
     /** Constructor for the GameObject class, assigns the and initializes the GameObject class variables */
     public GameObject(String name, Transform transform) {
@@ -33,8 +33,8 @@ public class GameObject {
 
     /** Update all the Game objects components*/
     public void update(float dt) {
-        for (BaseComponent baseComponent : componentsList) {
-            baseComponent.tick(dt);
+        for (BaseComponent component : componentsList) {
+            component.tick(dt);
         }
     }
 

@@ -42,6 +42,7 @@ public interface EConstants {
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;
+    int VERTEX_SIZE = 6;
 
 
     // Physics constants
