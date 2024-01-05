@@ -18,35 +18,30 @@ public class Renderer {
 
     private final List<BatchRenderer> batchRendererList = new ArrayList<>();
 
-
     /**
      * Call the render() method on each render Batch object in the batch renderer list
      */
     public void render() {
-        System.out.println("Rendering batches");
         for (BatchRenderer batch : batchRendererList) {
             batch.render();
         }
-        System.out.println(batchRendererList.size());
     }
 
+    /** Find a batch with room and add the sprite to that batch */
     private void addSpriteToBatch(Sprite sprite) {
-        boolean added = false;
-        for (BatchRenderer batch : batchRendererList) {
-            if (batch.hasRoom()) {
-                batch.addSprite(sprite);
-                added = true;
-                break;
-            }
-        }
+        BatchRenderer batch = batchRendererList.stream()
+                .filter(BatchRenderer::getBatchHasRoom)
+                .findFirst()
+                .orElseGet(() -> {
+                    BatchRenderer newBatch = new BatchRenderer();
+                    batchRendererList.add(newBatch);
+                    return newBatch;
+                });
 
-        if (!added) {
-            BatchRenderer batch = new BatchRenderer();
-            batchRendererList.add(batch);
-            batch.addSprite(sprite);
-        }
+        batch.addSpriteToBatch(sprite);
     }
 
+    /** This method adds a sprite to a batch if it exists in the provided game object. */
     public void addSprite(GameObject gameObject) {
         Sprite sprite = gameObject.getComponent(Sprite.class);
         if (sprite != null) {
@@ -54,7 +49,8 @@ public class Renderer {
         }
     }
 
-    public void cleanup() {
+    /** Handles the disposal or release of resources associated with rendering. */
+    private void cleanup() {
         // TODO: Implement renderer clean up code
     }
 }

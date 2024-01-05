@@ -75,8 +75,6 @@ public class Shader {
      * Call to to compile and link shader methods
      */
     public void compileAndLinkShaders() {
-        System.out.println("Compiling shaders...");
-        System.out.println("Linking shaders...");
         compile();
         link();
     }
@@ -156,6 +154,12 @@ public class Shader {
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         mat4.get(matBuffer);
         glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+
+    public void uploadIntArray(String varName, int[] intArray) {
+        use();
+        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        glUniform1iv(varLocation, intArray);
     }
 
 

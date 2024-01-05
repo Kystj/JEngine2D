@@ -21,6 +21,9 @@ public class Texture {
 
     private int textureID;
     private String filePath;
+    private int textureWidth;
+    private int textureHeight;
+
 
     public Texture(String filePath) {
         this.filePath = filePath;
@@ -39,7 +42,7 @@ public class Texture {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
                 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
-       // stbi_set_flip_vertically_on_load(true);
+        stbi_set_flip_vertically_on_load(true);
     }
 
     /**
@@ -73,6 +76,9 @@ public class Texture {
 
         // Define a 2D texture based on its channels
         if (image != null) {
+            textureWidth = width.get(0);
+            textureHeight = width.get(0);
+
             if (channels.get(0) == 3) {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0),
                         0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -112,5 +118,12 @@ public class Texture {
         return textureID;
     }
 
+    public int getTextureWidth() {
+        return textureWidth;
+    }
+
+    public int getTextureHeight() {
+        return textureHeight;
+    }
 }
 /*End of Texture class*/

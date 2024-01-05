@@ -9,6 +9,7 @@ import engine.audio.Audio;
 import engine.graphics.Shader;
 import engine.graphics.Texture;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,11 +24,15 @@ public class ResourceManager {
 
     /** Create a shader if it does not already exist in the pool and return it. If it does exist
      * just return it. */
-    public static Shader getOrCreateShader(String shaderID, Shader shader) {
+    public static Shader getOrCreateShader(String shaderID) {
+        File file = new File(shaderID);
         if (!shaderMap.containsKey(shaderID)) {
-            shaderMap.put(shaderID, shader);
+            Shader newShader = new Shader(shaderID);
+            newShader.compileAndLinkShaders();
+            shaderMap.put(file.getAbsolutePath(), newShader);
+            return newShader;
         }
-        return shaderMap.get(shaderID);
+        return shaderMap.get(file.getAbsolutePath());
     }
 
     /** Create a texture if it does not already exist in the pool and return it. If it does exist
