@@ -12,14 +12,12 @@ import org.joml.Vector4f;
 
 public class Sprite extends BaseComponent {
 
-    private Vector4f color;
-
+    private Vector4f color = new Vector4f(1, 1, 1, 1);
     private final Texture spriteTexture;
     private final Vector2f[] uvCoordinates;
 
     public Sprite(Texture texture) {
         this.spriteTexture = texture;
-        this.color = new Vector4f(1, 1, 1, 1);
         this.uvCoordinates  = new Vector2f[]{
                 new Vector2f(1, 1),
                 new Vector2f(1, 0),
