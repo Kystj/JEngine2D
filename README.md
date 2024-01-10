@@ -4,7 +4,7 @@
 
 - To Create 2D game engine written in Java that utilizes GLFW for window management and ImGui for user interface elements. It provides a basic framework for creating 2D games and applications with an interactive GUI.
 
-## Current plans
+## Ongoing Development Tasks
 
     Construct the asset panel and populate it with a variety of testing assets
 
