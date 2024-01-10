@@ -177,7 +177,6 @@ public class EngineWindow implements EventListener {
             pollUserEvents();
 
             updateEngineMode(deltaTime);
-            imGuiController.tick(deltaTime);
             glfwSwapBuffers(glfwWindow);
 
             endTime = glfwGetTime();
@@ -195,7 +194,7 @@ public class EngineWindow implements EventListener {
                 currentScene.init();
                 break;
             case 1:
-                System.out.println("Play Scene");
+                System.out.println("Initializing scene");
                 break;
             default:
                 assert false : "Unknown scene '" + newScene + "'";
@@ -209,16 +208,16 @@ public class EngineWindow implements EventListener {
      * engine mode.
      */
     private void updateEngineMode(float deltaTime) {
-        checkPlayMode();
+        if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
+            engineMode = 0;
+        }
 
         switch (engineMode) {
             case 0:
                 editorModeTick(deltaTime);
-                EventDispatcher.dispatchEvent(new Event(EventType.Play));
                 break;
             case 1:
                 fullPlayModeTick(deltaTime);
-                EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
                 break;
             default:
                 assert false : "No play mode selected";
@@ -236,25 +235,20 @@ public class EngineWindow implements EventListener {
         currentScene.render();
     }
 
-    private void checkPlayMode() {
-        if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
-            engineMode = 0;
-        }
-        if (KeyInputs.keyPressed(GLFW_KEY_F)) {
-            engineMode = 1;
-        }
-    }
-
     /**
      * Render the game with the editor (The game can still be played from the viewport)
      */
     private void editorModeTick(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
+            // Renderer to the framebuffer
             this.framebuffer.bind();
             currentScene.tick(deltaTime);
             currentScene.render();
             this.framebuffer.unBind();
+
+            // Update the ImGui components
+            imGuiController.tick(deltaTime);
         }
     }
 
@@ -326,7 +320,6 @@ public class EngineWindow implements EventListener {
      * Terminate the engine and cleanup ImGui
      */
     private void closeEngine() {
-        // TODO: Change this to a function and use a modifier
         if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS &&
                 glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
 
@@ -403,7 +396,7 @@ public class EngineWindow implements EventListener {
                 break;
             case FullPlay:
                 engineMode = 1;
-               //System.out.println("Launching full play mode...");
+                System.out.println("Launching full play mode...");
                 break;
         }
     }

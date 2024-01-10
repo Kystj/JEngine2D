@@ -1,5 +1,4 @@
 - clean up render batch render method
-- fix the full launch error
 - cleanup the asset tab window
     - remove x.
     - add tabs for the other of the assets

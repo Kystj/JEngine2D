@@ -118,6 +118,9 @@ public class BatchRenderer {
     }
 
     public void render() {
+        // Clear the color buffer and depth buffer
+        clear();
+
         // For now, we will re-buffer all data every frame
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
@@ -295,7 +298,7 @@ public class BatchRenderer {
      * Clears the color and depth buffers
      */
     private void clear() {
-        glClearColor(1,1,1,1);
+        glClearColor(0,0,0,0);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
