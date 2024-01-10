@@ -10,6 +10,7 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.settings.EConstants.EventType;
 import imgui.ImGui;
+import imgui.flag.ImGuiViewportFlags;
 import imgui.flag.ImGuiWindowFlags;
 
 public class Viewport {
@@ -19,7 +20,7 @@ public class Viewport {
     public void tick() {
 
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
-                | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar);
+                | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar | ImGuiViewportFlags.NoTaskBarIcon);
 
 
         viewportsMenuBar();
@@ -33,19 +34,44 @@ public class Viewport {
     private void viewportsMenuBar() {
         ImGui.beginMenuBar();
 
-        if (ImGui.menuItem("Play", "", playing, !playing)) {
+        // Calculate the width of the menu bar
+        float menuBarWidth = ImGui.getContentRegionAvailX();
+
+        // Calculate the total width of the buttons
+        float totalButtonWidth = 3 * 100f; // Adjust the button width and count as needed
+
+        // Calculate the left padding required to center the buttons
+        float leftPadding = (menuBarWidth - totalButtonWidth) * 0.5f;
+
+        // Set the cursor position to the left padding
+        ImGui.setCursorPosX(leftPadding);
+
+        // Button 1 (Play)
+        if (ImGui.button("Play")) {
             playing = true;
             EventDispatcher.dispatchEvent(new Event(EventType.Play));
         }
 
-        if (ImGui.menuItem("Stop", "", !playing, playing)) {
+        // Use ImGui.sameLine() to keep the next elements on the same line
+        ImGui.sameLine();
+
+        // Set the cursor position to center the remaining space
+        ImGui.setCursorPosX(ImGui.getCursorPosX());
+
+        // Button 2 (Stop)
+        if (ImGui.button("Stop")) {
             playing = false;
             EventDispatcher.dispatchEvent(new Event(EventType.Stop));
         }
 
-        if (ImGui.menuItem("Launch", "")) {
+        // Use ImGui.sameLine() to keep the next elements on the same line
+        ImGui.sameLine();
+
+        // Button 3 (Launch)
+        if (ImGui.button("Launch")) {
             EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
         }
+
         ImGui.endMenuBar();
     }
 }

@@ -12,9 +12,11 @@ import org.joml.Vector4f;
 
 public class Sprite extends BaseComponent {
 
-    private Vector4f color = new Vector4f(1, 1, 1, 1);
+    private final Vector4f color = new Vector4f(1, 1, 1, 1);
     private final Texture spriteTexture;
     private final Vector2f[] uvCoordinates;
+    private  boolean bisModified = false;
+    private Transform spriteTransform;
 
     public Sprite(Texture texture) {
         this.spriteTexture = texture;
@@ -36,11 +38,20 @@ public class Sprite extends BaseComponent {
     @Override
     public void init() {
         super.init();
+        // this.spriteTransform = owningGameObject.transform;
     }
 
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
+        //updateTransform();
+    }
+
+    private void updateTransform() {
+        if (!this.spriteTransform.equals(owningGameObject.transform)) {
+            owningGameObject.setTransform(spriteTransform);
+            bisModified = true;
+        }
     }
 
 
@@ -63,5 +74,14 @@ public class Sprite extends BaseComponent {
     public Vector2f getSpritePos() {
         return this.getOwningGameObject().getTransform().getPosition();
     }
+
+    public boolean isBisModified() {
+        return bisModified;
+    }
+
+    public int getTextureID() {
+        return spriteTexture == null ? -1: spriteTexture.getTextureID();
+    }
+
 }
 /*End of Sprite class*/

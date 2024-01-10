@@ -13,7 +13,6 @@ import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static engine.settings.EConstants.MAX_BATCH_SIZE;
@@ -49,7 +48,7 @@ public class BatchRenderer {
     private final Shader shader = ResourceManager.getOrCreateShader("shaders/default.glsl");
 
     private List<Texture> textures = new ArrayList<>();
-    private final int[] textureSlots = new int[7];
+    private int[] textureSlots = {0,1,2,3,4,5,6,7};
 
 
     public BatchRenderer() {
@@ -175,7 +174,6 @@ public class BatchRenderer {
 
         Vector4f color = sprite.getColor();
         Vector2f[] uvCoordinates = sprite.getUvCoordinates();
-        System.out.println("UVCoordinates: " + Arrays.toString(sprite.getUvCoordinates()));
 
         // Sprite has a texture so loop through until we find a match and use the texID as the ID in the array
         int textureID = 0;
@@ -233,8 +231,8 @@ public class BatchRenderer {
     }
 
     private void unBindTextures() {
-        for (Texture texture : textures) {
-            texture.unbind();
+        for (int i=0; i < textures.size(); i++) {
+            textures.get(i).unbind();
         }
     }
 

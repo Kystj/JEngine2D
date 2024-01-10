@@ -177,6 +177,7 @@ public class EngineWindow implements EventListener {
             pollUserEvents();
 
             updateEngineMode(deltaTime);
+            imGuiController.tick(deltaTime);
             glfwSwapBuffers(glfwWindow);
 
             endTime = glfwGetTime();
@@ -194,8 +195,7 @@ public class EngineWindow implements EventListener {
                 currentScene.init();
                 break;
             case 1:
-                // Full play scene
-                System.out.println("Full play scene");
+                System.out.println("Play Scene");
                 break;
             default:
                 assert false : "Unknown scene '" + newScene + "'";
@@ -209,12 +209,16 @@ public class EngineWindow implements EventListener {
      * engine mode.
      */
     private void updateEngineMode(float deltaTime) {
+        checkPlayMode();
+
         switch (engineMode) {
             case 0:
                 editorModeTick(deltaTime);
+                EventDispatcher.dispatchEvent(new Event(EventType.Play));
                 break;
             case 1:
                 fullPlayModeTick(deltaTime);
+                EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
                 break;
             default:
                 assert false : "No play mode selected";
@@ -225,9 +229,19 @@ public class EngineWindow implements EventListener {
      * Render and play the game in fullscreen mode without the editor
      */
     private void fullPlayModeTick(float deltaTime) {
+        // Safety check
+        if (engineMode == 1) {
+           changeScene(0);
+        }
         currentScene.render();
+    }
+
+    private void checkPlayMode() {
         if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
             engineMode = 0;
+        }
+        if (KeyInputs.keyPressed(GLFW_KEY_F)) {
+            engineMode = 1;
         }
     }
 
@@ -235,10 +249,13 @@ public class EngineWindow implements EventListener {
      * Render the game with the editor (The game can still be played from the viewport)
      */
     private void editorModeTick(float deltaTime) {
-        this.framebuffer.bind();
-        currentScene.render();
-        this.framebuffer.unBind();
-        imGuiController.tick(deltaTime);
+        // Safety check
+        if (engineMode == 0) {
+            this.framebuffer.bind();
+            currentScene.tick(deltaTime);
+            currentScene.render();
+            this.framebuffer.unBind();
+        }
     }
 
     /** Get the currently bound scene*/
@@ -378,15 +395,15 @@ public class EngineWindow implements EventListener {
         switch (event.getEventType()) {
             case Play:
                 engineMode = 0;
-                System.out.println("Playing...");
+                //System.out.println("Playing...");
                 break;
             case Stop:
                 engineMode = 0;
-                System.out.println("Stopping...");
+                //System.out.println("Stopping...");
                 break;
             case FullPlay:
                 engineMode = 1;
-                System.out.println("Launching full play mode...");
+               //System.out.println("Launching full play mode...");
                 break;
         }
     }

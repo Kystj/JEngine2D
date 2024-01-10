@@ -60,7 +60,8 @@ public class ImGuiController {
         enableDocking();
         updateViewport();
         updateWidgets();
-        //ImGui.showDemoWindow();
+        EngineWindow.getCurrentScene().imgui();
+        ImGui.showDemoWindow();
         endFrame();
     }
 
@@ -77,6 +78,7 @@ public class ImGuiController {
     private void updateWidgets() {
         mainMenuBar.tick();
         shortcutHandler.tick();
+        // assetPanel.tick();
     }
 
     /**
@@ -88,15 +90,15 @@ public class ImGuiController {
 
         ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always);
         ImGui.setNextWindowSize(EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f);
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f);
+
         windowFlags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse |
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove |
                 ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus;
-        ImGui.popStyleVar(2);
+
         ImGui.begin("Dockspace", open, windowFlags);
         ImGui.dockSpace(ImGui.getID("Dockspace"));
         ImGui.end();
+
     }
 
     /**
@@ -139,16 +141,17 @@ public class ImGuiController {
      * Push custom ImGui style options
      */
     private void pushCustomStyleVars() {
-        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 12f);
-        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0f, 0f);
         ImGui.pushStyleVar(ImGuiStyleVar.WindowTitleAlign,0.5f, 0.5f);
+        ImGui.pushStyleVar(ImGuiStyleVar.FrameRounding, 2.0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0f, 0f);
+        ImGui.pushStyleVar(ImGuiStyleVar.ItemSpacing,15.0f,11.0f);
     }
 
     /**
      * Pop custom ImGui style options
      */
     private void popCustomStyleVars() {
-        ImGui.popStyleVar(3);
+        ImGui.popStyleVar(4);
     }
 }
 /*End of ImGuiLayer class*/

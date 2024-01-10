@@ -47,6 +47,10 @@ public class Scene {
         }
     }
 
+    public void imgui() {
+
+    }
+
     public void render() {
         renderer.render();
     }

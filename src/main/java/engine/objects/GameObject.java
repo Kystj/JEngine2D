@@ -64,6 +64,7 @@ public class GameObject {
     }
 
     public void addComponent(BaseComponent component) {
+        System.out.println("Adding component " + component.getClass().getSimpleName() + " to GameObject " + name);
         this.componentsList.add(component);
         component.assignOwningObject(this);
     }
@@ -84,6 +85,10 @@ public class GameObject {
     }
 
     public Transform getTransform() {
+        return transform;
+    }
+
+    public Transform setTransform(Transform newTransform) {
         return transform;
     }
 }

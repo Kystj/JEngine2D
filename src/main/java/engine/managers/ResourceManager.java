@@ -7,6 +7,7 @@ package engine.managers;
 
 import engine.audio.Audio;
 import engine.graphics.Shader;
+import engine.graphics.SpriteSheet;
 import engine.graphics.Texture;
 
 import java.io.File;
@@ -20,6 +21,7 @@ public class ResourceManager {
 
     private static final Map<String, Shader> shaderMap = new HashMap<>();
     private static final Map<String, Texture> textureMap = new HashMap<>();
+    private static final Map<String, SpriteSheet> spriteSheetMap = new HashMap<>();
     private static final Map<String, Audio > audioMap = new HashMap<>();
 
     /** Create a shader if it does not already exist in the pool and return it. If it does exist
@@ -37,20 +39,26 @@ public class ResourceManager {
 
     /** Create a texture if it does not already exist in the pool and return it. If it does exist
      * just return it. */
-    public static Texture getOrCreateTexture(String textureID, Texture Texture) {
+    public static Texture getOrCreateTexture(String textureID) {
+        File file = new File(textureID);
         if (!textureMap.containsKey(textureID)) {
-            textureMap.put(textureID, Texture);
+            Texture texture = new Texture(textureID);
+            textureMap.put(file.getAbsolutePath(), texture);
+            return texture;
         }
-        return textureMap.get(textureID);
+        return textureMap.get(file.getAbsolutePath());
     }
 
-    /** Create a shader if it does not already exist in the pool and return it. If it does exist
-     * just return it. */
-    public static Audio getOrCreateAudio(String audioID, Audio audio) {
-        if (!audioMap.containsKey(audioID)) {
-            audioMap.put(audioID, audio);
+    public static void addSpriteSheet(String resourceName, SpriteSheet spriteSheet) {
+        File file = new File(resourceName);
+        if (!spriteSheetMap.containsKey(file.getAbsolutePath())) {
+            spriteSheetMap.put(file.getAbsolutePath(), spriteSheet);
         }
-        return audioMap.get(audioID);
+    }
+
+    public static SpriteSheet getSpriteSheet(String resourceName) {
+        File file = new File(resourceName);
+        return spriteSheetMap.get(file.getAbsolutePath());
     }
 }
 /*End of ResourceManager class*/

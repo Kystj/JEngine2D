@@ -10,7 +10,7 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;
-//TODO: TEST THIS CLASS
+
 public class SpriteSheet {
 
     private final Texture spriteSheetTexture;
@@ -59,6 +59,18 @@ public class SpriteSheet {
                 currentY -= spriteHeight + spriteSpacing;
             }
         }
+    }
+
+    public int spriteWidth() {
+        return spriteWidth;
+    }
+
+    public int getSpriteHeight() {
+        return spriteHeight;
+    }
+
+    public int numOfSprites() {
+        return spriteSheet.size();
     }
 
     public Sprite getSprite(int spriteIndex) {
