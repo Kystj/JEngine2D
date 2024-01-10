@@ -25,24 +25,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class BatchRenderer {
 
-    private final int POS_SIZE = 2;
-    private final int COLOR_SIZE = 4;
-    private final int TEX_COORDS_SIZE = 2;
-    private final int TEX_ID_SIZE = 1;
-
-    private final int POS_OFFSET = 0;
-    private final int COLOR_OFFSET = POS_OFFSET + POS_SIZE * Float.BYTES;
-    private final int TEX_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-    private final int TEX_ID_OFFSET = TEX_COORDS_OFFSET + TEX_COORDS_SIZE * Float.BYTES;
-    private final int VERTEX_SIZE = 9;
-    private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+    private final int vertexSize = 9;
 
     private final Sprite[] sprites = new Sprite[MAX_BATCH_SIZE];
     private int numSprites = 0;
 
     private boolean bBatchHasRoom = true;
 
-    private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * VERTEX_SIZE];
+    private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
     private final Shader shader = ResourceManager.getOrCreateShader("shaders/default.glsl");
@@ -104,16 +94,25 @@ public class BatchRenderer {
         glEnableVertexAttribArray(3);*/
 
         // Enable the buffer attribute pointers
-        glVertexAttribPointer(0, POS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POS_OFFSET);
+        int vertexSizeInBytes = vertexSize * Float.BYTES;
+        int vertexPosOffset = 0;
+        int vertexPosSize = 2;
+        glVertexAttribPointer(0, vertexPosSize, GL_FLOAT, false, vertexSizeInBytes, vertexPosOffset);
         glEnableVertexAttribArray(0);
 
-        glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);
+        int vertexColorSize = 4;
+        int colorPosOffset = vertexPosOffset + vertexPosSize * Float.BYTES;
+        glVertexAttribPointer(1, vertexColorSize, GL_FLOAT, false, vertexSizeInBytes, colorPosOffset);
         glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2, TEX_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_COORDS_OFFSET);
+        int uvCoordinateOffset = colorPosOffset + vertexColorSize * Float.BYTES;
+        int uvCoordinateSize = 2;
+        glVertexAttribPointer(2, uvCoordinateSize, GL_FLOAT, false, vertexSizeInBytes, uvCoordinateOffset);
         glEnableVertexAttribArray(2);
 
-        glVertexAttribPointer(3, TEX_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEX_ID_OFFSET);
+        int textureIdSize = 1;
+        int textureIdOffset = uvCoordinateOffset + uvCoordinateSize * Float.BYTES;
+        glVertexAttribPointer(3, textureIdSize, GL_FLOAT, false, vertexSizeInBytes, textureIdOffset);
         glEnableVertexAttribArray(3);
     }
 
@@ -170,20 +169,25 @@ public class BatchRenderer {
     }
 
     private void updateVertexAttribArray(int index) {
+        // Store the sprite at the specified
         Sprite sprite = this.sprites[index];
 
         // Find offset within array (4 vertices per sprite)
-        int offset = index * 4 * VERTEX_SIZE;
+        int offset = index * 4 * vertexSize;
 
+        // Get the sprites attributes
+        Vector2f spritePos = sprite.getSpritePos();
+        Vector2f spriteSize = sprite.getSpriteSize();
         Vector4f color = sprite.getColor();
         Vector2f[] uvCoordinates = sprite.getUvCoordinates();
 
-        // Sprite has a texture so loop through until we find a match and use the texID as the ID in the array
+        // Check if the sprite has a texture, and if so, find its corresponding ID in the textures array
         int textureID = 0;
-        if (sprite.getSpriteTexture() != null) {
+        Texture spriteTexture = sprite.getSpriteTexture();
+
+        if (spriteTexture != null) {
             for (int i = 0; i < textures.size(); i++) {
-                // If we are on the Texture that our sprite has then that is the texID we want to use
-                if (textures.get(i) == sprite.getSpriteTexture()) {
+                if (textures.get(i) == spriteTexture) {
                     // [0, tex, tex, tex, tex]: Adding texId = i + 1; gives us that special reserve slot for color
                     textureID = i + 1;
                     break;
@@ -191,23 +195,32 @@ public class BatchRenderer {
             }
         }
 
+        // Pre-calculate position components
+        float xPos = spritePos.x;
+        float yPos = spritePos.y;
+        float xSize = spriteSize.x;
+        float ySize = spriteSize.y;
+
         // Add vertices with the appropriate properties
         float xAdd = 1.0f;
         float yAdd = 1.0f;
         for (int i = 0; i < 4; i++) {
-            if (i == 1) {
-                yAdd = 0.0f;
-            } else if (i == 2) {
-                xAdd = 0.0f;
-            } else if (i == 3) {
-                yAdd = 1.0f;
+            switch (i) {
+                case 1:
+                    yAdd = 0.0f;
+                    break;
+                case 2:
+                    xAdd = 0.0f;
+                    break;
+                case 3:
+                    yAdd = 1.0f;
+                    break;
+                // No change for case 0
             }
 
             // Load position
-            vertices[offset] = sprite.getSpritePos().x +
-                    (xAdd * sprite.getSpriteSize().x);
-            vertices[offset + 1] = sprite.getSpritePos().y +
-                    (yAdd * sprite.getSpriteSize().y);
+            vertices[offset] = xPos + (xAdd * xSize);
+            vertices[offset + 1] = yPos + (yAdd * ySize);
 
             // Load color
             vertices[offset + 2] = color.x;
@@ -222,7 +235,7 @@ public class BatchRenderer {
             // Load texture id
             vertices[offset + 8] = textureID;
 
-            offset += VERTEX_SIZE;
+            offset += vertexSize;
         }
     }
 

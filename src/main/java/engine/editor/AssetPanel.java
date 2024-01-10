@@ -9,7 +9,6 @@ import engine.components.Sprite;
 import engine.graphics.SpriteSheet;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 
 import java.util.List;
@@ -17,7 +16,9 @@ import java.util.List;
 public class AssetPanel {
 
     private final String[] tabNames = {"Terrain", "Pawns"};
-        List<SpriteSheet> spriteSheets;
+    private List<SpriteSheet> spriteSheets;
+
+    private boolean isTooltipVisible = false;
 
     public AssetPanel(List<SpriteSheet> spriteSheet) {
         spriteSheets = spriteSheet;
@@ -31,10 +32,13 @@ public class AssetPanel {
     private void render() {
         // Create a window
         ImGui.begin("Assets");
+        ImGui.spacing();
 
         // Create tabs
+        // TODO: Create a system that allows users to create tabs and populate them from within the editor
         if (ImGui.beginTabBar("Tabs")) {
             SpriteSheet tempSheet;
+
             for (String tabName : tabNames) {
                 switch (tabName) {
                     case "Terrain":
@@ -46,8 +50,23 @@ public class AssetPanel {
                     default:
                         throw new IllegalStateException("Unexpected value: " + tabName);
                 }
-                if (ImGui.beginTabItem(tabName, new ImBoolean(true), 0)) {
+
+                if (ImGui.beginTabItem(tabName)) {
+                    // Set up columns
+                    ImGui.columns(2, "Columns", true);
+
+                    updateAssetDropdown();
+
+                    // Second column
+                    ImGui.nextColumn();
+
+                    // Populate buttons or other controls in the second column
                     populateAssetButtons(tempSheet);
+
+                    // End columns
+                    ImGui.columns(1);  // Reset to a single column
+
+                    // End the tab item
                     ImGui.endTabItem();
                 }
             }
@@ -55,6 +74,27 @@ public class AssetPanel {
         }
         // End the window
         ImGui.end();
+    }
+
+    private void updateAssetDropdown() {
+        // First column
+        ImGui.setColumnWidth(0, 200);  // Adjust the width as needed
+        ImGui.text("Options");
+
+        if (ImGui.beginCombo(" ", "+/-")) {
+            // Options to display in the dropdown
+            if (ImGui.selectable("Import Asset", true)) {
+                // TODO: Handle the creation of a new sprite sheet and import the individual sprites
+                System.out.println("Importing assets.....");
+            }
+            if (ImGui.selectable("Delete Asset", true)) {
+                // TODO: Delete assets from the specified tabor delete the whole tab
+                System.out.println("Delete assets.....");
+            }
+            // End the tree node
+            ImGui.endCombo();
+            ImGui.popItemWidth();
+        }
     }
 
 
@@ -67,7 +107,7 @@ public class AssetPanel {
         ImGui.getStyle().getItemSpacing(itemSpacing);
 
         float windowX2 = windowPos.x + windowSize.x;
-        for (int i=0; i < sprites.numOfSprites(); i++) {
+        for (int i = 0; i < sprites.numOfSprites(); i++) {
             Sprite sprite = sprites.getSprite(i);
             float spriteWidth = sprites.spriteWidth() * 2;
             float spriteHeight = sprites.getSpriteHeight() * 2;

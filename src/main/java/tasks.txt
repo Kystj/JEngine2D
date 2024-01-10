@@ -1,5 +1,3 @@
-- clean up render batch render method
-- cleanup the asset tab window
-    - remove x.
-    - add tabs for the other of the assets
 - finish the dirty flag system
+- Asset Panel
+    - set up functionality do add and remove functionality
