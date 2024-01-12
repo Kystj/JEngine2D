@@ -110,6 +110,7 @@ public class ImGuiController {
         imGuiGlfw.newFrame();
         ImGui.newFrame();
         pushCustomStyleVars();
+
     }
 
     /**
