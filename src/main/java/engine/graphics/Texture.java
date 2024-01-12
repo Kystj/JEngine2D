@@ -20,6 +20,7 @@ import static org.lwjgl.stb.STBImage.*;
 public class Texture {
 
     private int textureID;
+
     private String filePath;
     private int textureWidth;
     private int textureHeight;
@@ -125,5 +126,10 @@ public class Texture {
     public int getTextureHeight() {
         return textureHeight;
     }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
 }
 /*End of Texture class*/

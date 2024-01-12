@@ -14,6 +14,7 @@ import java.util.List;
 public class SpriteSheet {
 
     private final Texture spriteSheetTexture;
+
     private final List<Sprite> spriteSheet = new ArrayList<>();
     private final int spriteWidth;
     private final int spriteHeight;
@@ -75,6 +76,10 @@ public class SpriteSheet {
 
     public Sprite getSprite(int spriteIndex) {
         return spriteSheet.get(spriteIndex);
+    }
+
+    public String getFilePathOfTexture() {
+        return spriteSheetTexture.getFilePath();
     }
 }
 /*End of SpriteSheet class*/

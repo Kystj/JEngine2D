@@ -1,3 +1,4 @@
 - finish the dirty flag system
 - Asset Panel
-    - set up functionality do add and remove functionality
+    - Fix the bug that crashes the editor when the last spite sheet is removed from
+        the assets Map in the AssetManager class

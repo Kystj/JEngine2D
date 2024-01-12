@@ -44,7 +44,7 @@ public class Editor extends Scene {
 
     private void createGameObjects() {
         GameObject test01 = new GameObject("Test01",
-                new Transform(new Vector2f(100, 100), new Vector2f(128, 128)));
+                new Transform(new Vector2f(200, 200), new Vector2f(128, 128)));
         test01.addComponent(spriteSheets.get(0).getSprite(1));
         gameObjectList.add(test01);
 
@@ -52,9 +52,14 @@ public class Editor extends Scene {
                 new Transform(new Vector2f(400, 400), new Vector2f(128, 128)));
         test02.addComponent(spriteSheets.get(1).getSprite(2));
         gameObjectList.add(test02);
+
+        GameObject test03 = new GameObject("Test03",
+                new Transform(new Vector2f(600, 600), new Vector2f(128, 128)));
+        test03.addComponent(spriteSheets.get(2).getSprite(2));
+        gameObjectList.add(test03);
     }
 
-    //TODO: Clean this up
+    //TODO: Move this to a save/load class as it should be done on launch based the editors previous state
     private void loadSpriteSheets() {
         ResourceManager.addSpriteSheet("textures/test.png",
                 new SpriteSheet( new Texture("textures/test.png"),
@@ -64,9 +69,16 @@ public class Editor extends Scene {
                 new SpriteSheet( new Texture("textures/test2.png"),
                         16, 16,0,3));
 
+        // Load the default sprite sheets
+        ResourceManager.addSpriteSheet("textures/test3.png",
+                new SpriteSheet( new Texture("textures/test3.png"),
+                        16, 16,0,3));
+
         this.spriteSheets.add(ResourceManager.getSpriteSheet("textures/test.png"));
         this.spriteSheets.add(ResourceManager.getSpriteSheet("textures/test2.png"));
-        assetPanel = new AssetPanel(spriteSheets);
+        this.spriteSheets.add(ResourceManager.getSpriteSheet("textures/test3.png"));
+
+        assetPanel = new AssetPanel();
     }
 
     private void addGameObjToEditor() {
