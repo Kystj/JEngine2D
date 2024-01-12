@@ -37,11 +37,8 @@ out vec4 color;
 void main()
 {
     if (fTexId > 0) {
-        // Must cast to int to index into uTextures[]
         int id = int(fTexId);
-        // By using fColor we can add things like tints to our game
         color = fColor * texture(uTextures[id], fTexCoords);
-        //color = vec4(fTexCoords, 0, 1);
     } else {
         // Use reserve slot for color
         color = fColor;

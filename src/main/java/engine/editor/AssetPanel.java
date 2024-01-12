@@ -7,6 +7,7 @@ package engine.editor;
 
 import engine.components.Sprite;
 import engine.graphics.SpriteSheet;
+import engine.managers.ShortcutHandler;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -16,9 +17,12 @@ import java.util.List;
 public class AssetPanel {
 
     private final String[] tabNames = {"Terrain", "Pawns"};
-    private List<SpriteSheet> spriteSheets;
+    private final List<SpriteSheet> spriteSheets;
+    private final ImportSpriteSheet spriteSheetImporter = new ImportSpriteSheet();
+    private boolean bIsImportOpen = false;
+    private boolean bIsRemoveOpen = false;
+    private boolean bShowOptions = true;
 
-    private boolean isTooltipVisible = false;
 
     public AssetPanel(List<SpriteSheet> spriteSheet) {
         spriteSheets = spriteSheet;
@@ -30,6 +34,16 @@ public class AssetPanel {
     }
 
     private void render() {
+        if (bIsImportOpen) {
+            bIsImportOpen = ShortcutHandler.closeWithEscape();
+            spriteSheetImporter.renderInputForm();
+        }
+
+        if (bIsRemoveOpen) {
+            bIsRemoveOpen = ShortcutHandler.closeWithEscape();
+            spriteSheetImporter.renderRemoveForm();
+        }
+
         // Create a window
         ImGui.begin("Assets");
         ImGui.spacing();
@@ -52,48 +66,49 @@ public class AssetPanel {
                 }
 
                 if (ImGui.beginTabItem(tabName)) {
-                    // Set up columns
-                    ImGui.columns(2, "Columns", true);
 
-                    updateAssetDropdown();
+                    if (bShowOptions) {
+                        updateAssetDropdown();
 
-                    // Second column
-                    ImGui.nextColumn();
+                        // Second column
+                        ImGui.nextColumn();
 
-                    // Populate buttons or other controls in the second column
-                    populateAssetButtons(tempSheet);
+                        // Populate buttons or other controls in the second column
+                        populateAssetButtons(tempSheet);
 
-                    // End columns
-                    ImGui.columns(1);  // Reset to a single column
+                        // End columns
+                        ImGui.columns(1);  // Reset to a single column
 
-                    // End the tab item
-                    ImGui.endTabItem();
+                        // End the tab item
+                        ImGui.endTabItem();
+                    }
                 }
             }
             ImGui.endTabBar();
         }
-        // End the window
         ImGui.end();
     }
 
     private void updateAssetDropdown() {
-        // First column
-        ImGui.setColumnWidth(0, 200);  // Adjust the width as needed
-        ImGui.text("Options");
+        //Set up columns
+        ImGui.columns(2, "Columns", true);
 
-        if (ImGui.beginCombo(" ", "+/-")) {
-            // Options to display in the dropdown
-            if (ImGui.selectable("Import Asset", true)) {
-                // TODO: Handle the creation of a new sprite sheet and import the individual sprites
-                System.out.println("Importing assets.....");
+        // First column
+        ImGui.setColumnWidth(0, 150);  // Adjust the width as needed
+        ImGui.text(" ");
+        ImGui.setCursorPos(25,70);
+
+        if (ImGui.beginCombo("##combo", "+/-")) {
+            if (ImGui.selectable("Import")) {
+                bIsRemoveOpen = false;
+                bIsImportOpen = true;
             }
-            if (ImGui.selectable("Delete Asset", true)) {
-                // TODO: Delete assets from the specified tabor delete the whole tab
-                System.out.println("Delete assets.....");
+
+            if (ImGui.selectable("Remove")) {
+                bIsImportOpen = false;
+                bIsRemoveOpen = true;
             }
-            // End the tree node
             ImGui.endCombo();
-            ImGui.popItemWidth();
         }
     }
 

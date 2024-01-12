@@ -37,8 +37,8 @@ public class BatchRenderer {
 
     private final Shader shader = ResourceManager.getOrCreateShader("shaders/default.glsl");
 
-    private List<Texture> textures = new ArrayList<>();
-    private int[] textureSlots = {0,1,2,3,4,5,6,7};
+    private final List<Texture> textures = new ArrayList<>();
+    private final int[] textureSlots = {0,1,2,3,4,5,6,7};
 
 
     public BatchRenderer() {
@@ -65,38 +65,12 @@ public class BatchRenderer {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
 
-       /* // Attribute values
-        int vertexSizeBytes = VERTEX_SIZE * Float.BYTES;
-        int posAttribOffset = 0;
-        int posAttribSize = 2;
-        int colorAttribOffset = posAttribOffset + posAttribSize * Float.BYTES;
-        int colorAttribSize = 4;
-        int uvAttribSize = 2;
-        int uvAttribOffset = colorAttribOffset + colorAttribSize * Float.BYTES;
-        int textureIDAttribSize = 1;
-        int textureIDOffset = uvAttribOffset + uvAttribSize * Float.BYTES;*/
-
-
-      /*  // Enable attributes
-            // Position
-        glVertexAttribPointer(0, posAttribSize, GL_FLOAT, false, vertexSizeBytes, posAttribOffset);
-        glEnableVertexAttribArray(0);
-
-            // Color
-        glVertexAttribPointer(1, colorAttribSize, GL_FLOAT, false, vertexSizeBytes, colorAttribOffset);
-        glEnableVertexAttribArray(1);
-            // UV
-        glVertexAttribPointer(2, uvAttribSize, GL_FLOAT, false, vertexSizeBytes, uvAttribOffset);
-        glEnableVertexAttribArray(2);
-
-            // Texture ID
-        glVertexAttribPointer(3, textureIDAttribSize, GL_FLOAT, false, vertexSizeBytes, textureIDOffset);
-        glEnableVertexAttribArray(3);*/
 
         // Enable the buffer attribute pointers
         int vertexSizeInBytes = vertexSize * Float.BYTES;
         int vertexPosOffset = 0;
         int vertexPosSize = 2;
+
         glVertexAttribPointer(0, vertexPosSize, GL_FLOAT, false, vertexSizeInBytes, vertexPosOffset);
         glEnableVertexAttribArray(0);
 
@@ -247,8 +221,8 @@ public class BatchRenderer {
     }
 
     private void unBindTextures() {
-        for (int i=0; i < textures.size(); i++) {
-            textures.get(i).unbind();
+        for (Texture texture : textures) {
+            texture.unbind();
         }
     }
 
@@ -311,7 +285,7 @@ public class BatchRenderer {
      * Clears the color and depth buffers
      */
     private void clear() {
-        glClearColor(0,0,0,0);
+        glClearColor(0,0,0,0.5f);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 

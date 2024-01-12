@@ -16,23 +16,29 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class ShortcutHandler {
 
-    private final HelpMenu helpMenu = new HelpMenu();
-    private final PreferencesMenu preferencesMenu = new PreferencesMenu();
+    private static final HelpMenu helpMenu = new HelpMenu();
+    private static final PreferencesMenu preferencesMenu = new PreferencesMenu();
 
     /**
      * Check for input and call shortcut functionality This method is called in the
      * Renderer class's tick() method currently
      */
-    public void tick() {
+    public static void tick() {
         projectShortcuts();
         helpShortcut();
         debugShortcuts();
     }
 
+    public static boolean closeWithEscape() {
+        return !KeyInputs.keyPressed(GLFW_KEY_ESCAPE);
+    }
+
+
+
     /**
      * Recognize user input for shortcuts available under the Project drop down menu.
      */
-    public void projectShortcuts() {
+    public static void projectShortcuts() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
             if (KeyInputs.keyPressed(GLFW_KEY_S)) saveShortcut();
             if (KeyInputs.keyPressed(GLFW_KEY_L)) loadShortcut();
@@ -43,7 +49,7 @@ public class ShortcutHandler {
     /**
      * The shortcut function to save the current project
      */
-    private void saveShortcut() {
+    private static void saveShortcut() {
         //TODO: Implement save method and call here
         System.out.println("Saving.....");
     }
@@ -51,7 +57,7 @@ public class ShortcutHandler {
     /**
      * The shortcut function to load the current project
      */
-    private void loadShortcut() {
+    private static void loadShortcut() {
         //TODO: Implement load method and call here
         System.out.println("Loading.....");
     }
@@ -59,7 +65,7 @@ public class ShortcutHandler {
     /**
      * The shortcut function to load the preferences for the Editor and current project
      */
-    private void preferencesShortcut() {
+    private static void preferencesShortcut() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
             if (KeyInputs.keyPressed(GLFW_KEY_P)) preferencesMenu.setOpen(true);
         }
@@ -69,7 +75,7 @@ public class ShortcutHandler {
     /**
      * The shortcut function to load the Help options
      */
-    private void helpShortcut() {
+    private static void helpShortcut() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
             if (KeyInputs.keyPressed(GLFW_KEY_H)) helpMenu.setOpen(true);
         }
