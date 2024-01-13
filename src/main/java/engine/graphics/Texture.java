@@ -25,7 +25,6 @@ public class Texture {
     private int textureWidth;
     private int textureHeight;
 
-
     public Texture(String filePath) {
         this.filePath = filePath;
         init();

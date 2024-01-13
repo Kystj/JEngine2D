@@ -7,6 +7,7 @@ package engine.managers;
 
 import engine.graphics.SpriteSheet;
 import engine.graphics.Texture;
+import engine.serialization.SpriteSheetSerializer;
 import imgui.ImGui;
 import imgui.type.ImInt;
 import imgui.type.ImString;
@@ -21,19 +22,18 @@ public class AssetManager {
     private ImString assetType = new ImString();
     private ImInt width = new ImInt();
     private ImInt height = new ImInt();
+    private ImInt spacing = new ImInt();
     private ImInt numSprites = new ImInt();
 
-    private final Map<String, SpriteSheet> spriteSheets = new HashMap<>();
+    private final Map<SpriteSheet, String> spriteSheets = new HashMap<>();
 
     public AssetManager() {
         init();
     }
 
-    // TODO: Add functionality to save/load the assets based on the editors previous state
     private void init() {
-        this.spriteSheets.put("Terrain", ResourceManager.getSpriteSheet("textures/test.png"));
+        // TODO: Preform loading operations here
     }
-
 
     public void renderInputForm() {
         int itemSpacing = 10;
@@ -51,14 +51,19 @@ public class AssetManager {
         ImGui.inputText("##AssetType", assetType, 256);
 
         ImGui.setCursorPosX(itemSpacing);
-        ImGui.text("Width:");
+        ImGui.text("Sprite Width:");
         ImGui.setCursorPosX(itemSpacing);
         ImGui.inputInt("##Width", width);
 
         ImGui.setCursorPosX(itemSpacing);
-        ImGui.text("Height:");
+        ImGui.text("Sprite Height:");
         ImGui.setCursorPosX(itemSpacing);
         ImGui.inputInt("##Height", height);
+
+        ImGui.setCursorPosX(itemSpacing);
+        ImGui.text("Spacing:");
+        ImGui.setCursorPosX(itemSpacing);
+        ImGui.inputInt("##Spacing", spacing);
 
         ImGui.setCursorPosX(itemSpacing);
         ImGui.text("Number of Sprites:");
@@ -80,16 +85,21 @@ public class AssetManager {
 
         int spriteWidth = width.intValue();
         int spriteHeight = height.intValue();
+        int spriteSpacing = spacing.intValue();
         int amount = numSprites.intValue();
 
-        spriteSheets.put(type,
-                new SpriteSheet(
-                        new Texture(fileName),
-                        spriteWidth,
-                        spriteHeight,
-                        0,
-                        amount)
+        ResourceManager.addSpriteSheet(fileName,
+                new SpriteSheet(new Texture(fileName),
+                        spriteWidth, spriteHeight,
+                        spriteSpacing, amount));
+
+        SpriteSheetSerializer.saveSpriteSheet(ResourceManager.getSpriteSheet(fileName));
+
+        spriteSheets.put(
+                ResourceManager.getSpriteSheet(fileName),
+                        type
         );
+
         refreshImportFields();
     }
 
@@ -98,13 +108,13 @@ public class AssetManager {
 
         ImGui.setCursorPos(ImGui.getWindowSizeX() / 6, 50);
         if (ImGui.beginCombo("##MapKeysCombo", "Select SpriteSheet")) {
-            Iterator<Map.Entry<String, SpriteSheet>> iterator = spriteSheets.entrySet().iterator();
+            Iterator<Map.Entry<SpriteSheet, String>> iterator = spriteSheets.entrySet().iterator();
             while (iterator.hasNext()) {
-                Map.Entry<String, SpriteSheet> entry = iterator.next();
-                String key = entry.getKey();
-                SpriteSheet value = entry.getValue();
+                Map.Entry<SpriteSheet, String> entry = iterator.next();
+                SpriteSheet key = entry.getKey();
+                String value = entry.getValue();
 
-                String option = value.getFilePathOfTexture();
+                String option = key.getFilePathOfTexture();
 
                 if (ImGui.selectable(option)) {
                     // Remove the selected SpriteSheet from the map
@@ -121,10 +131,11 @@ public class AssetManager {
         assetType = new ImString();
         width = new ImInt();
         height = new ImInt();
+        spacing = new ImInt();
         numSprites = new ImInt();
     }
 
-    public Map<String, SpriteSheet> getSpriteSheets() {
+    public Map<SpriteSheet, String> getSpriteSheets() {
         return spriteSheets;
     }
 

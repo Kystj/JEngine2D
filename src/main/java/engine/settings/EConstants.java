@@ -30,6 +30,9 @@ public interface EConstants {
     ImVec4 IM_RED = new ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
     ImVec4 IM_BLUE = new ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
 
+    // ImGui
+    int X_SPACING = 10;
+
     // Event Types
     enum EventType {
         Play,

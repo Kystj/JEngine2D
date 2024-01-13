@@ -3,14 +3,14 @@
  Date: 2023-11-09
  Author: Kyle St John
  */
-package engine.typeadapters;
+package engine.serialization;
 
 import com.google.gson.*;
 import engine.debug.BugReport;
 
 import java.lang.reflect.Type;
 
-public class BugTypeAdapter implements JsonSerializer<BugReport>, JsonDeserializer<BugReport> {
+public class BugAdapter implements JsonSerializer<BugReport>, JsonDeserializer<BugReport> {
 
     @Override
     public JsonElement serialize(BugReport bugReport, Type type,

@@ -8,7 +8,7 @@ package engine.managers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.debug.BugReport;
-import engine.typeadapters.BugTypeAdapter;
+import engine.serialization.BugAdapter;
 import imgui.ImGui;
 
 import java.io.File;
@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
+import static engine.settings.EConstants.X_SPACING;
+
 public class BugReportManager {
 
     private static final Map<BugReport, Boolean> bugReports = new HashMap<>();
@@ -31,7 +33,11 @@ public class BugReportManager {
 
     public static void displayBugReports() {
 
+
+
         for (Map.Entry<BugReport, Boolean> entry : bugReports.entrySet()) {
+            ImGui.spacing();
+            ImGui.setCursorPosX(X_SPACING);
             if (ImGui.button(entry.getKey().getBugID())) {
                 selectedReport.setBugID(entry.getKey().getBugID());
                 selectedReport.setBugDescription(entry.getKey().getBugDescription());
@@ -39,8 +45,10 @@ public class BugReportManager {
             }
         }
         if (showSelectedReport) {
+            ImGui.setCursorPosX(X_SPACING);
             ImGui.text(selectedReport.getBugDescription());
             ImGui.spacing();
+            ImGui.setCursorPosX(X_SPACING);
             if (ImGui.button("close")) {
                 showSelectedReport = false;
             }
@@ -60,7 +68,7 @@ public class BugReportManager {
         // Save bug reports using GSON
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(BugReport.class, new BugTypeAdapter())
+                .registerTypeAdapter(BugReport.class, new BugAdapter())
                 .create();
 
         String fileName = bugName.replace(" ", "");
@@ -78,7 +86,7 @@ public class BugReportManager {
             for (Path filePath : directoryStream) {
                 Gson gson = new GsonBuilder()
                         .setPrettyPrinting()
-                        .registerTypeAdapter(BugReport.class, new BugTypeAdapter())
+                        .registerTypeAdapter(BugReport.class, new BugAdapter())
                         .create();
                 String data = "";
                 try {

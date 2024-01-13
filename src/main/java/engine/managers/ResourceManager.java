@@ -60,5 +60,9 @@ public class ResourceManager {
         File file = new File(resourceName);
         return spriteSheetMap.get(file.getAbsolutePath());
     }
+
+    public static int SpriteSheetMapSize() {
+        return spriteSheetMap.size();
+    }
 }
 /*End of ResourceManager class*/

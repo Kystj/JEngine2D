@@ -12,14 +12,25 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 
 import static engine.settings.EConstants.POPUP_WIN_SIZE;
+import static engine.settings.EConstants.X_SPACING;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class ImGuiCustom {
 
     /**
+     * Custom placement for the ImGui close button for the application
+     */
+    public static boolean closeButton(float xPlacement, float yPlacement) {
+        ImGui.spacing();
+        ImGui.setCursorPos(xPlacement, yPlacement);
+        return !ImGui.button("Close", 50.0f, 20.0f);
+    }
+
+    /**
      * The ImGui close button for the application
      */
     public static boolean closeButton() {
+        ImGui.setCursorPosX(X_SPACING);
         return !ImGui.button("Close", 50.0f, 20.0f);
     }
 

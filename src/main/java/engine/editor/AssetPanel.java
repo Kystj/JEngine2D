@@ -13,16 +13,16 @@ import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
 
+import java.util.Map;
+
 public class AssetPanel {
 
-    private String[] tabNames;
     private final AssetManager assetManager = new AssetManager();
     private boolean bIsImportOpen = false;
     private boolean bIsRemoveOpen = false;
 
     // Update ImGui and the various tabs representing asset types
     public void tick() {
-        tabNames = assetManager.getSpriteSheets().keySet().toArray(new String[0]);
         render();
     }
 
@@ -41,24 +41,22 @@ public class AssetPanel {
         ImGui.begin("Assets");
         ImGui.spacing();
 
+        updateAssetDropdown();
+
+        // Second column
+        ImGui.nextColumn();
+
         // Create tabs
         if (ImGui.beginTabBar("Tabs")) {
-            SpriteSheet tempSheet;
 
-
-            for (String tabName : tabNames) {
-                tempSheet = assetManager.getSpriteSheets().get(tabName);
+            for (Map.Entry<SpriteSheet, String> entry : assetManager.getSpriteSheets().entrySet()) {
+                SpriteSheet spriteSheet = entry.getKey();
+                String tabName = entry.getValue();
 
                 if (ImGui.beginTabItem(tabName)) {
 
-
-                        updateAssetDropdown();
-
-                        // Second column
-                        ImGui.nextColumn();
-
                         // Populate buttons or other controls in the second column
-                        populateAssetButtons(tempSheet);
+                        populateAssetButtons(spriteSheet);
 
                         // End columns
                         ImGui.columns(1);  // Reset to a single column
@@ -67,7 +65,6 @@ public class AssetPanel {
                         ImGui.endTabItem();
                     }
                 }
-
             ImGui.endTabBar();
         }
         ImGui.end();
@@ -80,10 +77,10 @@ public class AssetPanel {
         // First column
         ImGui.setColumnWidth(0, 150);  // Adjust the width as needed
         ImGui.text(" ");
-        ImGui.setCursorPos(25,70);
+        ImGui.setCursorPos(25,50);
 
         if (ImGui.beginCombo("##combo", "+/-")) {
-            if (ImGui.selectable("Import")) {
+            if (ImGui.selectable("Add")) {
                 bIsRemoveOpen = false;
                 bIsImportOpen = true;
             }

@@ -11,6 +11,8 @@ import engine.widgets.ImGuiCustom;
 import imgui.ImGui;
 import imgui.type.ImString;
 
+import static engine.settings.EConstants.X_SPACING;
+
 public class BugReportUI {
 
     private boolean showPopup = false;
@@ -33,7 +35,7 @@ public class BugReportUI {
 
     private void generateReport() {
         if (generateNewReport) {
-            ImGui.begin("Debug");
+            ImGui.begin("Bug Report");
             generateReportFields();
             saveAndResetFields();
             ImGui.end();
@@ -42,12 +44,17 @@ public class BugReportUI {
 
     private void generateReportFields() {
         // Input fields with meaningful labels
+        ImGui.setCursorPosX(X_SPACING);
         ImGui.text("ID:   ");
+        ImGui.setCursorPosX(X_SPACING);
         ImGui.inputText("##name", imGuiBugName);
         ImGui.spacing();
+        ImGui.setCursorPosX(X_SPACING);
         ImGui.text("Description:");
-        ImGui.inputTextMultiline("##description", imGuiBugDescription);
+        ImGui.setCursorPosX(X_SPACING);
+        ImGui.inputTextMultiline("##description", imGuiBugDescription, 256);
 
+        ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("Generate Report")) {
             this.showPopup = true;
             String bugName = imGuiBugName.get();
@@ -61,7 +68,7 @@ public class BugReportUI {
         if (loadReport) {
             ImGui.begin("Reports");
             BugReportManager.displayBugReports();
-            loadReport = ImGuiCustom.closeButton();
+            loadReport = ImGuiCustom.closeButton(ImGui.getWindowSizeX() * .45f,ImGui.getWindowSizeY() * .85f);
             ImGui.end();
         }
     }

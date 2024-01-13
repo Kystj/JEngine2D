@@ -1,4 +1,5 @@
+- Set up a list to chose from to create spritesheets instead of using file paths
+
+
+
 - finish the dirty flag system
-- Asset Panel
-    - Fix the bug that crashes the editor when the last spite sheet is removed from
-        the assets Map in the AssetManager class

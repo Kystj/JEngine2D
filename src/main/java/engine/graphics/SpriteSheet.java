@@ -81,5 +81,9 @@ public class SpriteSheet {
     public String getFilePathOfTexture() {
         return spriteSheetTexture.getFilePath();
     }
+
+    public int getSpriteSpacing() {
+        return spriteSpacing;
+    }
 }
 /*End of SpriteSheet class*/
