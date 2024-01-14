@@ -32,42 +32,35 @@ public class Shader {
         init(filepath);
     }
 
-    /**
-     * Load the vertex and fragment shader information from a specified file
-     */
     protected void init(String filepath) {
         try {
             String source = new String(Files.readAllBytes(Paths.get(filepath)));
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
-            // Find the first pattern after #type 'pattern'
-            int index = source.indexOf("#type") + 6;
-            int eol = source.indexOf("\r\n", index);
-            String firstPattern = source.substring(index, eol).trim();
+            String firstPattern = extractPattern(source, 0);
+            String secondPattern = extractPattern(source, source.indexOf("#type", firstPattern.length()));
 
-            // Find the second pattern after #type 'pattern'
-            index = source.indexOf("#type", eol) + 6;
-            eol = source.indexOf("\r\n", index);
-            String secondPattern = source.substring(index, eol).trim();
-
-            if (firstPattern.equals("vertex")) {
-                vertexShaderSrc = splitString[1];
-            } else if (firstPattern.equals("fragment")) {
-                fragmentShaderSrc = splitString[1];
-            } else {
-                throw new IOException("Unexpected token '" + firstPattern + "'");
-            }
-
-            if (secondPattern.equals("vertex")) {
-                vertexShaderSrc = splitString[2];
-            } else if (secondPattern.equals("fragment")) {
-                fragmentShaderSrc = splitString[2];
-            } else {
-                throw new IOException("Unexpected token '" + secondPattern + "'");
-            }
+            setShaderSource(firstPattern, splitString[1]);
+            setShaderSource(secondPattern, splitString[2]);
         } catch (IOException e) {
             e.printStackTrace();
             assert false : "Error: Could not open file for shader: '" + filepath + "'";
+        }
+    }
+
+    private String extractPattern(String source, int startingIndex) {
+        int index = startingIndex + "#type".length() + 1;
+        int eol = source.indexOf("\r\n", index);
+        return source.substring(index, eol).trim();
+    }
+
+    private void setShaderSource(String pattern, String shaderSource) throws IOException {
+        if (pattern.equals("vertex")) {
+            vertexShaderSrc = shaderSource;
+        } else if (pattern.equals("fragment")) {
+            fragmentShaderSrc = shaderSource;
+        } else {
+            throw new IOException("Unexpected token '" + pattern + "'");
         }
     }
 

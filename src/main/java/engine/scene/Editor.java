@@ -5,8 +5,11 @@
  */
 package engine.scene;
 
+import engine.components.Transform;
 import engine.editor.AssetPanel;
 import engine.graphics.OrthographicCamera;
+import engine.graphics.SpriteSheet;
+import engine.managers.ResourceManager;
 import engine.objects.GameObject;
 import org.joml.Vector2f;
 
@@ -39,20 +42,12 @@ public class Editor extends Scene {
     }
 
     private void createGameObjects() {
-/*        GameObject test01 = new GameObject("Test01",
+        SpriteSheet spriteSheet = ResourceManager.getSpriteSheet("assets/spritesheets/test2.png");
+
+        GameObject test01 = new GameObject("Test01",
                 new Transform(new Vector2f(200, 200), new Vector2f(128, 128)));
-        test01.addComponent(spriteSheets.get(0).getSprite(1));
+        test01.addComponent(spriteSheet.getSprite(1));
         gameObjectList.add(test01);
-
-        GameObject test02 = new GameObject("Test02",
-                new Transform(new Vector2f(400, 400), new Vector2f(128, 128)));
-        test02.addComponent(spriteSheets.get(1).getSprite(2));
-        gameObjectList.add(test02);
-
-        GameObject test03 = new GameObject("Test03",
-                new Transform(new Vector2f(600, 600), new Vector2f(128, 128)));
-        test03.addComponent(spriteSheets.get(2).getSprite(2));
-        gameObjectList.add(test03);*/
     }
 
     private void addGameObjToEditor() {
