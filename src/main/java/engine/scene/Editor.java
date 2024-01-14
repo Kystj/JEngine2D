@@ -55,7 +55,6 @@ public class Editor extends Scene {
         gameObjectList.add(test03);*/
     }
 
-
     private void addGameObjToEditor() {
         for (GameObject gameObject : gameObjectList) {
             this.addGameObject(gameObject);

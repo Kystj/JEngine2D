@@ -105,7 +105,7 @@ public class AssetPanel {
         float windowX2 = windowPos.x + windowSize.x;
         for (int i = 0; i < sprites.numOfSprites(); i++) {
             Sprite sprite = sprites.getSprite(i);
-            float spriteWidth = sprites.spriteWidth() * 2;
+            float spriteWidth = sprites.getSpriteWidth() * 2;
             float spriteHeight = sprites.getSpriteHeight() * 2;
             int id = sprite.getTextureID();
             Vector2f[] texCoords = sprite.getUvCoordinates();

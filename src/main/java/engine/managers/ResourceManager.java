@@ -61,7 +61,7 @@ public class ResourceManager {
         return spriteSheetMap.get(file.getAbsolutePath());
     }
 
-    public static int SpriteSheetMapSize() {
+    public static int spriteSheetMapSize() {
         return spriteSheetMap.size();
     }
 }

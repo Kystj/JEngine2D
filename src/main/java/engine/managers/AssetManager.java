@@ -28,11 +28,7 @@ public class AssetManager {
     private final Map<SpriteSheet, String> spriteSheets = new HashMap<>();
 
     public AssetManager() {
-        init();
-    }
-
-    private void init() {
-        // TODO: Preform loading operations here
+        SpriteSheetSerializer.loadSpriteSheets(spriteSheets);
     }
 
     public void renderInputForm() {
@@ -79,9 +75,10 @@ public class AssetManager {
         ImGui.end();
     }
 
-    private void addSpriteSheet() {
+    public void addSpriteSheet() {
         String fileName = String.valueOf(filePath);
         String type = String.valueOf(assetType);
+        System.out.println("Asset type: " + type);
 
         int spriteWidth = width.intValue();
         int spriteHeight = height.intValue();
@@ -91,7 +88,7 @@ public class AssetManager {
         ResourceManager.addSpriteSheet(fileName,
                 new SpriteSheet(new Texture(fileName),
                         spriteWidth, spriteHeight,
-                        spriteSpacing, amount));
+                        spriteSpacing, amount, type));
 
         SpriteSheetSerializer.saveSpriteSheet(ResourceManager.getSpriteSheet(fileName));
 
@@ -138,6 +135,5 @@ public class AssetManager {
     public Map<SpriteSheet, String> getSpriteSheets() {
         return spriteSheets;
     }
-
 }
 /*End of ImportSpriteSheet class*/

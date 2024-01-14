@@ -30,6 +30,11 @@ public class Texture {
         init();
     }
 
+    //TODO: For testing. Delete.
+    public Texture(String filePath, boolean test) {
+        this.filePath = filePath;
+    }
+
     public Texture(int width, int height) {
         // Generate and bind the texture
         textureID = glGenTextures();

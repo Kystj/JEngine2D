@@ -33,8 +33,6 @@ public class BugReportManager {
 
     public static void displayBugReports() {
 
-
-
         for (Map.Entry<BugReport, Boolean> entry : bugReports.entrySet()) {
             ImGui.spacing();
             ImGui.setCursorPosX(X_SPACING);
@@ -56,7 +54,7 @@ public class BugReportManager {
             if (ImGui.button("delete")) {
                 String fileName = bugDirectoryPath + selectedReport.getBugID() + ".json";
                 System.out.println(fileName);
-                deleteBugReport(fileName);
+                deleteFile(fileName);
                 bugReports.entrySet().removeIf(entry -> entry.getKey().getBugID().equals(selectedReport.getBugID()));
                 showSelectedReport = false;
             }
@@ -110,7 +108,8 @@ public class BugReportManager {
         return newReport;
     }
 
-    public static void deleteBugReport(String path) {
+    // TODO: Move this to a helper class that controls file operations
+    public static void deleteFile(String path) {
         File fileToDelete = new File(path);
 
         if (fileToDelete.exists()) {

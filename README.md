@@ -6,12 +6,27 @@
 
 ## Ongoing Development Tasks
 
-    Construct the asset panel and populate it with a variety of testing assets
+    Address Sprite Placement Bug:
 
-    Integrate snap-to-grid functionality
+        - Investigate and fix the sprite placement bug that occurs when adding new spreadsheets to an existing tab.
+        - Test the fixes for the sprite placement bug
+        - Write tests for the serialization and deserialization of a spritesheets with default attributes.
 
-    Incorporate debug features (Debug drawing, Bug report/tracking system)
+    Complete Dirty Flag System:
 
+        - Finish and test the dirty flag system
+
+    Implement Debug Drawing Features:
+
+        - Begin development on debug drawing features to enhance the debugging capabilities of the application.
+        - Define specific features, such as visualizing bounding boxes, collision shapes, or other relevant debug information.
+
+    Construct Grid for Debugging:
+
+        -Create a grid visualization as part of the debug drawing features to assist in debugging and aligning sprites.
+        -Consider customizable options for the grid, such as cell size and color, to accommodate various debugging needs.
+
+![Local Image](gitPhoto.png)
 ## Acknowledgments:
 
 GLFW: https://www.glfw.org/

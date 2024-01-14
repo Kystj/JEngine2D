@@ -21,13 +21,17 @@ public class SpriteSheet {
     private final int spriteSpacing;
     private final int spritesPerSheet;
 
+    private String assetType;
+
     //TODO: Add multiple constructors for common sprite sizes and spacing
-    public SpriteSheet(Texture spriteSheet, int spriteWidth, int spriteHeight, int spriteSpacing, int spritesPerSheet) {
+    public SpriteSheet(Texture spriteSheet, int spriteWidth, int spriteHeight,
+                       int spriteSpacing, int spritesPerSheet, String assetType) {
         this.spriteSheetTexture = spriteSheet;
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
         this.spriteSpacing = spriteSpacing;
         this.spritesPerSheet = spritesPerSheet;
+        this.assetType = assetType;
         extractSprites();
     }
 
@@ -62,7 +66,7 @@ public class SpriteSheet {
         }
     }
 
-    public int spriteWidth() {
+    public int getSpriteWidth() {
         return spriteWidth;
     }
 
@@ -84,6 +88,10 @@ public class SpriteSheet {
 
     public int getSpriteSpacing() {
         return spriteSpacing;
+    }
+
+    public String getAssetType() {
+        return assetType;
     }
 }
 /*End of SpriteSheet class*/
