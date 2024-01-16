@@ -26,7 +26,7 @@
         -Create a grid visualization as part of the debug drawing features to assist in debugging and aligning sprites.
         -Consider customizable options for the grid, such as cell size and color, to accommodate various debugging needs.
 
-![Local Image](gitPhoto.png)
+![Local Image](showcase.png)
 ## Acknowledgments:
 
 GLFW: https://www.glfw.org/
