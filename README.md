@@ -6,10 +6,8 @@
 
 ## Ongoing Development Tasks
 
-    Address Sprite Placement Bug:
+    SpriteSheets
 
-        - Investigate and fix the sprite placement bug that occurs when adding new spreadsheets to an existing tab.
-        - Test the fixes for the sprite placement bug
         - Write tests for the serialization and deserialization of a spritesheets with default attributes.
 
     Complete Dirty Flag System:
