@@ -1,7 +1,7 @@
 /*
- Title: Event
- Date: 2023-11-20
- Author: Kyle St John
+ * Title: Event
+ * Date: 2023-11-20
+ * Author: Kyle St John
  */
 package engine.eventsystem;
 
@@ -13,27 +13,34 @@ import engine.settings.EConstants.EventType;
  * that sets the event type to a default value, "UserEvent" of the enumerated type "EventType."
  */
 public class Event {
+
+    // The type of the event
     private final EventType eventType;
 
     /**
-     * Construct an event with the designated event type
+     * Constructs an event with the designated event type.
+     *
+     * @param eventType The type of the event.
      */
     public Event(EventType eventType) {
         this.eventType = eventType;
     }
 
     /**
-     * Construct an event with the default user event type
+     * Constructs an event with the default user event type.
      */
     public Event() {
-        eventType = EventType.User;
+        // Default to EventType.User if no type is specified
+        this.eventType = EventType.User;
     }
 
     /**
-     * Return Events assigned type
+     * Gets the type of the event.
+     *
+     * @return The event type.
      */
     public EventType getEventType() {
         return eventType;
     }
 }
-/*End of Event class*/
+/* End of Event class */

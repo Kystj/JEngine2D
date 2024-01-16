@@ -33,8 +33,6 @@ public class ShortcutHandler {
         return !KeyInputs.keyPressed(GLFW_KEY_ESCAPE);
     }
 
-
-
     /**
      * Recognize user input for shortcuts available under the Project drop down menu.
      */

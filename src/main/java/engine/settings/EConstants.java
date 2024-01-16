@@ -20,7 +20,7 @@ public interface EConstants {
     Vector4f INVISIBLE = new Vector4f(0, 0, 0, 0);
 
     // Popup Window constants
-    Vector2f POPUP_WIN_SIZE = new Vector2f(100, 50);
+    Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
 
     // Scene Ids
     String EDITOR_SCENE_ID = "editor_scene";

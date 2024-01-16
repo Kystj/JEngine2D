@@ -14,16 +14,15 @@ import java.util.List;
 public class SpriteSheet {
 
     private final Texture spriteSheetTexture;
-
     private final List<Sprite> spriteSheet = new ArrayList<>();
+
     private final int spriteWidth;
     private final int spriteHeight;
     private final int spriteSpacing;
     private final int spritesPerSheet;
 
-    private String assetType;
+    private final String assetType;
 
-    //TODO: Add multiple constructors for common sprite sizes and spacing
     public SpriteSheet(Texture spriteSheet, int spriteWidth, int spriteHeight,
                        int spriteSpacing, int spritesPerSheet, String assetType) {
         this.spriteSheetTexture = spriteSheet;

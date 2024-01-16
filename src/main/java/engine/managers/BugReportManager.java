@@ -11,7 +11,6 @@ import engine.debug.BugReport;
 import engine.serialization.BugAdapter;
 import imgui.ImGui;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -54,7 +53,7 @@ public class BugReportManager {
             if (ImGui.button("delete")) {
                 String fileName = bugDirectoryPath + selectedReport.getBugID() + ".json";
                 System.out.println(fileName);
-                deleteFile(fileName);
+                ResourceManager.deleteFile(fileName);
                 bugReports.entrySet().removeIf(entry -> entry.getKey().getBugID().equals(selectedReport.getBugID()));
                 showSelectedReport = false;
             }
@@ -106,21 +105,6 @@ public class BugReportManager {
         BugReport newReport = new BugReport(bugName, bugDescription);
         bugReports.put(newReport, false);
         return newReport;
-    }
-
-    // TODO: Move this to a helper class that controls file operations
-    public static void deleteFile(String path) {
-        File fileToDelete = new File(path);
-
-        if (fileToDelete.exists()) {
-            if (fileToDelete.delete()) {
-                System.out.println("File deleted successfully.");
-            } else {
-                System.out.println("Failed to delete the file.");
-            }
-        } else {
-            System.out.println("File does not exist.");
-        }
     }
 }
 /*End of BugReportManager class*/

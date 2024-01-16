@@ -1,7 +1,7 @@
 /*
- Title: Viewport
- Date: 2023-11-18
- Author: Kyle St John
+ * Title: Viewport
+ * Date: 2023-11-18
+ * Author: Kyle St John
  */
 package engine.editor;
 
@@ -13,24 +13,31 @@ import imgui.ImGui;
 import imgui.flag.ImGuiViewportFlags;
 import imgui.flag.ImGuiWindowFlags;
 
+/**
+ * Viewport class for rendering and interacting with the game view.
+ */
 public class Viewport {
 
     private boolean playing = false;
 
+    /**
+     * Renders and updates the Viewport.
+     */
     public void tick() {
-
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar | ImGuiViewportFlags.NoTaskBarIcon);
 
-
         viewportsMenuBar();
+
         int textureId = EngineWindow.get().getFramebufferTexID();
-        ImGui.image(textureId, EngineWindow.get().getWindowWidth(),EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
+        ImGui.image(textureId, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
 
         ImGui.end();
-
     }
 
+    /**
+     * Renders the menu bar with playback controls.
+     */
     private void viewportsMenuBar() {
         ImGui.beginMenuBar();
 
@@ -75,4 +82,4 @@ public class Viewport {
         ImGui.endMenuBar();
     }
 }
-/*End of Viewport class*/
+/* End of Viewport class */

@@ -17,26 +17,48 @@ import java.nio.file.Paths;
 import static org.lwjgl.opengl.GL20.*;
 
 /**
- * The main shader class for the engine. Preforms the shader compilation, linking
- * and error checking
+ * The Shader class represents a shader program in OpenGL.
+ * It loads vertex and fragment shader sources from a file and sets them for compilation.
  */
 public class Shader {
 
+    // Shader source code for vertex and fragment shaders
     private String vertexShaderSrc;
     private String fragmentShaderSrc;
-    private int vertexShaderID, fragmentShaderID;
+
+    // Shader IDs for vertex and fragment shaders
+    private int vertexShaderID;
+    private int fragmentShaderID;
+
+    // Shader program ID after linking
     private int shaderProgramID;
+
+    // Flag to check if the shader is bound
     private boolean isShaderBound = false;
 
+    /**
+     * Constructs a Shader object by initializing shaders from a specified file.
+     *
+     * @param filepath The file path to the shader source file.
+     */
     public Shader(String filepath) {
         init(filepath);
     }
 
+    /**
+     * Initializes the shader by reading shader source from the file and extracting vertex and fragment shaders.
+     *
+     * @param filepath The file path to the shader source file.
+     */
     protected void init(String filepath) {
         try {
+            // Read the shader source from the file
             String source = new String(Files.readAllBytes(Paths.get(filepath)));
+
+            // Split the source based on the '#type' keyword to separate vertex and fragment shaders
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
 
+            // Extract the patterns and set shader sources
             String firstPattern = extractPattern(source, 0);
             String secondPattern = extractPattern(source, source.indexOf("#type", firstPattern.length()));
 
@@ -44,23 +66,37 @@ public class Shader {
             setShaderSource(secondPattern, splitString[2]);
         } catch (IOException e) {
             e.printStackTrace();
-            assert false : "Error: Could not open file for shader: '" + filepath + "'";
+            assert false : "Error: Unable to load file: '" + filepath + "'";
         }
     }
 
+    /**
+     * Extracts the shader type pattern (e.g., 'vertex' or 'fragment') from the source code.
+     *
+     * @param source        The source code of the shader.
+     * @param startingIndex The starting index to search for the pattern.
+     * @return The extracted pattern.
+     */
     private String extractPattern(String source, int startingIndex) {
         int index = startingIndex + "#type".length() + 1;
         int eol = source.indexOf("\r\n", index);
         return source.substring(index, eol).trim();
     }
 
+    /**
+     * Sets the shader source based on the specified pattern ('vertex' or 'fragment').
+     *
+     * @param pattern      The shader type pattern.
+     * @param shaderSource The source code of the shader.
+     * @throws IOException If the specified pattern is neither 'vertex' nor 'fragment'.
+     */
     private void setShaderSource(String pattern, String shaderSource) throws IOException {
         if (pattern.equals("vertex")) {
             vertexShaderSrc = shaderSource;
         } else if (pattern.equals("fragment")) {
             fragmentShaderSrc = shaderSource;
         } else {
-            throw new IOException("Unexpected token '" + pattern + "'");
+            throw new IOException("Error: Unknown shader type - " + pattern);
         }
     }
 
@@ -71,7 +107,6 @@ public class Shader {
         compile();
         link();
     }
-
 
     /**
      * Compile the vertex and fragment shaders and check for errors in the compilation process
@@ -141,6 +176,9 @@ public class Shader {
         glUniform1i(varLocation, slot);
     }
 
+    /**
+     * Get the location of and upload a Matrix4f uniform variable
+     */
     public void uploadMat4f(String varName, Matrix4f mat4) {
         use();
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
@@ -149,6 +187,9 @@ public class Shader {
         glUniformMatrix4fv(varLocation, false, matBuffer);
     }
 
+    /**
+     * Get the location of and upload an array of ints as a uniform variable
+     */
     public void uploadIntArray(String varName, int[] intArray) {
         use();
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
@@ -183,11 +224,6 @@ public class Shader {
     public void detatch() {
         glUseProgram(0);
         isShaderBound = false;
-    }
-
-    //TODO: Delete this
-    public int getShaderProgramID() {
-        return shaderProgramID;
     }
 }
 /*End of Shader class*/

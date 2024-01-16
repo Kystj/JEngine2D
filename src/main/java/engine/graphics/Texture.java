@@ -5,6 +5,7 @@
  */
 package engine.graphics;
 
+import engine.managers.ResourceManager;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -28,11 +29,6 @@ public class Texture {
     public Texture(String filePath) {
         this.filePath = filePath;
         init();
-    }
-
-    //TODO: For testing. Delete.
-    public Texture(String filePath, boolean test) {
-        this.filePath = filePath;
     }
 
     public Texture(int width, int height) {
@@ -61,7 +57,7 @@ public class Texture {
         // Texture parameters(filtering/wrapping)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // wrap in the x direction
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // wrap in the y direction
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // when minifying // TODO: TEST GL_LINEAR_MIPMAP_LINEAR
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // when minifying
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // when magnifying
 
         loadTextureFromFile();
@@ -73,17 +69,22 @@ public class Texture {
      * during the process.
      */
     public void loadTextureFromFile() {
+        if (!ResourceManager.isValidFilePath(filePath)) {
+            throw new UnsupportedOperationException("Error: Invalid file path provided: '" + filePath + "'");
+        }
+
         // stbi_load() requires an int buffer as a parameter
         IntBuffer width = BufferUtils.createIntBuffer(1);
         IntBuffer height = BufferUtils.createIntBuffer(1);
         IntBuffer channels = BufferUtils.createIntBuffer(1);
         ByteBuffer image = stbi_load(filePath, width, height, channels, 0);
 
-        // Define a 2D texture based on its channels
+        // Check if the image was loaded successfully
         if (image != null) {
             textureWidth = width.get(0);
             textureHeight = width.get(0);
 
+            // Check the number of channels and define the texture accordingly
             if (channels.get(0) == 3) {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0),
                         0, GL_RGB, GL_UNSIGNED_BYTE, image);
@@ -91,15 +92,14 @@ public class Texture {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0),
                         0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             } else {
-                assert false : "Error: Texture has " + channels.get(0) + "  channels";
+                assert false : "Error: Texture has " + channels.get(0) + " channels";
             }
+            // Free the image data after texture creation
+            stbi_image_free(image);
         } else {
+            // Handle the case where the image couldn't be loaded
             assert false : "Error: Could not load texture with path: '" + filePath + "'";
         }
-      /*  OpenGL expects the 0.0 coordinate on the y-axis to be on the bottom side of the image, but images
-        usually have 0.0 at the top of the y-axis. Luckily for us, stb_image.h can flip the y-axis during image loading*/
-        stbi_set_flip_vertically_on_load(true);
-        stbi_image_free(image);
     }
 
     /**

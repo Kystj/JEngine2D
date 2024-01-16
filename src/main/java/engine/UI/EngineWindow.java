@@ -245,7 +245,7 @@ public class EngineWindow implements EventListener {
             this.framebuffer.bind();
             currentScene.tick(deltaTime);
             currentScene.render();
-            this.framebuffer.unBind();
+            this.framebuffer.unbind();
 
             // Update the ImGui components
             imGuiController.tick(deltaTime);
@@ -354,7 +354,7 @@ public class EngineWindow implements EventListener {
      * Get the texture bound to the EngineWindows Framebuffer object
      */
     public int getFramebufferTexID() {
-        return framebuffer.getFBTextureID();
+        return framebuffer.getTextureID();
     }
 
     /**

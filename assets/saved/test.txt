@@ -2,7 +2,7 @@
   "SpriteWidth": 16,
   "SpriteHeight": 16,
   "NumOfSprites": 3,
-  "FilePathOfTexture": "assets/spritesheets/test3.png",
+  "FilePathOfTexture": "assets/spritesheets/test.png",
   "SpriteSpacing": 0,
-  "AssetType": "Pawns"
+  "AssetType": "Test"
 }

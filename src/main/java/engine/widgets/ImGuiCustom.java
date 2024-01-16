@@ -17,6 +17,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class ImGuiCustom {
 
+    private static boolean flag = false;
+
     /**
      * Custom placement for the ImGui close button for the application
      */
@@ -37,15 +39,15 @@ public class ImGuiCustom {
     /**
      * Actives a popup window with the specified description as the text and calls the centrePopupText it on the screen
      */
-    public static void activatePopup(String description) {
+    public static boolean activatePopup(String description) {
         ImGui.openPopup(description);
         centrePopup();
         // AlwaysAutoResize ensures the window resizes itself based on its content
         if (ImGui.beginPopup(description, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar)) {
             centrePopupText(description);
         }
-        closePopup();
         ImGui.endPopup();
+        return flag = closePopup();
     }
 
     /**
@@ -73,10 +75,12 @@ public class ImGuiCustom {
     /**
      * Closes the popup if the user clocks anywhere in the editor
      */
-    private static void closePopup() {
+    private static boolean closePopup() {
         if (MouseInputs.getMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
             ImGui.closeCurrentPopup();
+            return false;
         }
+        return true;
     }
 }
 /*End of ImGuiCustom class*/
