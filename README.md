@@ -6,14 +6,6 @@
 
 ## Ongoing Development Tasks
 
-    SpriteSheets
-
-        - Write tests for the serialization and deserialization of a spritesheets with default attributes.
-
-    Complete Dirty Flag System:
-
-        - Finish and test the dirty flag system
-
     Implement Debug Drawing Features:
 
         - Begin development on debug drawing features to enhance the debugging capabilities of the application.
