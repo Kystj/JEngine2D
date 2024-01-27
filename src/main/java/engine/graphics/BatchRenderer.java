@@ -10,7 +10,6 @@ import engine.components.Sprite;
 import engine.managers.ResourceManager;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +90,6 @@ public class BatchRenderer {
     }
 
     public void render() {
-        // Clear the color buffer and depth buffer
-        clear();
-
         // For now, we will re-buffer all data every frame
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
         glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
@@ -117,7 +113,7 @@ public class BatchRenderer {
 
         unBindTextures();
 
-        shader.detatch();
+        shader.detach();
     }
 
 
@@ -279,14 +275,6 @@ public class BatchRenderer {
     private void setWireframeMode(boolean active) {
         // TODO: Add as an option in the editor window
         glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
-    }
-
-    /**
-     * Clears the color and depth buffers
-     */
-    private void clear() {
-        glClearColor(0,0,0,0.5f);
-        glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
     /**

@@ -5,15 +5,13 @@
  */
 package engine.widgets;
 
-import engine.debug.BugReportUI;
+import engine.debug.DebugPanel;
 import imgui.ImGui;
 
 /**
  * Main menu bar for the engine
  */
 public class MainMenuBar {
-
-    BugReportUI bugReportUI = new BugReportUI();
 
     private final HelpMenu helpMenu = new HelpMenu();
     private final PreferencesMenu preferencesMenu = new PreferencesMenu();
@@ -73,8 +71,8 @@ public class MainMenuBar {
      */
     private void preferencesMenuItem() {
         if (ImGui.menuItem("Preferences", "Ctrl+p")) preferencesMenu.setOpen(true);
-            // TODO: Implement preferences
-            System.out.println("Preferences...");
+        // TODO: Implement preferences
+        System.out.println("Preferences...");
     }
 
     /**
@@ -98,9 +96,10 @@ public class MainMenuBar {
     }
 
     private void helpMenuItem() {
+        if (ImGui.menuItem("Shortcuts", "Ctrl+t"));
         if (ImGui.menuItem("Help", "Ctrl+h")) helpMenu.setOpen(true);
-            //TODO: Implement load and shortcuts
-            System.out.println("Loading...");
+        //TODO: Implement load and shortcuts
+        System.out.println("Loading...");
     }
 
 
@@ -109,17 +108,18 @@ public class MainMenuBar {
      */
     private void debugMenu() {
         //TODO: Implement debug window and shortcuts
-        if (ImGui.beginMenu("Debug")) {
-            if (ImGui.menuItem("New Report")) {
-                bugReportUI.setGenerateNewReport(true);
+        if (ImGui.beginMenu("Tools")) {
+
+            if (ImGui.menuItem("Debug Console", "Ctrl+d")) {
+                DebugPanel.setIsOpen(true);
+
             }
 
-            if (ImGui.menuItem("Open Report")) {
-                bugReportUI.setLoadReport(true);
+            if (ImGui.menuItem("Task Manager", "Ctrl+m")) {
+
             }
             ImGui.endMenu();
         }
-        bugReportUI.tick();
     }
 
     /**

@@ -25,7 +25,6 @@ public class ImGuiController {
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
     MainMenuBar mainMenuBar = new MainMenuBar();
-    ShortcutHandler shortcutHandler = new ShortcutHandler();
     Viewport viewport = new Viewport();
 
     /**
@@ -76,9 +75,8 @@ public class ImGuiController {
      * Update all the different IMmGui widgets
      */
     private void updateWidgets() {
+        ShortcutHandler.tick();
         mainMenuBar.tick();
-        shortcutHandler.tick();
-        // assetPanel.tick();
     }
 
     /**

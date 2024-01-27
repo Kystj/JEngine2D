@@ -15,19 +15,19 @@ public class BugAdapter implements JsonSerializer<BugReport>, JsonDeserializer<B
     /**
      * Serializes a BugReport object to a JSON representation.
      *
-     * @param bugReport                  The BugReport object to be serialized.
+     * @param report                  The BugReport object to be serialized.
      * @param type                       The type of the object.
      * @param jsonSerializationContext  The serialization context.
      * @return                           The serialized JSON element.
      */
     @Override
-    public JsonElement serialize(BugReport bugReport, Type type,
+    public JsonElement serialize(BugReport report, Type type,
                                  JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         // Adding BugReport properties to the JSON object
-        jsonObject.add("Name: ", new JsonPrimitive(String.valueOf(bugReport.getBugID())));
-        jsonObject.add("Description: ", new JsonPrimitive(String.valueOf(bugReport.getBugDescription())));
-        jsonObject.add("Resolved: ", new JsonPrimitive(bugReport.isResolved()));
+        jsonObject.add("Name: ", new JsonPrimitive(String.valueOf(report.getBugID())));
+        jsonObject.add("Description: ", new JsonPrimitive(String.valueOf(report.getBugDescription())));
+        jsonObject.add("Resolved: ", new JsonPrimitive(report.isResolved()));
         return jsonObject;
     }
 

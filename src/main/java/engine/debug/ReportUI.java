@@ -14,7 +14,7 @@ import imgui.type.ImString;
 import static engine.settings.EConstants.X_SPACING;
 
 /** BugReportUI class for handling bug reporting user interface. */
-public class BugReportUI {
+public class ReportUI {
 
     // Flags to control the visibility of UI elements
     private boolean showPopup = false;
@@ -26,7 +26,7 @@ public class BugReportUI {
     ImString imGuiBugDescription = new ImString();
 
     // Constructor that loads existing bug reports
-    public BugReportUI() {
+    public ReportUI() {
         BugReportManager.loadBugReports();
     }
 

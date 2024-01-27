@@ -1,6 +1,5 @@
 package engine.settings;
 
-import imgui.ImVec4;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -10,28 +9,20 @@ import org.joml.Vector4f;
  */
 public interface EConstants {
 
-
     // Color constants
     Vector3f RED = new Vector3f(1, 0, 0);
     Vector3f BLUE = new Vector3f(0, 0, 1);
     Vector3f GREEN = new Vector3f(0, 1, 0);
     Vector3f WHITE = new Vector3f(1, 1, 1);
-    Vector3f BLACK = new Vector3f(0, 0, 0);
+    Vector4f BLACK = new Vector4f(0, 0, 0, 1);
     Vector4f INVISIBLE = new Vector4f(0, 0, 0, 0);
 
     // Popup Window constants
     Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
 
-    // Scene Ids
-    String EDITOR_SCENE_ID = "editor_scene";
-    String PLAY_SCENE_ID = "play_scene";
-    String PAUSE_SCENE_ID = "pause_scene";
-
-    ImVec4 IM_RED = new ImVec4(1.0f, 0.0f, 0.0f, 1.0f);
-    ImVec4 IM_BLUE = new ImVec4(0.0f, 0.0f, 1.0f, 1.0f);
-
     // ImGui
     int X_SPACING = 10;
+    int Y_SPACING = 10;
 
     // Event Types
     enum EventType {
@@ -45,8 +36,9 @@ public interface EConstants {
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;
-    int VERTEX_SIZE = 9;
-
+    int MAX_DEBUG_LINES = 1000;
+    float DEBUG_LINE_WIDTH = 3.0f;
+    float DEBUG_LINE_Z_INDEX = -15.0f;
 
     // Physics constants
     enum BodyType {

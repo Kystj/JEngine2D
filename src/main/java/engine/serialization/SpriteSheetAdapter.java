@@ -41,13 +41,6 @@ public class SpriteSheetAdapter implements JsonSerializer<SpriteSheet>, JsonDese
         String assetType = jsonObject.get("AssetType").getAsString();
         int spacing = jsonObject.get("SpriteSpacing").getAsInt();
 
-        System.out.println(spriteWidth);
-        System.out.println(spriteHeight);
-        System.out.println(numOfSprites);
-        System.out.println(filePath);
-        System.out.println(assetType);
-        System.out.println(spacing);
-
         return new SpriteSheet(new Texture(filePath),
                 spriteWidth,
                 spriteHeight,

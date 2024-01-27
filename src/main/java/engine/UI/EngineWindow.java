@@ -6,6 +6,7 @@
 package engine.UI;
 
 
+import engine.debug.Draw;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
@@ -21,6 +22,7 @@ import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 
@@ -46,6 +48,7 @@ public class EngineWindow implements EventListener {
 
     private int engineMode = 0; // 0: Editor. 1: Full play
     private static Scene currentScene;
+
 
     /**
      * Create a EngineWindow instance using the singleton pattern
@@ -176,7 +179,13 @@ public class EngineWindow implements EventListener {
 
             pollUserEvents();
 
-            updateEngineMode(deltaTime);
+            Draw.clearDeadLines();
+
+            clear();
+
+            if (deltaTime >= 0) {
+                updateEngineMode(deltaTime);
+            }
             glfwSwapBuffers(glfwWindow);
 
             endTime = glfwGetTime();
@@ -242,9 +251,11 @@ public class EngineWindow implements EventListener {
         // Safety check
         if (engineMode == 0) {
             // Renderer to the framebuffer
-            this.framebuffer.bind();
             currentScene.tick(deltaTime);
+
+            this.framebuffer.bind();
             currentScene.render();
+            Draw.render();
             this.framebuffer.unbind();
 
             // Update the ImGui components
@@ -369,6 +380,15 @@ public class EngineWindow implements EventListener {
      */
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
+    }
+
+
+    /**
+     * Clears the color and depth buffers
+     */
+    private void clear() {
+        glClearColor(0,0,0,0.5f);
+        glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
     /**

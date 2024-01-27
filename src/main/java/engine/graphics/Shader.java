@@ -221,7 +221,7 @@ public class Shader {
     /**
      * Removes the current shader set in glUseProgram and sets it to 0 (no shader)
      */
-    public void detatch() {
+    public void detach() {
         glUseProgram(0);
         isShaderBound = false;
     }

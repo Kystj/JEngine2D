@@ -22,6 +22,7 @@ public class Renderer {
      * Call the render() method on each render Batch object in the batch renderer list
      */
     public void render() {
+        // Update the batches
         for (BatchRenderer batch : batchRendererList) {
             batch.render();
         }
@@ -48,6 +49,7 @@ public class Renderer {
             addSpriteToBatch(sprite);
         }
     }
+
 
     /** Handles the disposal or release of resources associated with rendering. */
     private void cleanup() {

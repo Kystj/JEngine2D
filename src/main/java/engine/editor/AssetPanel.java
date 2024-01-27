@@ -30,14 +30,14 @@ public class AssetPanel {
      * Updates ImGui and the various tabs representing asset types.
      */
     public void tick() {
-        render();
+        imgui();
     }
 
     /**
      * Renders the AssetPanel, including the main window, import and remove forms,
      * asset dropdown, and tabs for different asset types.
      */
-    private void render() {
+    private void imgui() {
         // Check the Asset Managers state
         handleConditionsAndForms();
 

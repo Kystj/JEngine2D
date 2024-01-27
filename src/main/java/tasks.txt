@@ -1,2 +1,5 @@
-- finish the dirty flag system
-- Begin work on debug drawing features and construct the grid
+- Fix up the Debug Drawing class and make it separate from the shapes class. Make your own.
+
+- Implement buttons for adding different shapes to the screen
+
+- Draw grid lines
