@@ -14,7 +14,8 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static engine.settings.EConstants.*;
+import static engine.settings.EConstants.DEBUG_LINE_WIDTH;
+import static engine.settings.EConstants.MAX_DEBUG_LINES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -105,7 +106,6 @@ public class Draw {
         debugShader.detach();
     }
 
-
     public static void clearDeadLines() {
         if (!running) {
             init();
@@ -120,6 +120,7 @@ public class Draw {
             }
         }
     }
+
 
     private static void enableVertexAttributes() {
         glEnableVertexAttribArray(0);
@@ -169,12 +170,14 @@ public class Draw {
                 new Vector2f(max.x, max.y), new Vector2f(max.x, min.y)
         };
 
-
         addLine2D(vertices[0], vertices[1], color, lifetime);
         addLine2D(vertices[0], vertices[3], color, lifetime);
         addLine2D(vertices[1], vertices[2], color, lifetime);
         addLine2D(vertices[2], vertices[3], color, lifetime);
     }
 
+    public static Shader getDebugShader() {
+        return debugShader;
+    }
 }
 /*End of Draw class*/

@@ -11,9 +11,10 @@ import org.joml.Vector3f;
 
 public class OrthographicCamera {
 
-    private Matrix4f viewMatrix = new Matrix4f();
-    private Matrix4f projectionMatrix = new Matrix4f();
+    private final Matrix4f viewMatrix = new Matrix4f();
+    private final Matrix4f projectionMatrix = new Matrix4f();
     public Vector2f position;
+    public Vector2f size = new Vector2f(32.0f * 40.0f, 32.0f * 22.0f);
 
     /**  Creates an orthographic projection with a custom camera position*/
     public OrthographicCamera(Vector2f position) {
@@ -29,8 +30,7 @@ public class OrthographicCamera {
 
     public void setOrthographicProjection() {
         projectionMatrix.identity();
-        float size = 32.0f * 48.0f; // Choose a size for the square
-        projectionMatrix.ortho(0.0f, size, 0.0f, size, 0.0f, 50.0f);
+        projectionMatrix.ortho(0.0f, size.x, 0.0f, size.y, 0.0f, 50.0f);
         }
 
 
@@ -41,6 +41,7 @@ public class OrthographicCamera {
         viewMatrix.lookAt(new Vector3f(position.x, position.y, 20.0f),
                 cameraFront.add(position.x, position.y, 0.0f),
                 cameraUp);
+
         return this.viewMatrix;
     }
 

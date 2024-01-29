@@ -34,11 +34,14 @@ public interface EConstants {
         FullPlay
     }
 
+    // Grid width
+    int DEFAULT_GRID_WIDTH = 32;
+    int DEFAULT_GRID_HEIGHT = 32;
+
     // Rendering
     int MAX_BATCH_SIZE = 1000;
     int MAX_DEBUG_LINES = 1000;
     float DEBUG_LINE_WIDTH = 3.0f;
-    float DEBUG_LINE_Z_INDEX = -15.0f;
 
     // Physics constants
     enum BodyType {

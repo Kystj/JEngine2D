@@ -19,6 +19,9 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+import static engine.settings.EConstants.DEFAULT_GRID_HEIGHT;
+import static engine.settings.EConstants.DEFAULT_GRID_WIDTH;
+
 public class Editor extends Scene {
 
     private final List<GameObject> gameObjectList = new ArrayList<>();
@@ -34,7 +37,7 @@ public class Editor extends Scene {
     @Override
     public void init() {
         super.init();
-        this.orthoCamera = new OrthographicCamera(new Vector2f(-250,-250));
+        this.orthoCamera = new OrthographicCamera();
         createGameObjects();
         addGameObjToEditor();
     }
@@ -50,6 +53,10 @@ public class Editor extends Scene {
     @Override
     public void render() {
         super.render();
+
+        drawGridLines();
+
+
     }
 
     @Override
@@ -60,8 +67,8 @@ public class Editor extends Scene {
 
     private void createGameObjects() {
         // FIRST GAME OBJECT
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(200, 100),
-                new Vector2f(256, 256)));
+        obj1 = new GameObject("Object 1", new Transform(new Vector2f(500, 500),
+                new Vector2f(500, 500)));
         obj1Sprite = new Sprite(ResourceManager.getSpriteSheet("assets/spritesheets/test.png").getSprite(1).getSpriteTexture());
         obj1.addComponent(obj1Sprite);
         gameObjectList.add(obj1);
@@ -73,5 +80,34 @@ public class Editor extends Scene {
         }
     }
 
+    public void drawGridLines() {
+
+        Vector2f cameraPos = orthoCamera.position;
+        Vector2f projectionSize = orthoCamera.size;
+
+        int firstX = ((int)(cameraPos.x / DEFAULT_GRID_WIDTH) - 1) * DEFAULT_GRID_WIDTH;
+        int firstY = ((int)(cameraPos.y / DEFAULT_GRID_HEIGHT) - 1) * DEFAULT_GRID_HEIGHT;
+
+        int numVtLines = (int)(projectionSize.x / DEFAULT_GRID_WIDTH) + 2;
+        int numHzLines = (int)(projectionSize.y / DEFAULT_GRID_HEIGHT) + 2;
+
+        int height = (int)projectionSize.y + DEFAULT_GRID_HEIGHT * 2;
+        int width = (int)projectionSize.x + DEFAULT_GRID_WIDTH * 2;
+
+        int maxLines = Math.max(numVtLines, numHzLines);
+        Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
+        for (int i=0; i < maxLines; i++) {
+            int x = firstX + (DEFAULT_GRID_WIDTH * i);
+            int y = firstY + (DEFAULT_GRID_HEIGHT * i);
+
+            if (i < numVtLines) {
+                Draw.addLine2D(new Vector2f(x, firstY), new Vector2f(x, firstY + height), color);
+            }
+
+            if (i < numHzLines) {
+                Draw.addLine2D(new Vector2f(firstX, y), new Vector2f(firstX + width, y), color);
+            }
+        }
+    }
 }
 /*End of Editor class*/
