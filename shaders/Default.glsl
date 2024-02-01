@@ -18,7 +18,6 @@ void main()
     fColor = aColor;
     fUVCoordinates = aUVCoordinates;
     fTextureID = aTextureID;
-
     gl_Position = uProjection * uView * vec4(aPosition, 1.0);
 }
 

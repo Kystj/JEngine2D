@@ -129,7 +129,6 @@ public class DebugPanel {
                     ReportManager.displayReport(bugID, bugDescription);
                 }
 
-
                 if (ImGui.isItemHovered()) {
                     ImGui.beginTooltip();
                     ImGui.setTooltip(bugDescription);
