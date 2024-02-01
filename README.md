@@ -8,14 +8,19 @@
 
     Implement Debug Drawing Features:
 
-        - Begin development on debug drawing features to enhance the debugging capabilities of the application.
+        - Debug panel and debug drawing features.
         - Define specific features, such as visualizing bounding boxes, collision shapes, or other relevant debug information.
 
     Construct Grid for Debugging:
+    
+        - Add functionaility to the grid to allow for a user to alter its properties.
+        - Start snap-to-grid features
+        
+    Construct Grid for Debugging:
 
-        -Create a grid visualization as part of the debug drawing features to assist in debugging and aligning sprites.
-        -Consider customizable options for the grid, such as cell size and color, to accommodate various debugging needs.
+        - Add drag and drop functionality to the asset panel
 
+        
 ![Local Image](showcase.png)
 ## Acknowledgments:
 
