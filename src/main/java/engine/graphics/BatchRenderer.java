@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.UI.EngineWindow;
+import engine.UI.engine.EngineWindow;
 import engine.components.Sprite;
 import engine.managers.ResourceManager;
 import org.joml.Vector2f;
@@ -34,7 +34,7 @@ public class BatchRenderer {
     private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
-    private final Shader shader = ResourceManager.getOrCreateShader("shaders/default.glsl");
+   private final Shader shader = ResourceManager.getOrCreateShader("shaders/Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
     private final int[] textureSlots = {0,1,2,3,4,5,6,7};

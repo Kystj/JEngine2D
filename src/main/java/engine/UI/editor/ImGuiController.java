@@ -3,9 +3,9 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine.UI;
+package engine.UI.editor;
 
-import engine.editor.Viewport;
+import engine.UI.engine.EngineWindow;
 import engine.managers.ShortcutHandler;
 import engine.widgets.MainMenuBar;
 import imgui.ImGui;
@@ -14,6 +14,7 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import org.joml.Vector2f;
 
 /**
  * The main class in charge of the ImGui configurations. Controls set up, style and
@@ -151,6 +152,14 @@ public class ImGuiController {
      */
     private void popCustomStyleVars() {
         ImGui.popStyleVar(4);
+    }
+
+
+    public Vector2f getViewportSize() {
+        System.out.println("THIS IS THE ERROR");
+        float width = ImGui.getMainViewport().getSizeX();
+        float height = ImGui.getMainViewport().getSizeY();
+        return new Vector2f(width, height);
     }
 }
 /*End of ImGuiLayer class*/

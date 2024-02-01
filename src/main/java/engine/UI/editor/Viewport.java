@@ -3,9 +3,9 @@
  * Date: 2023-11-18
  * Author: Kyle St John
  */
-package engine.editor;
+package engine.UI.editor;
 
-import engine.UI.EngineWindow;
+import engine.UI.engine.EngineWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.settings.EConstants.EventType;

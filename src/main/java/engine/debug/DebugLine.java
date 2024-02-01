@@ -8,23 +8,23 @@ package engine.debug;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class Line {
+public class DebugLine {
 
     private Vector2f lineStart;
     private Vector2f lineEnd;
     private Vector3f lineColor;
     private int lineLife;
 
-    public Line(Vector2f lineStart, Vector2f lineEnd, Vector3f lineColor, int lineLife) {
+    public DebugLine(Vector2f lineStart, Vector2f lineEnd, Vector3f lineColor, int lineLife) {
         this.lineStart = lineStart;
         this.lineEnd = lineEnd;
         this.lineColor = lineColor;
         this.lineLife = lineLife;
     }
 
-    public int isLineLive() {
+    public boolean isLineLive() {
         this.lineLife--;
-        return lineLife;
+        return lineLife >= 0;
     }
 
     public Vector2f getLineStart() {

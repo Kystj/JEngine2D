@@ -4,7 +4,7 @@
  Author: Kyle St John
  */
 
-import engine.UI.EngineWindow;
+import engine.UI.engine.EngineWindow;
 
 /**
  * The engines main class

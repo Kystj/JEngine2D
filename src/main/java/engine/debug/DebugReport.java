@@ -8,7 +8,7 @@ package engine.debug;
 /**
  * BugReport class representing a report of a software bug.
  */
-public class BugReport {
+public class DebugReport {
 
     // Unique identifier for the bug
     private String bugID;
@@ -25,7 +25,7 @@ public class BugReport {
      * @param bugID          The unique identifier of the bug.
      * @param bugDescription The description of the bug.
      */
-    public BugReport(String bugID, String bugDescription) {
+    public DebugReport(String bugID, String bugDescription) {
         this.bugID = bugID;
         this.bugDescription = bugDescription;
     }
@@ -38,7 +38,7 @@ public class BugReport {
      * @param bugDescription The description of the bug.
      * @param resolved       The resolution status of the bug.
      */
-    public BugReport(String bugID, String bugDescription, Boolean resolved) {
+    public DebugReport(String bugID, String bugDescription, Boolean resolved) {
         this.bugID = bugID;
         this.bugDescription = bugDescription;
         this.resolved = resolved;

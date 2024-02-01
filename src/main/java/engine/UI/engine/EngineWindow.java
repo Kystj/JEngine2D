@@ -3,19 +3,20 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine.UI;
+package engine.UI.engine;
 
 
-import engine.debug.Draw;
+import engine.UI.editor.ImGuiController;
+import engine.debug.DebugDraw;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
+import engine.graphics.OrthographicCamera;
 import engine.inputs.KeyInputs;
 import engine.inputs.MouseInputs;
 import engine.objects.GameObject;
-import engine.scene.Editor;
-import engine.scene.Scene;
+import engine.UI.editor.EditorScene;
 import engine.settings.EConstants.EventType;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
@@ -179,7 +180,7 @@ public class EngineWindow implements EventListener {
 
             pollUserEvents();
 
-            Draw.clearDeadLines();
+            DebugDraw.tick();
 
             clear();
 
@@ -193,13 +194,14 @@ public class EngineWindow implements EventListener {
             startTime = endTime;
 
             closeEngine();
+
         }
     }
 
     public void changeScene(int newScene) {
         switch (newScene) {
             case 0:
-                currentScene = new Editor();
+                currentScene = new EditorScene();
                 currentScene.init();
                 break;
             case 1:
@@ -255,12 +257,16 @@ public class EngineWindow implements EventListener {
 
             this.framebuffer.bind();
             currentScene.render();
-            Draw.render();
+            DebugDraw.render();
             this.framebuffer.unbind();
 
             // Update the ImGui components
             imGuiController.tick(deltaTime);
         }
+    }
+
+    public static OrthographicCamera getCamera() {
+        return currentScene.getOrthoCamera();
     }
 
     /** Get the currently bound scene*/

@@ -3,13 +3,13 @@
  Date: 2023-12-28
  Author: Kyle St John
  */
-package engine.scene;
+package engine.UI.editor;
 
+import engine.UI.engine.Scene;
 import engine.components.Sprite;
 import engine.components.Transform;
 import engine.debug.DebugPanel;
-import engine.debug.Draw;
-import engine.editor.AssetPanel;
+import engine.debug.DebugUtils;
 import engine.graphics.OrthographicCamera;
 import engine.managers.ResourceManager;
 import engine.objects.GameObject;
@@ -22,41 +22,45 @@ import java.util.List;
 import static engine.settings.EConstants.DEFAULT_GRID_HEIGHT;
 import static engine.settings.EConstants.DEFAULT_GRID_WIDTH;
 
-public class Editor extends Scene {
+public class EditorScene extends Scene {
 
     private final List<GameObject> gameObjectList = new ArrayList<>();
     private final AssetPanel assetPanel = new AssetPanel();
-
-    private GameObject obj1;
-    Sprite obj1Sprite;
-
-    // TODO: DELETE
-    float x = 200.0f;
-    float y = 200.0f;
 
     @Override
     public void init() {
         super.init();
         this.orthoCamera = new OrthographicCamera();
-        createGameObjects();
+        loadResources();
         addGameObjToEditor();
     }
-
 
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
 
-        Draw.addBox2D(new Vector2f(x, y), new Vector2f(256, 256), 0f, new Vector3f(1, 0, 0), 2);
+        // TODO: Delete. Testing Debug drawing shapes only
+        DebugUtils.addBox(new Vector2f(200.0f, 200.0f),
+                          new Vector2f(256, 256), 0f,
+                          new Vector3f(1, 0, 0), 2);
+
+        DebugUtils.addCircle(new Vector2f(400,400),
+                             50.0f, new Vector3f(0,1,0));
+
+        DebugUtils.addLine(new Vector2f(400, 400),
+                           new Vector2f(500, 700),
+                           new Vector3f(0, 0, 1));
+
+        DebugUtils.addTriangle(new Vector2f(600, 400),
+                               new Vector2f(750,700),
+                               new Vector2f(900, 400));
     }
 
     @Override
     public void render() {
-        super.render();
+         super.render();
 
-        drawGridLines();
-
-
+         drawGridLines();
     }
 
     @Override
@@ -65,13 +69,13 @@ public class Editor extends Scene {
         DebugPanel.tick();
     }
 
-    private void createGameObjects() {
-        // FIRST GAME OBJECT
-        obj1 = new GameObject("Object 1", new Transform(new Vector2f(500, 500),
+    private void loadResources() {
+        // TEST GAME OBJECT
+        GameObject testObj1 = new GameObject("Object 1", new Transform(new Vector2f(500, 500),
                 new Vector2f(500, 500)));
-        obj1Sprite = new Sprite(ResourceManager.getSpriteSheet("assets/spritesheets/test.png").getSprite(1).getSpriteTexture());
-        obj1.addComponent(obj1Sprite);
-        gameObjectList.add(obj1);
+        Sprite obj1TestSprite = new Sprite(ResourceManager.getSpriteSheet("assets/spritesheets/test.png").getSprite(1).getSpriteTexture());
+        testObj1.addComponent(obj1TestSprite);
+        gameObjectList.add(testObj1);
     }
 
     private void addGameObjToEditor() {
@@ -101,11 +105,11 @@ public class Editor extends Scene {
             int y = firstY + (DEFAULT_GRID_HEIGHT * i);
 
             if (i < numVtLines) {
-                Draw.addLine2D(new Vector2f(x, firstY), new Vector2f(x, firstY + height), color);
+                DebugUtils.addLine(new Vector2f(x, firstY), new Vector2f(x, firstY + height), color);
             }
 
             if (i < numHzLines) {
-                Draw.addLine2D(new Vector2f(firstX, y), new Vector2f(firstX + width, y), color);
+                DebugUtils.addLine(new Vector2f(firstX, y), new Vector2f(firstX + width, y), color);
             }
         }
     }

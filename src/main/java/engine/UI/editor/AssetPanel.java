@@ -3,7 +3,7 @@
  Date: 2024-01-06
  Author: Kyle St John
  */
-package engine.editor;
+package engine.UI.editor;
 
 import engine.components.Sprite;
 import engine.graphics.SpriteSheet;
@@ -61,7 +61,7 @@ public class AssetPanel {
                 // Begin a tab item for the current SpriteSheet
                 if (ImGui.beginTabItem(tabName)) {
                     // Populate buttons or other controls in the second column for the current SpriteSheet
-                    populateAssetButtons(spriteSheet);
+                    generateAssetButtons(spriteSheet);
 
                     // Reset to a single column after the second column
                     ImGui.columns(1);
@@ -109,7 +109,7 @@ public class AssetPanel {
      *
      * @param sprites The SpriteSheet containing the assets.
      */
-    private void populateAssetButtons(SpriteSheet sprites) {
+    private void generateAssetButtons(SpriteSheet sprites) {
         ImVec2 windowPos = new ImVec2();
         ImGui.getWindowPos(windowPos);
 

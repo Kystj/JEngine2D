@@ -100,7 +100,7 @@ public class AssetManager {
      * Adds a new SpriteSheet based on the input form data and updates the map.
      */
     private void addSpriteSheet() {
-        String fileName = String.valueOf(filePath);
+        String filePath = String.valueOf(this.filePath);
         String type = String.valueOf(assetType);
 
         int spriteWidth = width.intValue();
@@ -109,22 +109,22 @@ public class AssetManager {
         int amount = numSprites.intValue();
 
         // Preform error checking before creating the new sprite sheet
-        if (checkAndHandleErrors(fileName, type, spriteWidth, spriteHeight, amount)) {
+        if (checkAndHandleErrors(filePath, type, spriteWidth, spriteHeight, amount)) {
             return;
         }
 
         // Add new SpriteSheet to the ResourceManager
-        ResourceManager.addSpriteSheet(fileName,
-                new SpriteSheet(new Texture(fileName),
+        ResourceManager.addSpriteSheet(filePath,
+                new SpriteSheet(new Texture(filePath),
                         spriteWidth, spriteHeight,
                         spriteSpacing, amount, type));
 
         // Save the sprite sheets info to a GSON file
-        SpriteSheetSerializer.saveSpriteSheet(ResourceManager.getSpriteSheet(fileName));
+        SpriteSheetSerializer.saveSpriteSheet(ResourceManager.getSpriteSheet(filePath));
 
         // Update the map with the new SpriteSheet and its asset type
         spriteSheets.put(
-                ResourceManager.getSpriteSheet(fileName),
+                ResourceManager.getSpriteSheet(filePath),
                 type
         );
 

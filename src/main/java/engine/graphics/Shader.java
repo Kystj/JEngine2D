@@ -6,6 +6,8 @@
 package engine.graphics;
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
@@ -165,6 +167,18 @@ public class Shader {
         int uniformLocation = glGetUniformLocation(shaderProgramID, uniformName);
         use();
         glUniform4f(uniformLocation, vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public void uploadVec2f(String uniformName, Vector2f vec) {
+        int uniformLocation = glGetUniformLocation(shaderProgramID, uniformName);
+        use();
+        glUniform2f(uniformLocation, vec.x, vec.y);
+    }
+
+    public void uploadVec3f(String uniformName, Vector3f vec) {
+        int uniformLocation = glGetUniformLocation(shaderProgramID, uniformName);
+        use();
+        glUniform3f(uniformLocation, vec.x, vec.y, vec.z);
     }
 
     /**

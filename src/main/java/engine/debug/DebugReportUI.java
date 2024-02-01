@@ -6,7 +6,7 @@
 package engine.debug;
 
 import engine.inputs.MouseInputs;
-import engine.managers.BugReportManager;
+import engine.managers.ReportManager;
 import engine.widgets.ImGuiCustom;
 import imgui.ImGui;
 import imgui.type.ImString;
@@ -14,7 +14,7 @@ import imgui.type.ImString;
 import static engine.settings.EConstants.X_SPACING;
 
 /** BugReportUI class for handling bug reporting user interface. */
-public class ReportUI {
+public class DebugReportUI {
 
     // Flags to control the visibility of UI elements
     private boolean showPopup = false;
@@ -26,8 +26,8 @@ public class ReportUI {
     ImString imGuiBugDescription = new ImString();
 
     // Constructor that loads existing bug reports
-    public ReportUI() {
-        BugReportManager.loadBugReports();
+    public DebugReportUI() {
+        ReportManager.loadReports();
     }
 
     // Main tick method for handling UI updates
@@ -71,7 +71,7 @@ public class ReportUI {
             this.showPopup = true;
             String bugName = imGuiBugName.get();
             String bugDescription = imGuiBugDescription.get();
-            BugReportManager.saveBugReport(bugName, bugDescription);
+            ReportManager.saveReport(bugName, bugDescription);
         }
         // Close button to cancel bug report generation
         generateNewReport = ImGuiCustom.closeButton();
@@ -83,7 +83,7 @@ public class ReportUI {
     private void loadReportInformation() {
         if (loadReport) {
             ImGui.begin("Reports");
-            BugReportManager.displayBugReports();
+            //BugReportManager.displayBugReports();
             // Close button to hide the bug report information
             loadReport = ImGuiCustom.closeButton(ImGui.getWindowSizeX() * .45f, ImGui.getWindowSizeY() * .85f);
             ImGui.end();

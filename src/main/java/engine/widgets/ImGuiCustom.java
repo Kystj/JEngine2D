@@ -5,7 +5,7 @@
  */
 package engine.widgets;
 
-import engine.UI.EngineWindow;
+import engine.UI.engine.EngineWindow;
 import engine.inputs.MouseInputs;
 import imgui.ImGui;
 import imgui.ImVec2;
