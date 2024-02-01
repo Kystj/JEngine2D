@@ -20,7 +20,6 @@ import static engine.settings.EConstants.X_SPACING;
 public class DebugPanel {
 
     private static boolean bIsOpen = true;
-    private static boolean bShowReport = false;
     private static final DebugReportUI reports = new DebugReportUI();
 
 

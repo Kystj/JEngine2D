@@ -28,7 +28,7 @@ public class Shader {
     private String vertexShaderSrc;
     private String fragmentShaderSrc;
 
-    // Shader IDs for vertex and fragment shaders
+    // Shader IDs for vertex and fragment shader
     private int vertexShaderID;
     private int fragmentShaderID;
 
