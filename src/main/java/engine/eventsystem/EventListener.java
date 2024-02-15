@@ -1,6 +1,6 @@
 package engine.eventsystem;
 
-import engine.objects.GameObject;
+import engine.world.objects.GameObject;
 
 /**
  * This interface declares methods for handling events. Implementing classes can choose to implement

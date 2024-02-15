@@ -12,13 +12,15 @@
         - Define specific features, such as visualizing bounding boxes, collision shapes, or other relevant debug information.
 
     Construct Grid for Debugging:
+
+        - Add drag and drop functionality to the asset panel
+
+
+    Construct Grid for Debugging:
     
         - Add functionaility to the grid to allow for a user to alter its properties.
         - Start snap-to-grid features
-        
-    Construct Grid for Debugging:
 
-        - Add drag and drop functionality to the asset panel
 
         
 ![Local Image](showcase.png)

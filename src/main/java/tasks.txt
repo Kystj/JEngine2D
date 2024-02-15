@@ -1,5 +1,3 @@
-- Fix up the Debug Drawing class and make it separate from the shapes class. Make your own.
-
-- Implement buttons for adding different shapes to the screen
-
-- Draw grid lines
+- Complete the debug drawing panel and ensure that all shapes draw correctly. Fix the overlap of the shapes and the issue with
+    drawing shapes over another. Add a function to clear all persistent lines. Add a close button to
+    debug panel isntead f exit on escape

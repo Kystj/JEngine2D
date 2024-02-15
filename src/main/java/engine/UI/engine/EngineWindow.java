@@ -6,18 +6,18 @@
 package engine.UI.engine;
 
 
-import engine.UI.editor.ImGuiController;
-import engine.debug.DebugDraw;
+import engine.debug.DebugRenderer;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
 import engine.graphics.OrthographicCamera;
-import engine.inputs.KeyInputs;
-import engine.inputs.MouseInputs;
-import engine.objects.GameObject;
-import engine.UI.editor.EditorScene;
-import engine.settings.EConstants.EventType;
+import engine.io.KeyInputs;
+import engine.io.MouseInputs;
+import engine.world.objects.GameObject;
+import engine.scenes.EditorScene;
+import engine.scenes.Scene;
+import engine.UI.settings.EConstants.EventType;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -180,9 +180,7 @@ public class EngineWindow implements EventListener {
 
             pollUserEvents();
 
-            DebugDraw.tick();
-
-            clear();
+            DebugRenderer.tick();
 
             if (deltaTime >= 0) {
                 updateEngineMode(deltaTime);
@@ -243,6 +241,7 @@ public class EngineWindow implements EventListener {
         if (engineMode == 1) {
            changeScene(0);
         }
+        clear();
         currentScene.render();
     }
 
@@ -252,12 +251,16 @@ public class EngineWindow implements EventListener {
     private void editorModeTick(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
-            // Renderer to the framebuffer
-            currentScene.tick(deltaTime);
 
             this.framebuffer.bind();
+            clear();
+
+            // Render the editor scene to the framebuffer
+            DebugRenderer.render();
             currentScene.render();
-            DebugDraw.render();
+
+            // Renderer to the framebuffer
+            currentScene.tick(deltaTime);
             this.framebuffer.unbind();
 
             // Update the ImGui components
@@ -393,8 +396,18 @@ public class EngineWindow implements EventListener {
      * Clears the color and depth buffers
      */
     private void clear() {
-        glClearColor(0,0,0,0.5f);
+        glClearColor(0,0,0,1.0f);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+    }
+
+    /**
+     * Sets wireframe mode on or off.
+     *
+     * @param active True for wireframe mode, false for filled mode.
+     */
+    public void setWireframeMode(boolean active) {
+        // TODO: Add as an option in the editor window
+        glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
     }
 
     /**

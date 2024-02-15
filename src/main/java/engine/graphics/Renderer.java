@@ -1,25 +1,25 @@
 /*
- Title: renderer
+ Title: Renderer
  Date: 2023-11-06
  Author: Kyle St John
  */
 package engine.graphics;
 
-import engine.components.Sprite;
-import engine.objects.GameObject;
+import engine.world.components.Sprite;
+import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Renderer class for the engine
+ * The Renderer class is responsible for rendering sprites using BatchRenderer objects.
  */
 public class Renderer {
 
     private final List<BatchRenderer> batchRendererList = new ArrayList<>();
 
     /**
-     * Call the render() method on each render Batch object in the batch renderer list
+     * Calls the render() method on each render Batch object in the batch renderer list.
      */
     public void render() {
         // Update the batches
@@ -28,7 +28,11 @@ public class Renderer {
         }
     }
 
-    /** Find a batch with room and add the sprite to that batch */
+    /**
+     * Finds a batch with room and adds the sprite to that batch.
+     *
+     * @param sprite The sprite to be added to a batch.
+     */
     private void addSpriteToBatch(Sprite sprite) {
         BatchRenderer batch = batchRendererList.stream()
                 .filter(BatchRenderer::getBatchHasRoom)
@@ -42,7 +46,11 @@ public class Renderer {
         batch.addSpriteToBatch(sprite);
     }
 
-    /** This method adds a sprite to a batch if it exists in the provided game object. */
+    /**
+     * Adds a sprite to a batch if it exists in the provided game object.
+     *
+     * @param gameObject The game object containing the sprite component.
+     */
     public void addSprite(GameObject gameObject) {
         Sprite sprite = gameObject.getComponent(Sprite.class);
         if (sprite != null) {
@@ -50,10 +58,12 @@ public class Renderer {
         }
     }
 
-
-    /** Handles the disposal or release of resources associated with rendering. */
+    /**
+     * Handles the disposal or release of resources associated with rendering.
+     * TODO: Implement renderer cleanup code.
+     */
     private void cleanup() {
-        // TODO: Implement renderer clean up code
+        // TODO: Implement renderer cleanup code
     }
 }
-/*End of renderer class*/
+/*End of Renderer class*/

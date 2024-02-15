@@ -8,21 +8,14 @@ package engine.UI.editor;
 import engine.UI.engine.EngineWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
-import engine.settings.EConstants.EventType;
+import engine.UI.settings.EConstants.EventType;
 import imgui.ImGui;
+import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
 import imgui.flag.ImGuiWindowFlags;
 
-/**
- * Viewport class for rendering and interacting with the game view.
- */
 public class Viewport {
 
-    private boolean playing = false;
-
-    /**
-     * Renders and updates the Viewport.
-     */
     public void tick() {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar | ImGuiViewportFlags.NoTaskBarIcon);
@@ -30,51 +23,66 @@ public class Viewport {
         viewportsMenuBar();
 
         int textureId = EngineWindow.get().getFramebufferTexID();
-        ImGui.image(textureId, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight(), 0, 1, 1, 0);
+
+        ImVec2 windowSize = getViewportSize();
+        ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
+
+        ImGui.setCursorPos(windowPos.x, windowPos.y);
+
+        ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
         ImGui.end();
     }
 
-    /**
-     * Renders the menu bar with playback controls.
-     */
+    private ImVec2 getViewportSize() {
+        ImVec2 windowSize = getWindowSize();
+        float aspectWidth = windowSize.x;
+        // Aspect ratio (for example, 16:9)
+        float aspectRatio = 16.0f / 9.0f;
+        float aspectHeight = aspectWidth / aspectRatio;
+        if (aspectHeight > windowSize.y) {
+            aspectHeight = windowSize.y;
+            aspectWidth = aspectHeight * aspectRatio;
+        }
+        return new ImVec2(aspectWidth, aspectHeight);
+    }
+
+    private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
+        ImVec2 windowSize = getWindowSize();
+        float viewportX = (windowSize.x - aspectSize.x) * 0.5f;
+        float viewportY = (windowSize.y - aspectSize.y) * 0.5f;
+        return new ImVec2(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
+    }
+
+    private ImVec2 getWindowSize() {
+        ImVec2 windowSize = new ImVec2();
+        ImGui.getContentRegionAvail(windowSize);
+        windowSize.x -= ImGui.getScrollX();
+        windowSize.y -= ImGui.getScrollY();
+        return windowSize;
+    }
+
     private void viewportsMenuBar() {
         ImGui.beginMenuBar();
 
-        // Calculate the width of the menu bar
         float menuBarWidth = ImGui.getContentRegionAvailX();
-
-        // Calculate the total width of the buttons
-        float totalButtonWidth = 3 * 100f; // Adjust the button width and count as needed
-
-        // Calculate the left padding required to center the buttons
+        float totalButtonWidth = 3 * ImGui.calcTextSize("Play").x + ImGui.getStyle().getItemSpacingX() * 2;
         float leftPadding = (menuBarWidth - totalButtonWidth) * 0.5f;
 
-        // Set the cursor position to the left padding
         ImGui.setCursorPosX(leftPadding);
 
-        // Button 1 (Play)
         if (ImGui.button("Play")) {
-            playing = true;
             EventDispatcher.dispatchEvent(new Event(EventType.Play));
         }
 
-        // Use ImGui.sameLine() to keep the next elements on the same line
         ImGui.sameLine();
 
-        // Set the cursor position to center the remaining space
-        ImGui.setCursorPosX(ImGui.getCursorPosX());
-
-        // Button 2 (Stop)
         if (ImGui.button("Stop")) {
-            playing = false;
             EventDispatcher.dispatchEvent(new Event(EventType.Stop));
         }
 
-        // Use ImGui.sameLine() to keep the next elements on the same line
         ImGui.sameLine();
 
-        // Button 3 (Launch)
         if (ImGui.button("Launch")) {
             EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
         }

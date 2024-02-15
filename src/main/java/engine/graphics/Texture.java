@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.managers.ResourceManager;
+import engine.handlers.ResourceHandler;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -15,22 +15,31 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.stb.STBImage.*;
 
 /**
- * This class encapsulates all the functionality needed to read a texture from a file,
- * create the texture and bind it
+ * The Texture class encapsulates functionality to read a texture from a file, create the texture, and bind it for use.
  */
 public class Texture {
 
     private int textureID;
-
     private String filePath;
     private int textureWidth;
     private int textureHeight;
 
+    /**
+     * Constructs a Texture object with the specified file path.
+     *
+     * @param filePath The file path of the texture.
+     */
     public Texture(String filePath) {
         this.filePath = filePath;
         init();
     }
 
+    /**
+     * Constructs a Texture object with the specified width and height for procedural texture generation.
+     *
+     * @param width  The width of the procedural texture.
+     * @param height The height of the procedural texture.
+     */
     public Texture(int width, int height) {
         // Generate and bind the texture
         textureID = glGenTextures();
@@ -40,21 +49,20 @@ public class Texture {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Defines a 2D texture with RGBA Channels and generates the image
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
         stbi_set_flip_vertically_on_load(true);
     }
 
     /**
-     * Initializes a texture for use and applies the parameters to create and use a 2D texture
+     * Initializes the texture, generating and binding it for use.
      */
     private void init() {
         // Generate and bind the texture
         textureID = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, textureID);
 
-        // Texture parameters(filtering/wrapping)
+        // Texture parameters (filtering/wrapping)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // wrap in the x direction
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // wrap in the y direction
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // when minifying
@@ -64,12 +72,10 @@ public class Texture {
     }
 
     /**
-     * The loadTextureFromFile method uses the STB Image library to load a texture from a specified file. It configures a 2D OpenGL
-     * texture based on the image's properties, handling different color channels (RGB or RGBA) and performing error checks
-     * during the process.
+     * Loads a texture from a file using the STB Image library.
      */
-    public void loadTextureFromFile() {
-        if (!ResourceManager.isValidFilePath(filePath)) {
+    private void loadTextureFromFile() {
+        if (!ResourceHandler.isValidFilePath(filePath)) {
             throw new UnsupportedOperationException("Error: Invalid file path provided: '" + filePath + "'");
         }
 
@@ -82,15 +88,13 @@ public class Texture {
         // Check if the image was loaded successfully
         if (image != null) {
             textureWidth = width.get(0);
-            textureHeight = width.get(0);
+            textureHeight = height.get(0);
 
             // Check the number of channels and define the texture accordingly
             if (channels.get(0) == 3) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0),
-                        0, GL_RGB, GL_UNSIGNED_BYTE, image);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, textureWidth, textureHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
             } else if (channels.get(0) == 4) {
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0),
-                        0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textureWidth, textureHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
             } else {
                 assert false : "Error: Texture has " + channels.get(0) + " channels";
             }
@@ -103,37 +107,53 @@ public class Texture {
     }
 
     /**
-     * Bind this texture for use
+     * Binds the texture for use.
      */
     public void bind() {
         glBindTexture(GL_TEXTURE_2D, textureID);
     }
 
     /**
-     * Unbind this texture
+     * Unbinds the texture.
      */
     public void unbind() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     /**
-     * Return this textures ID
+     * Gets the ID of the texture.
+     *
+     * @return The texture ID.
      */
     public int getTextureID() {
         return textureID;
     }
 
+    /**
+     * Gets the width of the texture.
+     *
+     * @return The texture width.
+     */
     public int getTextureWidth() {
         return textureWidth;
     }
 
+    /**
+     * Gets the height of the texture.
+     *
+     * @return The texture height.
+     */
     public int getTextureHeight() {
         return textureHeight;
     }
 
+    /**
+     * Gets the file path of the texture.
+     *
+     * @return The file path.
+     */
     public String getFilePath() {
         return filePath;
     }
-
 }
 /*End of Texture class*/

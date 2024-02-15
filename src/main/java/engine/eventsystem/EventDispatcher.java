@@ -5,7 +5,7 @@
  */
 package engine.eventsystem;
 
-import engine.settings.EConstants.EventType;
+import engine.UI.settings.EConstants.EventType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

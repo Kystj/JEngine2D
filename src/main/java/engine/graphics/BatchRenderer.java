@@ -6,15 +6,15 @@
 package engine.graphics;
 
 import engine.UI.engine.EngineWindow;
-import engine.components.Sprite;
-import engine.managers.ResourceManager;
+import engine.world.components.Sprite;
+import engine.handlers.ResourceHandler;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.settings.EConstants.MAX_BATCH_SIZE;
+import static engine.UI.settings.EConstants.MAX_BATCH_SIZE;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -22,6 +22,9 @@ import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
+/**
+ * The BatchRenderer class is responsible for rendering a batch of sprites efficiently using OpenGL.
+ */
 public class BatchRenderer {
 
     private final int vertexSize = 9;
@@ -34,17 +37,21 @@ public class BatchRenderer {
     private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
-   private final Shader shader = ResourceManager.getOrCreateShader("shaders/Default.glsl");
+    private final Shader shader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
-    private final int[] textureSlots = {0,1,2,3,4,5,6,7};
+    private final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
-
+    /**
+     * Constructs a BatchRenderer and initializes the necessary OpenGL resources.
+     */
     public BatchRenderer() {
         init();
     }
 
-    // Create all the data on the GPU
+    /**
+     * Initializes the OpenGL resources, such as shaders, VAO, and VBO.
+     */
     public void init() {
         // Compile and link shaders
         shader.compileAndLinkShaders();
@@ -63,7 +70,6 @@ public class BatchRenderer {
         int[] indices = generateIndices();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-
 
         // Enable the buffer attribute pointers
         int vertexSizeInBytes = vertexSize * Float.BYTES;
@@ -89,6 +95,9 @@ public class BatchRenderer {
         glEnableVertexAttribArray(3);
     }
 
+    /**
+     * Renders the batch of sprites using the specified shader and textures.
+     */
     public void render() {
         // For now, we will re-buffer all data every frame
         glBindBuffer(GL_ARRAY_BUFFER, vboID);
@@ -116,7 +125,11 @@ public class BatchRenderer {
         shader.detach();
     }
 
-
+    /**
+     * Adds a sprite to the batch for rendering.
+     *
+     * @param sprite The sprite to be added to the batch.
+     */
     public void addSpriteToBatch(Sprite sprite) {
         // Get index and add renderObject
         int index = this.numSprites;
@@ -130,6 +143,11 @@ public class BatchRenderer {
         updateBatchCapacityFlag();
     }
 
+    /**
+     * Adds the texture of a sprite to the textures list if it is not already present.
+     *
+     * @param sprite The sprite whose texture needs to be added.
+     */
     private void addTexture(Sprite sprite) {
         if (sprite.getSpriteTexture() != null) {
             if (!textures.contains(sprite.getSpriteTexture())) {
@@ -138,14 +156,19 @@ public class BatchRenderer {
         }
     }
 
+    /**
+     * Updates the vertex attribute array for a specific sprite at the given index.
+     *
+     * @param index The index of the sprite in the batch.
+     */
     private void updateVertexAttribArray(int index) {
-        // Store the sprite at the specified
+        // Store the sprite at the specified index
         Sprite sprite = this.sprites[index];
 
         // Find offset within array (4 vertices per sprite)
         int offset = index * 4 * vertexSize;
 
-        // Get the sprites attributes
+        // Get the sprite's attributes
         Vector2f spritePos = sprite.getSpritePos();
         Vector2f spriteSize = sprite.getSpriteSize();
         Vector4f color = sprite.getColor();
@@ -209,19 +232,30 @@ public class BatchRenderer {
         }
     }
 
+    /**
+     * Binds the textures to their respective texture units.
+     */
     private void bindTextures() {
-        for (int i=0; i < textures.size(); i++) {
+        for (int i = 0; i < textures.size(); i++) {
             glActiveTexture(GL_TEXTURE0 + i + 1);
             textures.get(i).bind();
         }
     }
 
+    /**
+     * Unbinds the textures.
+     */
     private void unBindTextures() {
         for (Texture texture : textures) {
             texture.unbind();
         }
     }
 
+    /**
+     * Generates the indices for rendering triangles from quads.
+     *
+     * @return An array of indices for rendering triangles.
+     */
     private int[] generateIndices() {
         // 6 indices per quad (3 per triangle)
         int[] elements = new int[6 * MAX_BATCH_SIZE];
@@ -232,6 +266,12 @@ public class BatchRenderer {
         return elements;
     }
 
+    /**
+     * Loads the indices for rendering triangles from quads into the elements array.
+     *
+     * @param elements The array to store the indices.
+     * @param index    The index of the quad in the batch.
+     */
     private void loadElementIndices(int[] elements, int index) {
         int offsetArrayIndex = 6 * index;
         int offset = 4 * index;
@@ -248,9 +288,8 @@ public class BatchRenderer {
         elements[offsetArrayIndex + 5] = offset + 1;
     }
 
-
     /**
-     * Enables the various vertex attributes needed for rendering
+     * Enables the various vertex attributes needed for rendering.
      */
     private void enableVertexAttributes() {
         glEnableVertexAttribArray(0);
@@ -260,7 +299,7 @@ public class BatchRenderer {
     }
 
     /**
-     * Disables the various vertex attributes no longer needed for rendering
+     * Disables the various vertex attributes no longer needed for rendering.
      */
     private void disableVertexAttributes() {
         glDisableVertexAttribArray(0);
@@ -269,29 +308,28 @@ public class BatchRenderer {
         glDisableVertexAttribArray(3);
     }
 
-    /**
-     * Draws in wireframe mode. Can be toggled on and off
-     */
-    private void setWireframeMode(boolean active) {
-        // TODO: Add as an option in the editor window
-        glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
-    }
 
     /**
-     * Release any resources, shaders, textures, etc.
+     * Releases any resources, shaders, textures, etc.
      */
     private void cleanup() {
-        // TODO: Implement renderer clean up code
+        // TODO: Implement renderer cleanup code
     }
 
-    /** Update the flag for the bath capacity limit*/
+    /**
+     * Updates the flag for the batch capacity limit.
+     */
     private void updateBatchCapacityFlag() {
         if (numSprites >= MAX_BATCH_SIZE) {
             this.bBatchHasRoom = false;
         }
     }
 
-    /** Getter for the bBatchHasRoom variable */
+    /**
+     * Getter for the bBatchHasRoom variable.
+     *
+     * @return True if the batch has room for more sprites, false otherwise.
+     */
     public boolean getBatchHasRoom() {
         return this.bBatchHasRoom;
     }

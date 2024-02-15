@@ -8,7 +8,7 @@ package engine.serialization;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.graphics.SpriteSheet;
-import engine.managers.ResourceManager;
+import engine.handlers.ResourceHandler;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -54,7 +54,7 @@ public class SpriteSheetSerializer {
                     e.printStackTrace();
                 }
                 SpriteSheet spriteSheet = gson.fromJson(data, SpriteSheet.class);
-                ResourceManager.addSpriteSheet(spriteSheet.getFilePathOfTexture(), spriteSheet);
+                ResourceHandler.addSpriteSheet(spriteSheet.getFilePathOfTexture(), spriteSheet);
                 spriteSheets.put(spriteSheet, spriteSheet.getAssetType());
             }
         } catch (IOException e) {

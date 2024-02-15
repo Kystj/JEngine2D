@@ -5,11 +5,11 @@
  */
 package engine.UI.editor;
 
-import engine.components.Sprite;
+import engine.world.components.Sprite;
 import engine.graphics.SpriteSheet;
-import engine.managers.AssetManager;
-import engine.managers.ShortcutHandler;
-import engine.widgets.ImGuiCustom;
+import engine.handlers.AssetHandler;
+import engine.handlers.ShortcutHandler;
+import engine.UI.engine.ImGuiCustom;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class AssetPanel {
 
-    private final AssetManager assetManager = new AssetManager();
+    private final AssetHandler assetHandler = new AssetHandler();
     private boolean bIsImportOpen = false;
     private boolean bIsRemoveOpen = false;
 
@@ -54,7 +54,7 @@ public class AssetPanel {
         // Create tabs to represent different asset types
         if (ImGui.beginTabBar("Tabs")) {
             // Iterate through each SpriteSheet in the AssetManager
-            for (Map.Entry<SpriteSheet, String> entry : assetManager.getSpriteSheets().entrySet()) {
+            for (Map.Entry<SpriteSheet, String> entry : assetHandler.getSpriteSheets().entrySet()) {
                 SpriteSheet spriteSheet = entry.getKey();
                 String tabName = entry.getValue();
 
@@ -163,30 +163,30 @@ public class AssetPanel {
      */
     private void handleConditionsAndForms() {
         // Perform a safety check for file error popup
-        if (assetManager.bFileErrorPopup) {
-            assetManager.bFileErrorPopup = ImGuiCustom.activatePopup("File Path Already In Use.\nPlease choose a different file path.");
+        if (assetHandler.bFileErrorPopup) {
+            assetHandler.bFileErrorPopup = ImGuiCustom.activatePopup("File Path Already In Use.\nPlease choose a different file path.");
         }
 
         // Perform a safety check for type error popup
-        if (assetManager.bTypeErrorPopup) {
-            assetManager.bTypeErrorPopup = ImGuiCustom.activatePopup("Type Name Already In Use.\nPlease choose a different name.");
+        if (assetHandler.bTypeErrorPopup) {
+            assetHandler.bTypeErrorPopup = ImGuiCustom.activatePopup("Type Name Already In Use.\nPlease choose a different name.");
         }
 
         // Perform a safety check for type error popup
-        if (assetManager.bValErrorPopup) {
-            assetManager.bValErrorPopup = ImGuiCustom.activatePopup("Sprite extraction values cannot be 0.\n");
+        if (assetHandler.bValErrorPopup) {
+            assetHandler.bValErrorPopup = ImGuiCustom.activatePopup("Sprite extraction values cannot be 0.\n");
         }
 
         // Check if the import form is open and close it if the escape key is pressed
         if (bIsImportOpen) {
             bIsImportOpen = ShortcutHandler.closeWithEscape();
-            assetManager.renderInputForm();
+            assetHandler.renderInputForm();
         }
 
         // Check if the remove form is open and close it if the escape key is pressed
         if (bIsRemoveOpen) {
             bIsRemoveOpen = ShortcutHandler.closeWithEscape();
-            assetManager.renderRemoveForm();
+            assetHandler.renderRemoveForm();
         }
     }
 

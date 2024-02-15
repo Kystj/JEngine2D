@@ -1,0 +1,8 @@
+{
+  "SpriteWidth": 16,
+  "SpriteHeight": 16,
+  "NumOfSprites": 3,
+  "FilePathOfTexture": "assets/spritesheets/test1.png",
+  "SpriteSpacing": 0,
+  "AssetType": "test"
+}
