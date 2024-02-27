@@ -3,8 +3,8 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine.UI.engine;
 
+package engine.ui.engine;
 
 import engine.debug.DebugRenderer;
 import engine.eventsystem.Event;
@@ -14,10 +14,10 @@ import engine.graphics.Framebuffer;
 import engine.graphics.OrthographicCamera;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.world.objects.GameObject;
 import engine.scenes.EditorScene;
 import engine.scenes.Scene;
-import engine.UI.settings.EConstants.EventType;
+import engine.ui.settings.EConstants;
+import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -49,6 +49,8 @@ public class EngineWindow implements EventListener {
 
     private int engineMode = 0; // 0: Editor. 1: Full play
     private static Scene currentScene;
+
+    private float deltaTime = -1;
 
 
     /**
@@ -159,22 +161,18 @@ public class EngineWindow implements EventListener {
         imGuiController.initImGui(glfwWindow);
 
         // Add the various events the EngineWindow should respond to and register it as a listener
-        EventDispatcher.addListener(EventType.Play, this);
-        EventDispatcher.addListener(EventType.Stop, this);
-        EventDispatcher.addListener(EventType.FullPlay, this);
+        EventDispatcher.addListener(EConstants.EventType.Play, this);
+        EventDispatcher.addListener(EConstants.EventType.Stop, this);
+        EventDispatcher.addListener(EConstants.EventType.FullPlay, this);
 
         // Load the Editor Scene at launch
         changeScene(0);
     }
 
-    /**
-     * Begin the engines update loop
-     */
-    public void tick() {
 
+    public void tick() {
         double startTime = glfwGetTime();
         double endTime;
-        float deltaTime = -1;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
 
@@ -192,7 +190,6 @@ public class EngineWindow implements EventListener {
             startTime = endTime;
 
             closeEngine();
-
         }
     }
 
@@ -211,11 +208,7 @@ public class EngineWindow implements EventListener {
         }
     }
 
-    /**
-     * The method updateEngineMode takes a deltaTime parameter and switches between different engine modes (0, 1, or 2),
-     * invoking corresponding tick methods (editorModeTick, playModeTick, or fullPlayModeTick) based on the current
-     * engine mode.
-     */
+
     private void updateEngineMode(float deltaTime) {
         if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
             engineMode = 0;
@@ -233,21 +226,14 @@ public class EngineWindow implements EventListener {
         }
     }
 
-    /**
-     * Render and play the game in fullscreen mode without the editor
-     */
+
     private void fullPlayModeTick(float deltaTime) {
-        // Safety check
-        if (engineMode == 1) {
-           changeScene(0);
-        }
         clear();
         currentScene.render();
+        currentScene.tick(deltaTime);
     }
 
-    /**
-     * Render the game with the editor (The game can still be played from the viewport)
-     */
+
     private void editorModeTick(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
@@ -410,34 +396,32 @@ public class EngineWindow implements EventListener {
         glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
     }
 
-    /**
-     * The onEvent method, implemented as part of an EventListener interface, responds to incoming events
-     */
+
     @Override
     public void onEvent(GameObject gameObject, Event event) {
 
     }
 
-    /**
-     * The onEvent method, implemented as part of an EventListener interface, responds to incoming events by switching
-     * the engineMode based on the event type
-     */
+
     @Override
     public void onEvent(Event event) {
         switch (event.getEventType()) {
             case Play:
                 engineMode = 0;
-                //System.out.println("Playing...");
+                System.out.println("Playing...");
                 break;
             case Stop:
-                engineMode = 0;
-                //System.out.println("Stopping...");
+                System.out.println("Stopping...");
                 break;
             case FullPlay:
                 engineMode = 1;
                 System.out.println("Launching full play mode...");
                 break;
         }
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 }
 /*End of EngineWindow class*/

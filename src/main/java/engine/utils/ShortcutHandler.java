@@ -3,11 +3,12 @@
  Date: 2023-11-08
  Author: Kyle St John
  */
-package engine.handlers;
+package engine.utils;
 
 import engine.io.KeyInputs;
-import engine.UI.widgets.HelpPanel;
-import engine.UI.widgets.Preferences;
+import engine.ui.widgets.HelpPanel;
+import engine.ui.widgets.Preferences;
+import imgui.type.ImBoolean;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -65,7 +66,7 @@ public class ShortcutHandler {
      */
     private static void preferencesShortcut() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
-            if (KeyInputs.keyPressed(GLFW_KEY_P)) PREFERENCES.setOpen(true);
+            if (KeyInputs.keyPressed(GLFW_KEY_P)) PREFERENCES.setOpen(new ImBoolean(true));
         }
         PREFERENCES.tick();
     }
@@ -75,7 +76,7 @@ public class ShortcutHandler {
      */
     private static void helpShortcut() {
         if (KeyInputs.keyPressed(GLFW_KEY_LEFT_CONTROL)) {
-            if (KeyInputs.keyPressed(GLFW_KEY_H)) HELP_PANEL_MENU.setOpen(true);
+            if (KeyInputs.keyPressed(GLFW_KEY_H)) HELP_PANEL_MENU.setOpen(new ImBoolean(true));
         }
         HELP_PANEL_MENU.tick();
     }

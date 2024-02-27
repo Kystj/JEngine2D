@@ -3,10 +3,11 @@
  Date: 2023-11-08
  Author: Kyle St John
  */
-package engine.UI.widgets;
+package engine.ui.widgets;
 
-import engine.UI.debug.DebugPanel;
+import engine.ui.debug.DebugPanel;
 import imgui.ImGui;
+import imgui.type.ImBoolean;
 
 /**
  * Main menu bar for the engine
@@ -52,7 +53,7 @@ public class MainMenuBar {
      * Opens the Preferences window if the preferencesMenu.isOpen() is true
      */
     private void updatePreferenceWindow() {
-        if (preferences.isOpen()) {
+        if (preferences.isOpen().get()) {
             preferences.tick();
         }
     }
@@ -61,7 +62,7 @@ public class MainMenuBar {
      * Opens the Help window if helpMenu.isOpen() is true
      */
     private void updateHelpWindow() {
-        if (helpPanelMenu.isOpen()) {
+        if (helpPanelMenu.isOpen().get()) {
             helpPanelMenu.tick();
         }
     }
@@ -70,7 +71,7 @@ public class MainMenuBar {
      * Selectable preferences option in the Project menu items drop window
      */
     private void preferencesMenuItem() {
-        if (ImGui.menuItem("Preferences", "Ctrl+p")) preferences.setOpen(true);
+        if (ImGui.menuItem("Preferences", "Ctrl+p")) preferences.setOpen(new ImBoolean(true));
         // TODO: Implement preferences
         System.out.println("Preferences...");
     }
@@ -97,7 +98,7 @@ public class MainMenuBar {
 
     private void helpMenuItem() {
         if (ImGui.menuItem("Shortcuts", "Ctrl+t"));
-        if (ImGui.menuItem("Help", "Ctrl+h")) helpPanelMenu.setOpen(true);
+        if (ImGui.menuItem("Help", "Ctrl+h")) helpPanelMenu.setOpen(new ImBoolean(true));
         //TODO: Implement load and shortcuts
         System.out.println("Loading...");
     }

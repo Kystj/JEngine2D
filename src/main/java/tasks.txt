@@ -1,3 +1,9 @@
-- Complete the debug drawing panel and ensure that all shapes draw correctly. Fix the overlap of the shapes and the issue with
-    drawing shapes over another. Add a function to clear all persistent lines. Add a close button to
-    debug panel isntead f exit on escape
+- Find sufficient spreadsheet for testing. Environment tiles would work well.
+
+- Implement Drag and drop
+
+- Implement snap to grid
+
+- Make sure every class is commented correctly.
+
+- Reload to git with a working Main branch and a Dev branch

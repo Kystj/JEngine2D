@@ -3,7 +3,7 @@
  Date: 2024-01-11
  Author: Kyle St John
  */
-package engine.handlers;
+package engine.utils;
 
 import engine.graphics.SpriteSheet;
 import engine.graphics.Texture;

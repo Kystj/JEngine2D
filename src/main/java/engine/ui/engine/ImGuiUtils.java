@@ -3,41 +3,46 @@
  Date: 2023-11-09
  Author: Kyle St John
  */
-package engine.UI.engine;
+package engine.ui.engine;
 
 import engine.io.MouseInputs;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 
-import static engine.UI.settings.EConstants.POPUP_WIN_SIZE;
-import static engine.UI.settings.EConstants.X_SPACING;
+import static engine.ui.settings.EConstants.POPUP_WIN_SIZE;
+import static engine.ui.settings.EConstants.X_SPACING;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
-public class ImGuiCustom {
+public class ImGuiUtils {
 
-    private static boolean flag = false;
 
-    /**
-     * Custom placement for the ImGui close button for the application
-     */
+    public static void renderMetricsInfo() {
+        ImGui.setCursorPosX(X_SPACING);
+        float deltaTimeInSeconds = EngineWindow.get().getDeltaTime();
+        double deltaTimeInMilliseconds = deltaTimeInSeconds * 1000; // Convert seconds to milliseconds
+        double fps = 1.0 / deltaTimeInSeconds; // Calculate frames per second
+
+        String string = " TPF(ms): " + String.format("%.2f", deltaTimeInMilliseconds) +
+                "    FPS: " + String.format("%.2f", fps);
+        ImGui.text(string);
+    }
+
+
+    // TODO: Remove and refactor
     public static boolean closeButton(float xPlacement, float yPlacement) {
         ImGui.spacing();
         ImGui.setCursorPos(xPlacement, yPlacement);
         return !ImGui.button("Close", 50.0f, 20.0f);
     }
 
-    /**
-     * The ImGui close button for the application
-     */
+    // TODO: Remove and refactor
     public static boolean closeButton() {
         ImGui.setCursorPosX(X_SPACING);
         return !ImGui.button("Close", 50.0f, 20.0f);
     }
 
-    /**
-     * Actives a popup window with the specified description as the text and calls the centrePopupText it on the screen
-     */
+
     public static boolean activatePopup(String description) {
         ImGui.openPopup(description);
         centrePopup();
@@ -46,12 +51,10 @@ public class ImGuiCustom {
             centrePopupText(description);
         }
         ImGui.endPopup();
-        return flag = closePopup();
+        return closePopup();
     }
 
-    /**
-     * Centres the popup windows text
-     */
+
     private static void centrePopupText(String description) {
         ImVec2 textSize = ImGui.calcTextSize(description);
         ImVec2 centerPos = new ImVec2(new ImVec2((POPUP_WIN_SIZE.x - textSize.x) * 0.5f,
@@ -61,9 +64,7 @@ public class ImGuiCustom {
         ImGui.text(description);
     }
 
-    /**
-     * Centres the popup window
-     */
+
     private static void centrePopup() {
         ImVec2 popupPos = new ImVec2((EngineWindow.get().getWindowWidth() * 0.5f),
                 (EngineWindow.get().getWindowHeight() * 0.5f));
@@ -71,9 +72,7 @@ public class ImGuiCustom {
         ImGui.setNextWindowPos(popupPos.x, popupPos.y);
     }
 
-    /**
-     * Closes the popup if the user clocks anywhere in the editor
-     */
+
     private static boolean closePopup() {
         if (MouseInputs.getMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
             ImGui.closeCurrentPopup();

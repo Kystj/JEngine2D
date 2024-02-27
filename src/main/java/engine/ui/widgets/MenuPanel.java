@@ -3,19 +3,19 @@
  Date: 2023-11-11
  Author: Kyle St John
  */
-package engine.UI.widgets;
+package engine.ui.widgets;
 
-import engine.UI.engine.ImGuiCustom;
 import imgui.ImGui;
+import imgui.type.ImBoolean;
 
 public class MenuPanel {
 
-    private boolean open = false;
+    private ImBoolean open = new ImBoolean(false);
     protected String fileName;
     protected String menuName;
 
     public void tick() {
-        if (open) {
+        if (open.get()) {
             displayMenu();
         }
     }
@@ -25,17 +25,17 @@ public class MenuPanel {
     }
 
     protected void displayMenu() {
-        ImGui.begin(menuName);
+        ImGui.begin(menuName, open);
         // TODO: Create Help info text file, read it and place its contents here
-        open = ImGuiCustom.closeButton();
+
         ImGui.end();
     }
 
-    public boolean isOpen() {
+    public ImBoolean isOpen() {
         return open;
     }
 
-    public void setOpen(boolean open) {
+    public void setOpen(ImBoolean open) {
         this.open = open;
     }
 }

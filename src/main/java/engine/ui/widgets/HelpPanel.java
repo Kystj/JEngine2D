@@ -3,7 +3,9 @@
  Date: 2023-11-11
  Author: Kyle St John
  */
-package engine.UI.widgets;
+package engine.ui.widgets;
+
+import imgui.type.ImBoolean;
 
 public class HelpPanel extends MenuPanel {
 
@@ -29,12 +31,12 @@ public class HelpPanel extends MenuPanel {
     }
 
     @Override
-    public boolean isOpen() {
+    public ImBoolean isOpen() {
         return super.isOpen();
     }
 
     @Override
-    public void setOpen(boolean open) {
+    public void setOpen(ImBoolean open) {
         super.setOpen(open);
     }
 }

@@ -3,11 +3,11 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine.UI.engine;
+package engine.ui.engine;
 
-import engine.UI.editor.Viewport;
-import engine.handlers.ShortcutHandler;
-import engine.UI.widgets.MainMenuBar;
+import engine.ui.editor.Viewport;
+import engine.utils.ShortcutHandler;
+import engine.ui.widgets.MainMenuBar;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.*;

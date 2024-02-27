@@ -3,12 +3,13 @@
  * Date: 2023-11-18
  * Author: Kyle St John
  */
-package engine.UI.editor;
+package engine.ui.editor;
 
-import engine.UI.engine.EngineWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
-import engine.UI.settings.EConstants.EventType;
+import engine.ui.engine.EngineWindow;
+import engine.ui.engine.ImGuiUtils;
+import engine.ui.settings.EConstants.EventType;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
@@ -18,7 +19,7 @@ public class Viewport {
 
     public void tick() {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
-                | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.MenuBar | ImGuiViewportFlags.NoTaskBarIcon);
+                | ImGuiWindowFlags.NoScrollWithMouse | ImGuiViewportFlags.NoTaskBarIcon);
 
         viewportsMenuBar();
 
@@ -63,13 +64,13 @@ public class Viewport {
     }
 
     private void viewportsMenuBar() {
-        ImGui.beginMenuBar();
 
-        float menuBarWidth = ImGui.getContentRegionAvailX();
-        float totalButtonWidth = 3 * ImGui.calcTextSize("Play").x + ImGui.getStyle().getItemSpacingX() * 2;
-        float leftPadding = (menuBarWidth - totalButtonWidth) * 0.5f;
+        float totalButtonWidth = 3 * ImGui.calcTextSize("Launch").x + ImGui.getStyle().getItemSpacingX() * 2;
+        float leftPadding = (ImGui.getContentRegionAvailX() - totalButtonWidth) * 0.5f;
+        float topPadding = (ImGui.getContentRegionAvailY() * 0.025f);
 
         ImGui.setCursorPosX(leftPadding);
+        ImGui.setCursorPosY(topPadding);
 
         if (ImGui.button("Play")) {
             EventDispatcher.dispatchEvent(new Event(EventType.Play));
@@ -86,8 +87,8 @@ public class Viewport {
         if (ImGui.button("Launch")) {
             EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
         }
-
-        ImGui.endMenuBar();
+        ImGui.sameLine();
+        ImGuiUtils.renderMetricsInfo();
     }
 }
 /* End of Viewport class */

@@ -1,4 +1,4 @@
-package engine.UI.settings;
+package engine.ui.settings;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -37,6 +37,7 @@ public interface EConstants {
     // Grid width
     int DEFAULT_GRID_WIDTH = 32;
     int DEFAULT_GRID_HEIGHT = 32;
+
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;

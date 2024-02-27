@@ -3,7 +3,7 @@
  Date: 2023-12-06
  Author: Kyle St John
  */
-package engine.handlers;
+package engine.utils;
 
 import engine.io.Audio;
 import engine.graphics.Shader;

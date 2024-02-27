@@ -3,13 +3,13 @@
  Date: 2024-01-06
  Author: Kyle St John
  */
-package engine.UI.editor;
+package engine.ui.editor;
 
 import engine.world.components.Sprite;
 import engine.graphics.SpriteSheet;
-import engine.handlers.AssetHandler;
-import engine.handlers.ShortcutHandler;
-import engine.UI.engine.ImGuiCustom;
+import engine.utils.AssetHandler;
+import engine.utils.ShortcutHandler;
+import engine.ui.engine.ImGuiUtils;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -164,17 +164,17 @@ public class AssetPanel {
     private void handleConditionsAndForms() {
         // Perform a safety check for file error popup
         if (assetHandler.bFileErrorPopup) {
-            assetHandler.bFileErrorPopup = ImGuiCustom.activatePopup("File Path Already In Use.\nPlease choose a different file path.");
+            assetHandler.bFileErrorPopup = ImGuiUtils.activatePopup("File Path Already In Use.\nPlease choose a different file path.");
         }
 
         // Perform a safety check for type error popup
         if (assetHandler.bTypeErrorPopup) {
-            assetHandler.bTypeErrorPopup = ImGuiCustom.activatePopup("Type Name Already In Use.\nPlease choose a different name.");
+            assetHandler.bTypeErrorPopup = ImGuiUtils.activatePopup("Type Name Already In Use.\nPlease choose a different name.");
         }
 
         // Perform a safety check for type error popup
         if (assetHandler.bValErrorPopup) {
-            assetHandler.bValErrorPopup = ImGuiCustom.activatePopup("Sprite extraction values cannot be 0.\n");
+            assetHandler.bValErrorPopup = ImGuiUtils.activatePopup("Sprite extraction values cannot be 0.\n");
         }
 
         // Check if the import form is open and close it if the escape key is pressed

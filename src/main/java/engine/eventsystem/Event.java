@@ -5,7 +5,7 @@
  */
 package engine.eventsystem;
 
-import engine.UI.settings.EConstants.EventType;
+import engine.ui.settings.EConstants.EventType;
 
 /**
  * This class represents a generic event with an associated event type, stored as a public field "eventType."

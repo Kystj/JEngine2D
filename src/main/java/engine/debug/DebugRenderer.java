@@ -5,17 +5,17 @@
  */
 package engine.debug;
 
-import engine.UI.engine.EngineWindow;
+import engine.ui.engine.EngineWindow;
 import engine.graphics.Shader;
-import engine.handlers.ResourceHandler;
+import engine.utils.ResourceHandler;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static engine.UI.settings.EConstants.DEBUG_LINE_WIDTH;
-import static engine.UI.settings.EConstants.MAX_DEBUG_LINES;
+import static engine.ui.settings.EConstants.DEBUG_LINE_WIDTH;
+import static engine.ui.settings.EConstants.MAX_DEBUG_LINES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -77,6 +77,10 @@ public class DebugRenderer {
 
         // Check and remove lines that are not live
         for (int i = 0; i < debugLines.size(); i++) {
+            if (debugLines.get(i).isPersistent) {
+                continue;
+            }
+
             if (debugLines.get(i).isLineLive() < 0) {
                 debugLines.remove(i);
                 i--;
@@ -176,6 +180,13 @@ public class DebugRenderer {
      */
     public static Shader getDebugShader() {
         return debugShader;
+    }
+
+    /**
+     * Clears all persistent lines
+     */
+    public static void clearPersistentLines() {
+        debugLines.clear();
     }
 }
 /*End of Draw class*/

@@ -1,0 +1,8 @@
+{
+  "SpriteWidth": 32,
+  "SpriteHeight": 32,
+  "NumOfSprites": 18,
+  "FilePathOfTexture": "assets/spritesheets/groundTiles.png",
+  "SpriteSpacing": 0,
+  "AssetType": "ground"
+}

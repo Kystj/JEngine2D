@@ -5,24 +5,27 @@
  */
 package engine.scenes;
 
-import engine.UI.debug.DebugPanel;
-import engine.UI.editor.AssetPanel;
 import engine.debug.DebugDraw;
 import engine.graphics.OrthographicCamera;
+import engine.graphics.SpriteSheet;
+import engine.graphics.Texture;
+import engine.ui.debug.DebugPanel;
+import engine.ui.editor.AssetPanel;
+import engine.utils.ResourceHandler;
+import engine.world.components.Sprite;
+import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static engine.UI.settings.EConstants.DEFAULT_GRID_HEIGHT;
-import static engine.UI.settings.EConstants.DEFAULT_GRID_WIDTH;
+import static engine.ui.settings.EConstants.DEFAULT_GRID_HEIGHT;
+import static engine.ui.settings.EConstants.DEFAULT_GRID_WIDTH;
 
 public class EditorScene extends Scene {
 
-    private final List<GameObject> gameObjectList = new ArrayList<>();
     private final AssetPanel assetPanel = new AssetPanel();
+    private GameObject obj1;
+    float count = 0.0f;
 
     @Override
     public void init() {
@@ -31,23 +34,25 @@ public class EditorScene extends Scene {
         loadResources();
         addGameObjToEditor();
 
-        //TODO: Delete. Test code
-  /*      DebugDraw.addBox(new Vector2f(50.0f, 50.0f),
-                new Vector2f(50.0f, 50.0f), 0, new Vector3f(0, 0, 1), 100000000);
+        obj1 = new GameObject("obj1", new Transform(new Vector2f(200, 200),
+                new Vector2f(200,200) ,45), 1);
 
-        DebugDraw.addBox(new Vector2f(55.0f, 55.0f),
-                new Vector2f(60.0f, 60.0f),0, new Vector3f(0, 0, 1), 100000000);*/
+        obj1.addComponent(new Sprite(ResourceHandler.getSpriteSheet("assets/spritesheets/spritesheet.png").
+                getSprite(0).getSpriteTexture()));
+
+        addGameObject(obj1);
     }
 
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
+        obj1.getComponent(Sprite.class).getTransform().setPosition(new Vector2f(300 + count, 300 + count));
+        count += 0.01f;
     }
 
     @Override
     public void render() {
          super.render();
-
           drawGridLines();
     }
 
@@ -58,11 +63,15 @@ public class EditorScene extends Scene {
     }
 
     private void loadResources() {
-
+        ResourceHandler.addSpriteSheet("assets/spritesheets/spritesheet.png",
+                new SpriteSheet(new Texture("assets/spritesheets/spritesheet.png"),
+                        16, 16,
+                        0, 3, "test_01"));
     }
 
+
     private void addGameObjToEditor() {
-        for (GameObject gameObject : gameObjectList) {
+        for (GameObject gameObject : gameObjects) {
             this.addGameObject(gameObject);
         }
     }

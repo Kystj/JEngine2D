@@ -4,10 +4,11 @@
  Author: Kyle St John
  */
 
-package engine.UI.debug;
+package engine.ui.debug;
 
 import engine.debug.DebugDraw;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -17,18 +18,17 @@ public class ShapeGenerator {
 
     protected ShapeType currentShape;
 
-    protected Vector2f position;
     protected Vector3f color;
     protected int lifeTime;
+    protected float rotation;
 
     protected boolean bIsPersistent = false;
 
     public ShapeGenerator() {
-        position = new Vector2f();
         color = new Vector3f();
         lifeTime = 0;
+        rotation = 0;
     }
-
 
     protected void drawUI() {
 
@@ -50,6 +50,7 @@ public class ShapeGenerator {
 
         ImGui.text("Color");
         ImGui.text("Lifetime");
+        ImGui.text("Rotation");
         ImGui.spacing();
         ImGui.text("Persistent");
 
@@ -65,6 +66,11 @@ public class ShapeGenerator {
             lifeTime = imFloatLifetime[0];
         }
 
+        float[] imFloatRotation = {rotation};
+        if (ImGui.dragFloat("##Rotation", imFloatRotation)) {
+            rotation = imFloatRotation[0];
+        }
+
         ImGui.spacing();
         if (ImGui.checkbox("##Persistent", bIsPersistent)) {
             bIsPersistent = !bIsPersistent;
@@ -75,27 +81,30 @@ public class ShapeGenerator {
     protected void drawButtonAndDrawShape(Runnable drawShape) {
         ImGui.spacing();
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 1.0f, 0.0f, 0.5f); // RGB color
         if (ImGui.button("Draw Shape")) {
             drawShape.run();
             refreshFields();
         }
+        ImGui.popStyleColor();
     }
 
     protected void refreshFields() {
-        position = new Vector2f();
         color = new Vector3f();
         lifeTime = 0;
+        rotation = 0;
+        bIsPersistent = false;
     }
 }
 
 class BoxGenerator extends ShapeGenerator {
 
     private Vector2f size;
-    private float rotation;
+    private Vector2f position;
 
     public BoxGenerator() {
         size = new Vector2f();
-        rotation = 0;
+        position = new Vector2f();
         currentShape = ShapeType.BOX;
     }
 
@@ -105,7 +114,6 @@ class BoxGenerator extends ShapeGenerator {
 
         ImGui.text("Position");
         ImGui.text("Size");
-        ImGui.text("Rotation");
 
         ImGui.nextColumn();
 
@@ -119,16 +127,11 @@ class BoxGenerator extends ShapeGenerator {
             size.set(imVecSize[0], imVecSize[1]);
         }
 
-        float[] imFloatRotation = {rotation};
-        if (ImGui.dragFloat("##Rotation", imFloatRotation)) {
-            rotation = imFloatRotation[0];
-        }
-
         ImGui.columns(1);
         if (bIsPersistent) {
-            drawButtonAndDrawShape(() -> DebugDraw.addBox(position, size, rotation, color));
+            drawButtonAndDrawShape(() -> DebugDraw.addBox(position, size, rotation, color, true));
         } else {
-            drawButtonAndDrawShape(() -> DebugDraw.addBox(position, size, rotation, color, lifeTime));
+            drawButtonAndDrawShape(() -> DebugDraw.addBox(position, size, rotation, color, lifeTime, false));
         }
     }
 
@@ -137,8 +140,10 @@ class BoxGenerator extends ShapeGenerator {
         super.refreshFields();
         size = new Vector2f();
         rotation = 0;
+        position = new Vector2f();
     }
 }
+
 class TriangleGenerator extends ShapeGenerator {
 
     private Vector2f v1;
@@ -178,9 +183,11 @@ class TriangleGenerator extends ShapeGenerator {
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
 
         if (bIsPersistent) {
-            drawButtonAndDrawShape(() -> DebugDraw.addTriangle(v1, v2, v3, color));
+            drawButtonAndDrawShape(() -> DebugDraw.addTriangle(v1, v2, v3, color,
+                    true, rotation));
         } else {
-            drawButtonAndDrawShape(() -> DebugDraw.addTriangle(v1, v2, v3, color, lifeTime));
+            drawButtonAndDrawShape(() -> DebugDraw.addTriangle(v1, v2, v3, color, lifeTime,
+                    false, rotation));
         }
     }
 
@@ -240,9 +247,11 @@ class CircleGenerator extends ShapeGenerator {
         ImGui.columns(1);
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
         if (bIsPersistent) {
-            drawButtonAndDrawShape(() -> DebugDraw.addCircle(centre, radius, color));
+            drawButtonAndDrawShape(() -> DebugDraw.addCircle(centre, radius, rotation, color,
+                    segments, true));
         } else {
-            drawButtonAndDrawShape(() -> DebugDraw.addCircle(centre, radius, color, lifeTime, segments));
+            drawButtonAndDrawShape(() -> DebugDraw.addCircle(centre, radius, rotation, color,
+                    lifeTime, segments, false));
         }
     }
 
@@ -286,7 +295,7 @@ class LineGenerator extends ShapeGenerator {
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
 
         if (bIsPersistent) {
-            drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color));
+            drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color, true));
         } else {
             drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color, lifeTime));
         }
