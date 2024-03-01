@@ -1,0 +1,5 @@
+{
+  "Name: ": "Rotation bug",
+  "Description: ": "When game objects are created and added to the scene\nthey are being rendered upside down.",
+  "Resolved: ": false
+}

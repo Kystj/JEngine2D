@@ -82,7 +82,7 @@ public class ReportPanel {
             imGuiBugName.set("");
             imGuiBugDescription.set("");
         }
-        if (MouseInputs.getMouseButtonPressed(0)) {
+        if (MouseInputs.mouseButtonDown(0)) {
             showPopup = false;
         }
     }

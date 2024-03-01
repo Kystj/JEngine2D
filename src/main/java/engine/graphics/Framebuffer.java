@@ -13,10 +13,6 @@ public class Framebuffer {
     private int framebufferID;
     private Texture textureAttachment;
 
-    /**
-     * The Framebuffer class represents an OpenGL framebuffer with an attached texture for rendering.
-     * It allows rendering to a texture rather than directly to the window's framebuffer.
-     */
     public Framebuffer(int width, int height) {
         init(width, height);
     }
@@ -46,36 +42,22 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    /**
-     * Binds the framebuffer for rendering.
-     */
-    public void bind() {
+    public void bind(int width, int height) {
+        //glViewport(0, 0, width, height);
         glClearColor(1, 1, 1, 0);
+
         glClear(GL_COLOR_BUFFER_BIT);
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
     }
 
-    /**
-     * Unbinds the framebuffer.
-     */
     public void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    /**
-     * Gets the ID of the framebuffer.
-     *
-     * @return The ID of the framebuffer.
-     */
     public int getFramebufferID() {
         return framebufferID;
     }
 
-    /**
-     * Gets the ID of the framebuffer's attached texture.
-     *
-     * @return The ID of the attached texture.
-     */
     public int getTextureID() {
         return textureAttachment.getTextureID();
     }

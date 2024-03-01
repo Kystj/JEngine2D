@@ -7,13 +7,15 @@ package engine.ui.editor;
 
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
+import engine.io.MouseInputs;
 import engine.ui.engine.EngineWindow;
 import engine.ui.engine.ImGuiUtils;
-import engine.ui.settings.EConstants.EventType;
+import engine.ui.settings.EConstants;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
 import imgui.flag.ImGuiWindowFlags;
+import org.joml.Vector2f;
 
 public class Viewport {
 
@@ -30,7 +32,15 @@ public class Viewport {
 
         ImGui.setCursorPos(windowPos.x, windowPos.y);
 
+        ImVec2 topLeft = new ImVec2();
+        ImGui.getCursorScreenPos(topLeft);
+        topLeft.x -= ImGui.getScrollX();
+        topLeft.y -= ImGui.getScrollY();
+
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
+
+        MouseInputs.setViewportPos(new Vector2f(topLeft.x, topLeft.y));
+        MouseInputs.setViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
         ImGui.end();
     }
@@ -73,19 +83,19 @@ public class Viewport {
         ImGui.setCursorPosY(topPadding);
 
         if (ImGui.button("Play")) {
-            EventDispatcher.dispatchEvent(new Event(EventType.Play));
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Play));
         }
 
         ImGui.sameLine();
 
         if (ImGui.button("Stop")) {
-            EventDispatcher.dispatchEvent(new Event(EventType.Stop));
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Stop));
         }
 
         ImGui.sameLine();
 
         if (ImGui.button("Launch")) {
-            EventDispatcher.dispatchEvent(new Event(EventType.FullPlay));
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.FullPlay));
         }
         ImGui.sameLine();
         ImGuiUtils.renderMetricsInfo();

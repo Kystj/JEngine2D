@@ -40,6 +40,7 @@ public class EngineWindow implements EventListener {
     private static EngineWindow engine = null;
 
     private long glfwWindow;
+
     private int windowWidth;
     private int windowHeight;
 
@@ -238,7 +239,7 @@ public class EngineWindow implements EventListener {
         // Safety check
         if (engineMode == 0) {
 
-            this.framebuffer.bind();
+            this.framebuffer.bind(windowWidth, windowHeight);
             clear();
 
             // Render the editor scene to the framebuffer
@@ -254,12 +255,12 @@ public class EngineWindow implements EventListener {
         }
     }
 
-    public static OrthographicCamera getCamera() {
+    public OrthographicCamera getCamera() {
         return currentScene.getOrthoCamera();
     }
 
     /** Get the currently bound scene*/
-    public static Scene getCurrentScene() {
+    public Scene getCurrentScene() {
         return currentScene;
     }
 

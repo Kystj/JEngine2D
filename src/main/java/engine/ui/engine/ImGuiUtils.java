@@ -74,7 +74,7 @@ public class ImGuiUtils {
 
 
     private static boolean closePopup() {
-        if (MouseInputs.getMouseButtonPressed(GLFW_MOUSE_BUTTON_1)) {
+        if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
             ImGui.closeCurrentPopup();
             return false;
         }

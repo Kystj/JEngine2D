@@ -1,8 +1,6 @@
-- Find sufficient spreadsheet for testing. Environment tiles would work well.
+- Add a button to turn off snap to grid
 
-- Implement Drag and drop
-
-- Implement snap to grid
+- Fix the bugs
 
 - Make sure every class is commented correctly.
 

@@ -5,14 +5,32 @@
  */
 package engine.io;
 
+import engine.graphics.OrthographicCamera;
+import engine.ui.engine.EngineWindow;
+import org.joml.Vector2f;
+import org.joml.Vector4f;
+
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 
 public class MouseInputs {
 
-    private static double scrollX = 0.0, scrollY = 0.0;
-    private static double xPos = 0.0, yPos = 0.0, lastY = 0.0, lastX = 0.0;
-    private static final boolean[] mouseButtons = new boolean[3];
+    private static double scrollX, scrollY;
+    private static double xPos, yPos, lastY, lastX;
+    private static boolean[] mouseButtonPressed = new boolean[9];
+    private static boolean isDragging;
+
+    private static Vector2f viewportPos = new Vector2f();
+    private static Vector2f viewportSize = new Vector2f();
+
+    private MouseInputs() {
+        scrollX = 0.0;
+        scrollY = 0.0;
+        xPos = 0.0;
+        yPos = 0.0;
+        lastX = 0.0;
+        lastY = 0.0;
+    }
 
 
     public static void mousePosCallback(long window, double xpos, double ypos) {
@@ -20,24 +38,18 @@ public class MouseInputs {
         lastY = yPos;
         xPos = xpos;
         yPos = ypos;
-    }
-
-    public static boolean getMouseButtonPressed(int button) {
-        if (button < mouseButtons.length) {
-            return mouseButtons[button];
-        } else {
-            return false;
-        }
+        isDragging = mouseButtonPressed[0] || mouseButtonPressed[1] || mouseButtonPressed[2];
     }
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
-            if (button < mouseButtons.length) {
-                mouseButtons[button] = true;
+            if (button < mouseButtonPressed.length) {
+                mouseButtonPressed[button] = true;
             }
         } else if (action == GLFW_RELEASE) {
-            if (button < mouseButtons.length) {
-                mouseButtons[button] = false;
+            if (button < mouseButtonPressed.length) {
+                mouseButtonPressed[button] = false;
+               isDragging = false;
             }
         }
     }
@@ -55,19 +67,44 @@ public class MouseInputs {
     }
 
     public static float getX() {
-        return (float)xPos;
+        return (float) xPos;
     }
 
     public static float getY() {
-        return (float)yPos;
+        return (float) yPos;
+    }
+
+
+    public static float getOrthoX() {
+         float currentX = getX() - viewportPos.x;
+        currentX = (currentX / viewportSize.x) * 2.0f - 1.015f;
+        OrthographicCamera camera = EngineWindow.get().getCamera();
+
+        Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
+        tmp.mul(camera.getInverseProjection()).mul(camera.getInverseView());
+        currentX = tmp.x;
+
+        return currentX;
+    }
+
+    public static float getOrthoY() {
+        float currentY = getY() - viewportPos.y;
+        currentY = -((currentY / viewportSize.y) * 2.0f - 1.0f);
+        OrthographicCamera camera = EngineWindow.get().getCamera();
+
+        Vector4f tmp = new Vector4f(0, currentY, 0, 1);
+        tmp.mul(camera.getInverseProjection()).mul(camera.getInverseView());
+        currentY = tmp.y;
+
+        return currentY;
     }
 
     public static float getDx() {
-        return (float)(lastX - xPos);
+        return (float) (lastX - xPos);
     }
 
     public static float getDy() {
-        return (float)(lastY - yPos);
+        return (float) (lastY - yPos);
     }
 
     public static float getScrollX() {
@@ -78,13 +115,24 @@ public class MouseInputs {
         return (float) scrollY;
     }
 
+    public static boolean isDragging() {
+        return isDragging;
+    }
 
     public static boolean mouseButtonDown(int button) {
-        if (button < mouseButtons.length) {
-            return mouseButtons[button];
+        if (button < mouseButtonPressed.length) {
+            return mouseButtonPressed[button];
         } else {
             return false;
         }
+    }
+
+    public static void setViewportPos(Vector2f pos) {
+        viewportPos = pos;
+    }
+
+    public static void setViewportSize(Vector2f size) {
+        viewportSize = size;
     }
 }
 /*End of MouseInputs class*/

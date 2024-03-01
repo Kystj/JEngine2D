@@ -105,8 +105,8 @@ public class BatchRenderer {
 
         // Use shader
         shader.use();
-        shader.uploadMat4f("uProjection", EngineWindow.getCurrentScene().getOrthoCamera().getProjectionMatrix());
-        shader.uploadMat4f("uView", EngineWindow.getCurrentScene().getOrthoCamera().calculateViewMatrix());
+        shader.uploadMat4f("uProjection", EngineWindow.get().getCurrentScene().getOrthoCamera().getProjectionMatrix());
+        shader.uploadMat4f("uView", EngineWindow.get().getCurrentScene().getOrthoCamera().calculateViewMatrix());
 
         // Bind textures
         bindTextures();

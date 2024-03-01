@@ -6,8 +6,8 @@
 package engine.ui.engine;
 
 import engine.ui.editor.Viewport;
-import engine.utils.ShortcutHandler;
 import engine.ui.widgets.MainMenuBar;
+import engine.utils.ShortcutHandler;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.*;
@@ -50,6 +50,7 @@ public class ImGuiController {
         io.setBackendFlags(ImGuiBackendFlags.HasMouseCursors); // Mouse cursors to display while resizing windows etc.
         io.setBackendPlatformName("imgui_java_impl_glfw");
         //io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
+
     }
 
     /**
@@ -60,7 +61,7 @@ public class ImGuiController {
         enableDocking();
         updateViewport();
         updateWidgets();
-        EngineWindow.getCurrentScene().imgui();
+        EngineWindow.get().getCurrentScene().imgui();
         ImGui.showDemoWindow();
         endFrame();
     }

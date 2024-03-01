@@ -28,7 +28,6 @@ public class DebugPanel {
 
     public static void tick() {
         REPORT_PANEL.tick();
-        imgui();
     }
 
     public static void imgui() {

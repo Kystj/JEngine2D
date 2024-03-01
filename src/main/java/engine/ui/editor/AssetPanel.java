@@ -5,11 +5,13 @@
  */
 package engine.ui.editor;
 
-import engine.world.components.Sprite;
 import engine.graphics.SpriteSheet;
+import engine.ui.engine.ImGuiUtils;
 import engine.utils.AssetHandler;
 import engine.utils.ShortcutHandler;
-import engine.ui.engine.ImGuiUtils;
+import engine.world.components.Sprite;
+import engine.world.objects.GameObjFactory;
+import engine.world.objects.GameObject;
 import imgui.ImGui;
 import imgui.ImVec2;
 import org.joml.Vector2f;
@@ -25,19 +27,13 @@ public class AssetPanel {
     private final AssetHandler assetHandler = new AssetHandler();
     private boolean bIsImportOpen = false;
     private boolean bIsRemoveOpen = false;
+    public final EditorControls editorControls = new EditorControls();
 
-    /**
-     * Updates ImGui and the various tabs representing asset types.
-     */
-    public void tick() {
-        imgui();
+    public void tick(float deltaTime) {
+        editorControls.tick(deltaTime);
     }
 
-    /**
-     * Renders the AssetPanel, including the main window, import and remove forms,
-     * asset dropdown, and tabs for different asset types.
-     */
-    private void imgui() {
+    public void imgui() {
         // Check the Asset Managers state
         handleConditionsAndForms();
 
@@ -85,7 +81,7 @@ public class AssetPanel {
         ImGui.columns(2, "Columns", true);
 
         // First column
-        ImGui.setColumnWidth(0, 150);
+        ImGui.setColumnWidth(0, ImGui.getWindowSizeX() * .05f);
         ImGui.text(" ");
         ImGui.setCursorPos(25,50);
 
@@ -134,9 +130,10 @@ public class AssetPanel {
             ImGui.pushID(i);
 
             // Create an image button for the current sprite
-            if (ImGui.imageButton(id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+            if (ImGui.imageButton(id, 32, 32, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
                 // Handle the selection of the current asset
-                selectTargetAsset();
+                GameObject obj = GameObjFactory.generateEnvironmentObj(sprite, spriteWidth, spriteHeight);
+                editorControls.pickUp(obj);
             }
 
             // Pop the unique ID for ImGui elements
@@ -188,28 +185,6 @@ public class AssetPanel {
             bIsRemoveOpen = ShortcutHandler.closeWithEscape();
             assetHandler.renderRemoveForm();
         }
-    }
-
-    /**
-     * Handles the selection of a target asset, including drag-and-drop interactions.
-     */
-    private void selectTargetAsset() {
-        handleAssetDrag();
-        handleAssetDrop();
-    }
-
-    /**
-     * Handles the dragging of assets within the AssetPanel.
-     */
-    private void handleAssetDrag() {
-
-    }
-
-    /**
-     * Handles the dropping of assets onto the AssetPanel.
-     */
-    private void handleAssetDrop() {
-
     }
 }
 /*End of AssetPanel class*/

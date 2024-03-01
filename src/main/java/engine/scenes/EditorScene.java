@@ -7,13 +7,8 @@ package engine.scenes;
 
 import engine.debug.DebugDraw;
 import engine.graphics.OrthographicCamera;
-import engine.graphics.SpriteSheet;
-import engine.graphics.Texture;
 import engine.ui.debug.DebugPanel;
 import engine.ui.editor.AssetPanel;
-import engine.utils.ResourceHandler;
-import engine.world.components.Sprite;
-import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -24,8 +19,6 @@ import static engine.ui.settings.EConstants.DEFAULT_GRID_WIDTH;
 public class EditorScene extends Scene {
 
     private final AssetPanel assetPanel = new AssetPanel();
-    private GameObject obj1;
-    float count = 0.0f;
 
     @Override
     public void init() {
@@ -34,20 +27,13 @@ public class EditorScene extends Scene {
         loadResources();
         addGameObjToEditor();
 
-        obj1 = new GameObject("obj1", new Transform(new Vector2f(200, 200),
-                new Vector2f(200,200) ,45), 1);
-
-        obj1.addComponent(new Sprite(ResourceHandler.getSpriteSheet("assets/spritesheets/spritesheet.png").
-                getSprite(0).getSpriteTexture()));
-
-        addGameObject(obj1);
     }
 
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
-        obj1.getComponent(Sprite.class).getTransform().setPosition(new Vector2f(300 + count, 300 + count));
-        count += 0.01f;
+        assetPanel.tick(deltaTime);
+        DebugPanel.tick();
     }
 
     @Override
@@ -58,15 +44,12 @@ public class EditorScene extends Scene {
 
     @Override
     public void imgui() {
-        assetPanel.tick();
-        DebugPanel.tick();
+        assetPanel.imgui();
+        DebugPanel.imgui();
     }
 
     private void loadResources() {
-        ResourceHandler.addSpriteSheet("assets/spritesheets/spritesheet.png",
-                new SpriteSheet(new Texture("assets/spritesheets/spritesheet.png"),
-                        16, 16,
-                        0, 3, "test_01"));
+
     }
 
 

@@ -1,0 +1,5 @@
+{
+  "Name: ": "Deleted reports still showing",
+  "Description: ": "When reports get deleted they get removed from the file\nsystem but not the dropdown menu until reset",
+  "Resolved: ": false
+}

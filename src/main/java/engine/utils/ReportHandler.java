@@ -3,7 +3,7 @@ package engine.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.debug.DebugReport;
-import engine.serialization.BugAdapter;
+import engine.serialization.ReportAdapter;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 
@@ -55,7 +55,7 @@ public class ReportHandler {
         DebugReport newDebugReport = createReport(bugName, bugDescription);
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(DebugReport.class, new BugAdapter())
+                .registerTypeAdapter(DebugReport.class, new ReportAdapter())
                 .create();
 
         String fileName = bugName.replace(" ", "") + ".json";
@@ -73,7 +73,7 @@ public class ReportHandler {
             for (Path filePath : directoryStream) {
                 Gson gson = new GsonBuilder()
                         .setPrettyPrinting()
-                        .registerTypeAdapter(DebugReport.class, new BugAdapter())
+                        .registerTypeAdapter(DebugReport.class, new ReportAdapter())
                         .create();
                 String data;
                 try {

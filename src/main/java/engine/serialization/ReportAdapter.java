@@ -11,7 +11,7 @@ import engine.debug.DebugReport;
 import java.lang.reflect.Type;
 
 /** BugAdapter class for custom Gson serialization and deserialization of BugReport objects. */
-public class BugAdapter implements JsonSerializer<DebugReport>, JsonDeserializer<DebugReport> {
+public class ReportAdapter implements JsonSerializer<DebugReport>, JsonDeserializer<DebugReport> {
 
     /**
      * Serializes a BugReport object to a JSON representation.
