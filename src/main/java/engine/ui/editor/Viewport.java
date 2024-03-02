@@ -19,6 +19,8 @@ import org.joml.Vector2f;
 
 public class Viewport {
 
+    private boolean isGridLocked = true;
+
     public void tick() {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiViewportFlags.NoTaskBarIcon);
@@ -48,8 +50,7 @@ public class Viewport {
     private ImVec2 getViewportSize() {
         ImVec2 windowSize = getWindowSize();
         float aspectWidth = windowSize.x;
-        // Aspect ratio (for example, 16:9)
-        float aspectRatio = 16.0f / 9.0f;
+        float aspectRatio = 16.0f / 9.0f; // TODO: Change from hardcoded values to a default. Allow user to change.
         float aspectHeight = aspectWidth / aspectRatio;
         if (aspectHeight > windowSize.y) {
             aspectHeight = windowSize.y;
@@ -74,7 +75,6 @@ public class Viewport {
     }
 
     private void viewportsMenuBar() {
-
         float totalButtonWidth = 3 * ImGui.calcTextSize("Launch").x + ImGui.getStyle().getItemSpacingX() * 2;
         float leftPadding = (ImGui.getContentRegionAvailX() - totalButtonWidth) * 0.5f;
         float topPadding = (ImGui.getContentRegionAvailY() * 0.025f);
@@ -98,6 +98,16 @@ public class Viewport {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.FullPlay));
         }
         ImGui.sameLine();
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .98f);
+
+        if (isGridLocked) {
+            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.lockTexture, true);
+        } else {
+            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.unlock, false);
+        }
+
+        ImGui.sameLine();
+        ImGui.setCursorPosX(leftPadding);
         ImGuiUtils.renderMetricsInfo();
     }
 }

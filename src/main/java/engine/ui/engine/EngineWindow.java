@@ -14,8 +14,8 @@ import engine.graphics.Framebuffer;
 import engine.graphics.OrthographicCamera;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.scenes.EditorScene;
-import engine.scenes.Scene;
+import engine.world.scenes.EditorScene;
+import engine.world.scenes.Scene;
 import engine.ui.settings.EConstants;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
@@ -32,9 +32,6 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-/**
- * The main window class for JEngine2D
- */
 public class EngineWindow implements EventListener {
 
     private static EngineWindow engine = null;
@@ -53,10 +50,6 @@ public class EngineWindow implements EventListener {
 
     private float deltaTime = -1;
 
-
-    /**
-     * Create a EngineWindow instance using the singleton pattern
-     */
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
             EngineWindow.engine = new EngineWindow();
@@ -76,9 +69,6 @@ public class EngineWindow implements EventListener {
         terminateProgram();
     }
 
-    /**
-     * Initialize the engine and openGL
-     */
     private void init() {
         // Set up an error callback. The default implementation
         // will print the error message in System.err.
@@ -150,9 +140,6 @@ public class EngineWindow implements EventListener {
         loadEngineConfigs();
     }
 
-    /**
-     * Load the engine configurations at program start up Initialize ImGui.
-     */
     private void loadEngineConfigs() {
         // Initialize the frame buffer
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
@@ -259,7 +246,6 @@ public class EngineWindow implements EventListener {
         return currentScene.getOrthoCamera();
     }
 
-    /** Get the currently bound scene*/
     public Scene getCurrentScene() {
         return currentScene;
     }

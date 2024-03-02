@@ -1,4 +1,6 @@
-- Add a button to turn off snap to grid
+- Add user event for snap lock
+
+- float aspectRatio = 16.0f / 9.0f; Change from hardcoded values to a default. Allow user to change.
 
 - Fix the bugs
 

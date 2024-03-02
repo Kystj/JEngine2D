@@ -3,7 +3,7 @@
  Date: 2023-12-28
  Author: Kyle St John
  */
-package engine.scenes;
+package engine.world.scenes;
 
 import engine.debug.DebugDraw;
 import engine.graphics.OrthographicCamera;

@@ -17,14 +17,13 @@ public class DebugPanel {
 
     private static final ImBoolean bIsOpen = new ImBoolean(true);
     private static final ReportPanel REPORT_PANEL = new ReportPanel();
+    private static ShapeGenerator SHAPE_GENERATOR = new LineGenerator();
 
     private static final Texture squareButton = loadTexture("assets/buttons/Square.png");
     private static final Texture circleButton = loadTexture("assets/buttons/Circle.png");
     private static final Texture triangleButton = loadTexture("assets/buttons/Triangle.png");
     private static final Texture lineButton = loadTexture("assets/buttons/Line.png");
     private static final Texture refreshButton = loadTexture("assets/buttons/Refresh.png");
-
-    private static ShapeGenerator SHAPE_GENERATOR = new LineGenerator();
 
     public static void tick() {
         REPORT_PANEL.tick();
@@ -43,7 +42,7 @@ public class DebugPanel {
     }
 
     private static void drawConfigurations() {
-        if (ImGui.collapsingHeader("Configurations")) {
+        if (ImGui.collapsingHeader("Config")) {
             ImGui.setCursorPosX(X_SPACING);
             ImGui.bulletText("Grid Size");
 

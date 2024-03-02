@@ -31,7 +31,7 @@ public interface EConstants {
         Save,
         Load,
         User,
-        FullPlay
+        FullPlay,
     }
 
     // Grid width

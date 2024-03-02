@@ -5,8 +5,12 @@
  */
 package engine.ui.editor;
 
+import engine.eventsystem.Event;
+import engine.eventsystem.EventDispatcher;
+import engine.eventsystem.EventListener;
 import engine.io.MouseInputs;
 import engine.ui.engine.EngineWindow;
+import engine.ui.settings.EConstants;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
@@ -15,9 +19,14 @@ import static engine.ui.settings.EConstants.DEFAULT_GRID_HEIGHT;
 import static engine.ui.settings.EConstants.DEFAULT_GRID_WIDTH;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
-public class EditorControls {
+public class EditorControls implements EventListener {
 
-    GameObject selectedObject = null;
+    private GameObject selectedObject = null;
+    private boolean enableGridSnap = true;
+
+    public EditorControls() {
+        EventDispatcher.addListener(EConstants.EventType.User, this);
+    }
 
     public void pickUp(GameObject gameObject) {
         selectedObject = gameObject;
@@ -33,9 +42,12 @@ public class EditorControls {
         if (selectedObject != null) {
             selectedObject.getTransform().position.x = MouseInputs.getOrthoX() + 16;
             selectedObject.getTransform().position.y = MouseInputs.getOrthoY() + 16;
-            // Snap to grid
-            selectedObject.getTransform().position.x = (int)(selectedObject.getTransform().position.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
-            selectedObject.getTransform().position.y = (int)(selectedObject.getTransform().position.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
+
+            // Implement snap to grid
+            if (enableGridSnap) {
+                selectedObject.getTransform().position.x = (int) (selectedObject.getTransform().position.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
+                selectedObject.getTransform().position.y = (int) (selectedObject.getTransform().position.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
+            }
 
             spritePos.set(selectedObject.getTransform().position.x, selectedObject.getTransform().position.y);
 
@@ -44,6 +56,23 @@ public class EditorControls {
                 selectedObject.getComponent(Sprite.class).getTransform().setPosition(spritePos);
                 place();
             }
+        }
+    }
+
+
+    private void onButtonClick() {
+        enableGridSnap = !enableGridSnap;
+    }
+
+    @Override
+    public void onEvent(GameObject gameObject, Event event) {
+
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        if (event.getEventType() == EConstants.EventType.User) {
+           onButtonClick();
         }
     }
 }

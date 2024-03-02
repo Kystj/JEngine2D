@@ -25,8 +25,8 @@ public class ImGuiController {
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-    MainMenuBar mainMenuBar = new MainMenuBar();
-    Viewport viewport = new Viewport();
+    private final MainMenuBar mainMenuBar = new MainMenuBar();
+    private final Viewport viewport = new Viewport();
 
     /**
      * Initialize ImGui context and configs
