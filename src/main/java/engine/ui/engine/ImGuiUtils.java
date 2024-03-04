@@ -10,6 +10,7 @@ import engine.eventsystem.EventDispatcher;
 import engine.graphics.Texture;
 import engine.io.MouseInputs;
 import engine.ui.settings.EConstants;
+import engine.utils.MathUtils;
 import engine.utils.ResourceHandler;
 import imgui.ImGui;
 import imgui.ImVec2;
@@ -24,6 +25,7 @@ public class ImGuiUtils {
 
     public static final Texture lockTexture = ResourceHandler.getOrCreateTexture("assets/buttons/locked.png");
     public static final Texture unlock = ResourceHandler.getOrCreateTexture("assets/buttons/unlocked.png");
+    public static String aspectRatio = " ";
 
 
     public static void renderMetricsInfo() {
@@ -49,10 +51,10 @@ public class ImGuiUtils {
 
         };
         if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
-            System.out.println("This ran");
-            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User)); // Turn off snap to grid
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
-            }
+        }
+
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
             if (isLocked) {
@@ -63,59 +65,81 @@ public class ImGuiUtils {
             ImGui.endTooltip();
         }
         return isLocked;
-        }
+    }
 
-
-        // TODO: Remove and refactor
-        public static boolean closeButton ( float xPlacement, float yPlacement){
-            ImGui.spacing();
-            ImGui.setCursorPos(xPlacement, yPlacement);
-            return !ImGui.button("Close", 50.0f, 20.0f);
-        }
-
-        // TODO: Remove and refactor
-        public static boolean closeButton () {
-            ImGui.setCursorPosX(X_SPACING);
-            return !ImGui.button("Close", 50.0f, 20.0f);
-        }
-
-
-        public static boolean activatePopup (String description){
-            ImGui.openPopup(description);
-            centrePopup();
-            // AlwaysAutoResize ensures the window resizes itself based on its content
-            if (ImGui.beginPopup(description, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar)) {
-                centrePopupText(description);
-            }
+    public static void renderAspectRatioButton() {
+        if (ImGui.beginPopupContextItem("my popup")) {
+            if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f); aspectRatio = "16 / 9";
+            if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);aspectRatio = "16 / 10";
+            if (ImGui.selectable("21:9"))  EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);  aspectRatio = "21 / 9";
+            if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);  aspectRatio = "4 / 3";
             ImGui.endPopup();
-            return closePopup();
         }
 
+        String aspectRatio = MathUtils.decimalToAspectRatio(EngineWindow.get().getDefaultAspectRatio());
 
-        private static void centrePopupText (String description){
-            ImVec2 textSize = ImGui.calcTextSize(description);
-            ImVec2 centerPos = new ImVec2(new ImVec2((POPUP_WIN_SIZE.x - textSize.x) * 0.5f,
-                    (POPUP_WIN_SIZE.y - textSize.y) * 0.5f));
-            // Allows me to manually set where the next UI element will be drawn
-            ImGui.setCursorPos(centerPos.x, centerPos.y);
-            ImGui.text(description);
+        if (ImGui.button(aspectRatio)) {
+            ImGui.openPopup("my popup");
         }
 
-
-        private static void centrePopup () {
-            ImVec2 popupPos = new ImVec2((EngineWindow.get().getWindowWidth() * 0.5f),
-                    (EngineWindow.get().getWindowHeight() * 0.5f));
-            ImGui.setNextWindowSize(POPUP_WIN_SIZE.x, POPUP_WIN_SIZE.y);
-            ImGui.setNextWindowPos(popupPos.x, popupPos.y);
-        }
-
-
-        private static boolean closePopup () {
-            if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
-                ImGui.closeCurrentPopup();
-                return false;
-            }
-            return true;
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip("Change Aspect Ratio");
+            ImGui.endTooltip();
         }
     }
+
+
+    // TODO: Remove and refactor
+    public static boolean closeButton(float xPlacement, float yPlacement) {
+        ImGui.spacing();
+        ImGui.setCursorPos(xPlacement, yPlacement);
+        return !ImGui.button("Close", 50.0f, 20.0f);
+    }
+
+    // TODO: Remove and refactor
+    public static boolean closeButton() {
+        ImGui.setCursorPosX(X_SPACING);
+        return !ImGui.button("Close", 50.0f, 20.0f);
+    }
+
+
+    public static boolean activatePopup(String description) {
+        ImGui.openPopup(description);
+        centrePopup();
+        // AlwaysAutoResize ensures the window resizes itself based on its content
+        if (ImGui.beginPopup(description, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar)) {
+            centrePopupText(description);
+        }
+        ImGui.endPopup();
+        return closePopup();
+    }
+
+
+    private static void centrePopupText(String description) {
+        ImVec2 textSize = ImGui.calcTextSize(description);
+        ImVec2 centerPos = new ImVec2(new ImVec2((POPUP_WIN_SIZE.x - textSize.x) * 0.5f,
+                (POPUP_WIN_SIZE.y - textSize.y) * 0.5f));
+        // Allows me to manually set where the next UI element will be drawn
+        ImGui.setCursorPos(centerPos.x, centerPos.y);
+        ImGui.text(description);
+    }
+
+
+    private static void centrePopup() {
+        ImVec2 popupPos = new ImVec2((EngineWindow.get().getWindowWidth() * 0.5f),
+                (EngineWindow.get().getWindowHeight() * 0.5f));
+        ImGui.setNextWindowSize(POPUP_WIN_SIZE.x, POPUP_WIN_SIZE.y);
+        ImGui.setNextWindowPos(popupPos.x, popupPos.y);
+    }
+
+
+    private static boolean closePopup() {
+        if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
+            ImGui.closeCurrentPopup();
+            return false;
+        }
+        return true;
+    }
+}
 /*End of ImGuiCustom class*/

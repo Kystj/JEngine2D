@@ -50,7 +50,7 @@ public class Viewport {
     private ImVec2 getViewportSize() {
         ImVec2 windowSize = getWindowSize();
         float aspectWidth = windowSize.x;
-        float aspectRatio = 16.0f / 9.0f; // TODO: Change from hardcoded values to a default. Allow user to change.
+        float aspectRatio = EngineWindow.get().getDefaultAspectRatio();
         float aspectHeight = aspectWidth / aspectRatio;
         if (aspectHeight > windowSize.y) {
             aspectHeight = windowSize.y;
@@ -98,13 +98,16 @@ public class Viewport {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.FullPlay));
         }
         ImGui.sameLine();
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .98f);
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .95f);
 
         if (isGridLocked) {
             isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.lockTexture, true);
         } else {
             isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.unlock, false);
         }
+
+        ImGui.sameLine();
+        ImGuiUtils.renderAspectRatioButton();
 
         ImGui.sameLine();
         ImGui.setCursorPosX(leftPadding);

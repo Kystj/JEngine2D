@@ -1,24 +1,17 @@
 package engine.ui.settings;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 
 /**
  * This class contains all the constants used throughout the engine
  */
 public interface EConstants {
 
-    // Color constants
-    Vector3f RED = new Vector3f(1, 0, 0);
-    Vector3f BLUE = new Vector3f(0, 0, 1);
-    Vector3f GREEN = new Vector3f(0, 1, 0);
-    Vector3f WHITE = new Vector3f(1, 1, 1);
-    Vector4f BLACK = new Vector4f(0, 0, 0, 1);
-    Vector4f INVISIBLE = new Vector4f(0, 0, 0, 0);
-
     // Popup Window constants
     Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
+
+    // Aspect ratios
+
 
     // ImGui
     int X_SPACING = 10;
@@ -32,6 +25,7 @@ public interface EConstants {
         Load,
         User,
         FullPlay,
+        Grid_Lock
     }
 
     // Grid width

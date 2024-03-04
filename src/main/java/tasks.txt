@@ -1,9 +1,23 @@
-- Add user event for snap lock
+Current Development Tasks
 
-- float aspectRatio = 16.0f / 9.0f; Change from hardcoded values to a default. Allow user to change.
+   Weekly Plan (March 4 - Mach 10)
 
-- Fix the bugs
+       - Fix the bugs.
 
-- Make sure every class is commented correctly.
+       - Implement z-indexing.
 
-- Reload to git with a working Main branch and a Dev branch
+       - Implement a details window for the active game object.
+
+       - Implement functionality to allow a user to select objects once they have already been placed in the scene.
+
+       - Implement a config panel.
+
+       - Review Editor Controls, Mouse control math and OrthoCamera math/controls carefully and record editor control details in notebook.
+
+       - Make sure every class is commented correctly.
+
+       - Reload to git with a working Main branch and a Dev branch
+
+Name Ideas:
+ - StellarSprite2D
+ - Nova2D

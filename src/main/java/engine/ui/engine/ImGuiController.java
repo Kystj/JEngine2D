@@ -62,7 +62,7 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.get().getCurrentScene().imgui();
-        ImGui.showDemoWindow();
+        // ImGui.showDemoWindow();
         endFrame();
     }
 

@@ -1,0 +1,5 @@
+{
+  "Name: ": "Sprite duplication",
+  "Description: ": "When dragging sprites to screen if  same sprite already\non screen it will teleport to origin",
+  "Resolved: ": false
+}

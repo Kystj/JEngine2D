@@ -26,12 +26,13 @@ public class DebugPanel {
     private static final Texture refreshButton = loadTexture("assets/buttons/Refresh.png");
 
     public static void tick() {
-        REPORT_PANEL.tick();
+
     }
 
     public static void imgui() {
         if (bIsOpen.get()) {
             ImGui.begin("Debug", bIsOpen);
+            REPORT_PANEL.imgui();
             ImGui.spacing();
             drawConfigurations();
             drawShapes();

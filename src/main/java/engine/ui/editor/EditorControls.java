@@ -25,7 +25,7 @@ public class EditorControls implements EventListener {
     private boolean enableGridSnap = true;
 
     public EditorControls() {
-        EventDispatcher.addListener(EConstants.EventType.User, this);
+        EventDispatcher.addListener(EConstants.EventType.Grid_Lock, this);
     }
 
     public void pickUp(GameObject gameObject) {
@@ -52,7 +52,6 @@ public class EditorControls implements EventListener {
             spritePos.set(selectedObject.getTransform().position.x, selectedObject.getTransform().position.y);
 
             if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-                // TODO: Fix this
                 selectedObject.getComponent(Sprite.class).getTransform().setPosition(spritePos);
                 place();
             }
@@ -71,7 +70,7 @@ public class EditorControls implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event.getEventType() == EConstants.EventType.User) {
+        if (event.getEventType() == EConstants.EventType.Grid_Lock) {
            onButtonClick();
         }
     }

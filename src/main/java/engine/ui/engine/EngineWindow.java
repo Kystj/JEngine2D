@@ -41,6 +41,8 @@ public class EngineWindow implements EventListener {
     private int windowWidth;
     private int windowHeight;
 
+    private float defaultAspectRatio = 16.0f / 9.0f;
+
     private Framebuffer framebuffer;
 
     private final ImGuiController imGuiController = new ImGuiController();
@@ -240,6 +242,15 @@ public class EngineWindow implements EventListener {
             // Update the ImGui components
             imGuiController.tick(deltaTime);
         }
+    }
+
+    public float getDefaultAspectRatio() {
+        return defaultAspectRatio;
+    }
+
+
+    public void setDefaultAspectRatio(float defaultAspectRatio) {
+        this.defaultAspectRatio = defaultAspectRatio;
     }
 
     public OrthographicCamera getCamera() {

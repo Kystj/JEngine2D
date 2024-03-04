@@ -13,9 +13,6 @@ import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static engine.ui.settings.EConstants.DEFAULT_GRID_HEIGHT;
-import static engine.ui.settings.EConstants.DEFAULT_GRID_WIDTH;
-
 public class EditorScene extends Scene {
 
     private final AssetPanel assetPanel = new AssetPanel();
@@ -61,28 +58,36 @@ public class EditorScene extends Scene {
 
     public void drawGridLines() {
         Vector2f cameraPos = orthoCamera.position;
+
+        // Set the desired grid cell size
+        float cellSize = 16.0f;
+
+        // Calculate the size of the grid based on the camera's size
         Vector2f projectionSize = orthoCamera.size;
 
-        // Calculate the starting positions of grid lines based on the camera position
-        int firstX = ((int) cameraPos.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
-        int firstY = ((int) cameraPos.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
+        // Determine the number of rows and columns in the grid
+        int numColumns = (int) (projectionSize.x / cellSize);
+        int numRows = (int) (projectionSize.y / cellSize);
 
-        // Calculate the number of vertical and horizontal grid lines within the viewport
-        int numVtLines = (int) (projectionSize.x / DEFAULT_GRID_WIDTH) + 1;
-        int numHzLines = (int) (projectionSize.y / DEFAULT_GRID_HEIGHT) + 1;
+        // Calculate the actual size of each grid cell
+        float cellWidth = projectionSize.x / numColumns;
+        float cellHeight = projectionSize.y / numRows;
+
+        System.out.println("Cell width: " + cellWidth);
+        System.out.println("Cell height: " + cellHeight);
 
         // Set the color for the grid lines
         Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
 
         // Draw vertical grid lines
-        for (int i = 0; i < numVtLines; i++) {
-            int x = firstX + (DEFAULT_GRID_WIDTH * i);
+        for (int i = 0; i <= numColumns; i++) {
+            float x = cameraPos.x + i * cellWidth;
             DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), color);
         }
 
         // Draw horizontal grid lines
-        for (int i = 0; i < numHzLines; i++) {
-            int y = firstY + (DEFAULT_GRID_HEIGHT * i);
+        for (int i = 0; i <= numRows; i++) {
+            float y = cameraPos.y + i * cellHeight;
             DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), color);
         }
     }

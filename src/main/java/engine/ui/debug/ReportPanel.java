@@ -14,7 +14,6 @@ import static engine.ui.settings.EConstants.X_SPACING;
 public class ReportPanel {
 
     private boolean showPopup = false;
-    private boolean loadReport = false;
     private boolean generateNewReport = false;
 
     private final ImString imGuiBugName = new ImString();
@@ -24,9 +23,9 @@ public class ReportPanel {
         ReportHandler.loadReports();
     }
 
-    public void tick() {
+    public void imgui() {
         generateReport();
-        loadReportInformation();
+
     }
 
     private void generateReport() {
@@ -66,15 +65,7 @@ public class ReportPanel {
         generateNewReport = ImGuiUtils.closeButton();
     }
 
-    private void loadReportInformation() {
-        if (loadReport) {
-            ImGui.begin("Reports");
-            // Display existing bug reports
-            ReportHandler.viewBugs();
-            loadReport = ImGuiUtils.closeButton(ImGui.getWindowSizeX() * .50f, ImGui.getWindowSizeY() * .50f);
-            ImGui.end();
-        }
-    }
+
 
     private void saveAndResetFields() {
         if (this.showPopup) {
@@ -91,7 +82,4 @@ public class ReportPanel {
         this.generateNewReport = generateNewReport;
     }
 
-    public void setLoadReport(boolean loadReport) {
-        this.loadReport = loadReport;
-    }
 }
