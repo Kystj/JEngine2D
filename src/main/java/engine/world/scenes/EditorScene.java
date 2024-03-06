@@ -17,6 +17,8 @@ public class EditorScene extends Scene {
 
     private final AssetPanel assetPanel = new AssetPanel();
 
+    private static int cellSize = 16;
+
     @Override
     public void init() {
         super.init();
@@ -30,7 +32,6 @@ public class EditorScene extends Scene {
     public void tick(float deltaTime) {
         super.tick(deltaTime);
         assetPanel.tick(deltaTime);
-        DebugPanel.tick();
     }
 
     @Override
@@ -44,6 +45,8 @@ public class EditorScene extends Scene {
         assetPanel.imgui();
         DebugPanel.imgui();
     }
+
+
 
     private void loadResources() {
 
@@ -59,9 +62,6 @@ public class EditorScene extends Scene {
     public void drawGridLines() {
         Vector2f cameraPos = orthoCamera.position;
 
-        // Set the desired grid cell size
-        float cellSize = 16.0f;
-
         // Calculate the size of the grid based on the camera's size
         Vector2f projectionSize = orthoCamera.size;
 
@@ -69,27 +69,24 @@ public class EditorScene extends Scene {
         int numColumns = (int) (projectionSize.x / cellSize);
         int numRows = (int) (projectionSize.y / cellSize);
 
-        // Calculate the actual size of each grid cell
-        float cellWidth = projectionSize.x / numColumns;
-        float cellHeight = projectionSize.y / numRows;
-
-        System.out.println("Cell width: " + cellWidth);
-        System.out.println("Cell height: " + cellHeight);
-
         // Set the color for the grid lines
         Vector3f color = new Vector3f(0.2f, 0.2f, 0.2f);
 
         // Draw vertical grid lines
         for (int i = 0; i <= numColumns; i++) {
-            float x = cameraPos.x + i * cellWidth;
+            float x = cameraPos.x + i * cellSize;
             DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), color);
         }
 
         // Draw horizontal grid lines
         for (int i = 0; i <= numRows; i++) {
-            float y = cameraPos.y + i * cellHeight;
+            float y = cameraPos.y + i * cellSize;
             DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), color);
         }
+    }
+
+    public static void setCellSize(int cellSize) {
+        EditorScene.cellSize = cellSize;
     }
 }
 /*End of Editor class*/

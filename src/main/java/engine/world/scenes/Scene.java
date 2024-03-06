@@ -43,7 +43,7 @@ public class Scene {
         // Initialize each game object and add it to the renderer
         for (GameObject gameObject : gameObjects) {
             gameObject.init();
-            this.renderer.addSprite(gameObject);
+            this.renderer.addGameObject(gameObject);
         }
         // Set the scene as active
         bIsSceneActive = true;
@@ -72,7 +72,7 @@ public class Scene {
             // If active, add the game object, initialize it, and add it to the renderer
             gameObjects.add(gameObject);
             gameObject.init();
-            this.renderer.addSprite(gameObject);
+            this.renderer.addGameObject(gameObject);
         }
     }
 

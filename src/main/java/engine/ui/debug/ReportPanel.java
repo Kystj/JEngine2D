@@ -1,26 +1,26 @@
 package engine.ui.debug;
 
 import engine.io.MouseInputs;
-import engine.utils.ReportHandler;
 import engine.ui.engine.ImGuiUtils;
+import engine.utils.ReportHandler;
 import imgui.ImGui;
+import imgui.flag.ImGuiInputTextFlags;
+import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
 import static engine.ui.settings.EConstants.X_SPACING;
 
-/**
- * BugReportUI class for handling bug reporting user interface.
- */
 public class ReportPanel {
 
     private boolean showPopup = false;
-    private boolean generateNewReport = false;
+    private ImBoolean generateNewReport = new ImBoolean(false);
 
     private final ImString imGuiBugName = new ImString();
     private final ImString imGuiBugDescription = new ImString();
 
     public ReportPanel() {
         ReportHandler.loadReports();
+        imGuiBugDescription.resize(512);
     }
 
     public void imgui() {
@@ -29,41 +29,50 @@ public class ReportPanel {
     }
 
     private void generateReport() {
-        if (generateNewReport) {
-            ImGui.begin("Bug Report");
-            generateReportFields();
+        if (generateNewReport.get()) {
+            ImGui.begin("Bug Report", generateNewReport);
+            generateFields();
             saveAndResetFields();
             ImGui.end();
         }
     }
 
-    private void generateReportFields() {
+    private void generateFields() {
         ImGui.setCursorPosX(X_SPACING);
         ImGui.text("ID:   ");
         ImGui.setCursorPosX(X_SPACING);
 
+        // Input text field for bug name
         ImGui.inputText("##name", imGuiBugName);
+
         ImGui.spacing();
         ImGui.setCursorPosX(X_SPACING);
 
         ImGui.text("Description:");
         ImGui.setCursorPosX(X_SPACING);
-        ImGui.inputTextMultiline("##description", imGuiBugDescription, 256);
+
+        // Multiline input text field for bug description
+        if (imGuiBugDescription.getBufferSize() < 512) {
+            imGuiBugDescription.resize(512);
+        }
+        ImGui.inputTextMultiline("##description", imGuiBugDescription, ImGuiInputTextFlags.CallbackResize);
 
         ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("Generate Report")) {
             String bugName = imGuiBugName.get();
             String bugDescription = imGuiBugDescription.get();
+
             if (!bugName.isEmpty() && !bugDescription.isEmpty()) {
                 ReportHandler.saveReport(bugName, bugDescription);
                 this.showPopup = true;
+                generateNewReport.set(false);
             } else {
                 // Handle empty fields
                 ImGuiUtils.activatePopup("Error: Please fill in all fields!");
             }
         }
-        generateNewReport = ImGuiUtils.closeButton();
     }
+
 
 
 
@@ -78,7 +87,7 @@ public class ReportPanel {
         }
     }
 
-    public void setGenerateNewReport(boolean generateNewReport) {
+    public void setGenerateNewReport(ImBoolean generateNewReport) {
         this.generateNewReport = generateNewReport;
     }
 

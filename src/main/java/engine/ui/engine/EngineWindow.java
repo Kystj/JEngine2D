@@ -48,7 +48,7 @@ public class EngineWindow implements EventListener {
     private final ImGuiController imGuiController = new ImGuiController();
 
     private int engineMode = 0; // 0: Editor. 1: Full play
-    private static Scene currentScene;
+    private Scene currentScene;
 
     private float deltaTime = -1;
 
@@ -153,7 +153,7 @@ public class EngineWindow implements EventListener {
         // Add the various events the EngineWindow should respond to and register it as a listener
         EventDispatcher.addListener(EConstants.EventType.Play, this);
         EventDispatcher.addListener(EConstants.EventType.Stop, this);
-        EventDispatcher.addListener(EConstants.EventType.FullPlay, this);
+        EventDispatcher.addListener(EConstants.EventType.Launch, this);
 
         // Load the Editor Scene at launch
         changeScene(0);
@@ -227,7 +227,6 @@ public class EngineWindow implements EventListener {
     private void editorModeTick(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
-
             this.framebuffer.bind(windowWidth, windowHeight);
             clear();
 
@@ -354,6 +353,7 @@ public class EngineWindow implements EventListener {
         return windowHeight;
     }
 
+
     /**
      * Get the texture bound to the EngineWindows Framebuffer object
      */
@@ -394,6 +394,10 @@ public class EngineWindow implements EventListener {
         glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
     }
 
+    public float getDeltaTime() {
+        return deltaTime;
+    }
+
 
     @Override
     public void onEvent(GameObject gameObject, Event event) {
@@ -411,15 +415,11 @@ public class EngineWindow implements EventListener {
             case Stop:
                 System.out.println("Stopping...");
                 break;
-            case FullPlay:
+            case Launch:
                 engineMode = 1;
                 System.out.println("Launching full play mode...");
                 break;
         }
-    }
-
-    public float getDeltaTime() {
-        return deltaTime;
     }
 }
 /*End of EngineWindow class*/

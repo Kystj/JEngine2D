@@ -9,61 +9,54 @@ import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * The Renderer class is responsible for rendering sprites using BatchRenderer objects.
- */
 public class Renderer {
 
-    private final List<BatchRenderer> batchRendererList = new ArrayList<>();
+    private final List<BatchRenderer> batchList = new ArrayList<>();
 
-    /**
-     * Calls the render() method on each render Batch object in the batch renderer list.
-     */
     public void render() {
         // Update the batches
-        for (BatchRenderer batch : batchRendererList) {
+        for (BatchRenderer batch : batchList) {
             batch.render();
         }
     }
 
-    /**
-     * Finds a batch with room and adds the sprite to that batch.
-     *
-     * @param sprite The sprite to be added to a batch.
-     */
-    private void addSpriteToBatch(Sprite sprite) {
-        BatchRenderer batch = batchRendererList.stream()
-                .filter(BatchRenderer::getBatchHasRoom)
-                .findFirst()
-                .orElseGet(() -> {
-                    BatchRenderer newBatch = new BatchRenderer();
-                    batchRendererList.add(newBatch);
-                    return newBatch;
-                });
-
-        batch.addSpriteToBatch(sprite);
-    }
-
-    /**
-     * Adds a sprite to a batch if it exists in the provided game object.
-     *
-     * @param gameObject The game object containing the sprite component.
-     */
-    public void addSprite(GameObject gameObject) {
-        Sprite sprite = gameObject.getComponent(Sprite.class);
+    public void addGameObject(GameObject go) {
+        Sprite sprite = go.getComponent(Sprite.class);
         if (sprite != null) {
-            addSpriteToBatch(sprite);
+            add(sprite);
         }
     }
 
-    /**
-     * Handles the disposal or release of resources associated with rendering.
-     * TODO: Implement renderer cleanup code.
-     */
-    private void cleanup() {
-        // TODO: Implement renderer cleanup code
+    private void add(Sprite sprite) {
+        if (!addToExistingBatch(sprite)) {
+            createNewBatch(sprite);
+        }
+    }
+
+    private boolean addToExistingBatch(Sprite sprite) {
+        for (BatchRenderer batch : batchList) {
+            // Only add sprites of the same z-index onto the same batch
+            if (batch.getBatchHasRoom() && batch.getzIndex() == sprite.owningGameObject.getzIndex()) {
+                Texture tex = sprite.getSpriteTexture();
+                if (tex == null || (batch.hasTexture(tex) || batch.isTexSlotsFull())) {
+                    batch.addSpriteToBatch(sprite);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void createNewBatch(Sprite sprite) {
+        BatchRenderer newBatch = new BatchRenderer(sprite.owningGameObject.getzIndex());
+        newBatch.addSpriteToBatch(sprite);
+        batchList.add(newBatch);
+        // Sorts the batches by their z index to ensure they are in the correct order
+        // Can also call .reverseOrder()
+        Collections.sort(batchList);
     }
 }
 /*End of Renderer class*/

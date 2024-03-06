@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL20C.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class BatchRenderer {
+public class BatchRenderer implements Comparable<BatchRenderer> {
 
     private final int vertexSize = 9;
 
@@ -38,13 +38,23 @@ public class BatchRenderer {
     private final Shader shader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
-    private final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
+    private final int NUM_TEXTURE_SLOTS = 16; // Define the number of texture slots
+    private final int[] textureSlots = new int[NUM_TEXTURE_SLOTS];
 
-    public BatchRenderer() {
+    private int zIndex;
+
+    public BatchRenderer(int zIndex) {
+        this.zIndex = zIndex;
         init();
     }
 
     public void init() {
+        // Initialize textureSlots
+        // Initialize the texture slots array
+        for (int i = 0; i < NUM_TEXTURE_SLOTS; i++) {
+            textureSlots[i] = i;
+        }
+
         // Compile and link shaders
         shader.compileAndLinkShaders();
 
@@ -185,8 +195,8 @@ public class BatchRenderer {
         float halfHeight = ySize * 0.5f;
 
         // Calculate the cosine and sine of the rotation angle
-        float cos = (float) Math.cos(rotation);
-        float sin = (float) Math.sin(rotation);
+        float cos = (float) Math.cos(Math.toRadians(rotation)); // Ensure angle is in radians
+        float sin = (float) Math.sin(Math.toRadians(rotation));
 
         // Add vertices with the appropriate properties
         for (int i = 0; i < 4; i++) {
@@ -271,10 +281,6 @@ public class BatchRenderer {
     }
 
 
-    private void cleanup() {
-        // TODO: Implement renderer cleanup code
-    }
-
     private void checkCapacity() {
         if (numSprites >= MAX_BATCH_SIZE) {
             this.bBatchHasRoom = false;
@@ -283,6 +289,27 @@ public class BatchRenderer {
 
     public boolean getBatchHasRoom() {
         return this.bBatchHasRoom;
+    }
+
+    public int getzIndex() {
+        return zIndex;
+    }
+
+    public void setZIndex(int zIndex) {
+        this.zIndex = zIndex;
+    }
+
+    public boolean isTexSlotsFull() {
+        return this.textures.size() < 8;
+    }
+
+    public boolean hasTexture(Texture tex) {
+        return this.textures.contains(tex);
+    }
+
+    @Override
+    public int compareTo(BatchRenderer o) {
+        return Integer.compare(this.zIndex, o.zIndex);
     }
 }
 /*End of BatchRenderer class*/

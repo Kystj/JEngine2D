@@ -12,6 +12,7 @@ import engine.io.MouseInputs;
 import engine.ui.settings.EConstants;
 import engine.utils.MathUtils;
 import engine.utils.ResourceHandler;
+import engine.world.scenes.EditorScene;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
@@ -25,7 +26,17 @@ public class ImGuiUtils {
 
     public static final Texture lockTexture = ResourceHandler.getOrCreateTexture("assets/buttons/locked.png");
     public static final Texture unlock = ResourceHandler.getOrCreateTexture("assets/buttons/unlocked.png");
-    public static String aspectRatio = " ";
+    public static final Texture grid = ResourceHandler.getOrCreateTexture("assets/buttons/grid.png");
+    public static final Texture launch = ResourceHandler.getOrCreateTexture("assets/buttons/launch.png");
+    public static final Texture play = ResourceHandler.getOrCreateTexture("assets/buttons/play.png");
+    public static final Texture stop = ResourceHandler.getOrCreateTexture("assets/buttons/stop.png");
+
+    private static final Vector2f[] texCords = new Vector2f[]{
+            new Vector2f(1, 1),
+            new Vector2f(1, 0),
+            new Vector2f(0, 0),
+            new Vector2f(0, 1)
+    };
 
 
     public static void renderMetricsInfo() {
@@ -37,20 +48,56 @@ public class ImGuiUtils {
         String string = " TPF(ms): " + String.format("%.2f", deltaTimeInMilliseconds) +
                 "    FPS: " + String.format("%.2f", fps);
         ImGui.text(string);
+
     }
+
+
+    public static void renderLaunchButton() {
+        if (ImGui.imageButton(launch.getTextureID(), 16, 16, texCords[2].x, texCords[0].y, texCords[0].x, texCords[2].y)) {
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Launch));
+        }
+    }
+
+    public static void renderPlayButton() {
+        if (ImGui.imageButton(play.getTextureID(), 16, 16, texCords[2].x, texCords[2].y, texCords[0].x, texCords[0].y)) {
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Play));
+        }
+    }
+
+    public static void renderStopButton() {
+        if (ImGui.imageButton(stop.getTextureID(), 16, 16, texCords[2].x, texCords[2].y, texCords[0].x, texCords[0].y)) {
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Stop));
+        }
+    }
+
+    public static void renderGridSizeButton() {
+        if (ImGui.beginPopupContextItem("cellSize")) {
+            if (ImGui.selectable("16"))   EditorScene.setCellSize(16);
+            if (ImGui.selectable("32"))   EditorScene.setCellSize(32);
+            if (ImGui.selectable("64"))   EditorScene.setCellSize(64);
+            if (ImGui.selectable("128"))  EditorScene.setCellSize(128);
+            if (ImGui.selectable("256"))  EditorScene.setCellSize(256);
+            ImGui.endPopup();
+        }
+
+
+        if (ImGui.imageButton(grid.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
+            ImGui.openPopup("cellSize");
+        }
+
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip("Change cell Size");
+            ImGui.endTooltip();
+        }
+    }
+
 
     public static boolean renderLockButton(Texture texture, boolean isLocked) {
         String lockedStr = "Lock";
         String unlockedStr = "Unlock";
 
-        Vector2f[] texCoords = new Vector2f[]{
-                new Vector2f(1, 1),
-                new Vector2f(1, 0),
-                new Vector2f(0, 0),
-                new Vector2f(0, 1)
-
-        };
-        if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+        if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
         }
@@ -68,9 +115,11 @@ public class ImGuiUtils {
     }
 
     public static void renderAspectRatioButton() {
-        if (ImGui.beginPopupContextItem("my popup")) {
-            if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f); aspectRatio = "16 / 9";
-            if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);aspectRatio = "16 / 10";
+        if (ImGui.beginPopupContextItem("aspectRatio")) {
+            if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f);
+            String aspectRatio = "16 / 9";
+            if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);
+            aspectRatio = "16 / 10";
             if (ImGui.selectable("21:9"))  EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);  aspectRatio = "21 / 9";
             if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);  aspectRatio = "4 / 3";
             ImGui.endPopup();
@@ -79,7 +128,7 @@ public class ImGuiUtils {
         String aspectRatio = MathUtils.decimalToAspectRatio(EngineWindow.get().getDefaultAspectRatio());
 
         if (ImGui.button(aspectRatio)) {
-            ImGui.openPopup("my popup");
+            ImGui.openPopup("aspectRatio");
         }
 
         if (ImGui.isItemHovered()) {
@@ -88,21 +137,6 @@ public class ImGuiUtils {
             ImGui.endTooltip();
         }
     }
-
-
-    // TODO: Remove and refactor
-    public static boolean closeButton(float xPlacement, float yPlacement) {
-        ImGui.spacing();
-        ImGui.setCursorPos(xPlacement, yPlacement);
-        return !ImGui.button("Close", 50.0f, 20.0f);
-    }
-
-    // TODO: Remove and refactor
-    public static boolean closeButton() {
-        ImGui.setCursorPosX(X_SPACING);
-        return !ImGui.button("Close", 50.0f, 20.0f);
-    }
-
 
     public static boolean activatePopup(String description) {
         ImGui.openPopup(description);

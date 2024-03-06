@@ -130,7 +130,7 @@ public class AssetPanel {
             ImGui.pushID(i);
 
             // Create an image button for the current sprite
-            if (ImGui.imageButton(id, 32, 32, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+            if (ImGui.imageButton(id, 32, 32, texCoords[0].x, texCoords[2].y, texCoords[2].x, texCoords[0].y)) {
                 // Handle the selection of the current asset
                 GameObject obj = GameObjFactory.generateEnvironmentObj(sprite, 32, 32);
                 editorControls.pickUp(obj);

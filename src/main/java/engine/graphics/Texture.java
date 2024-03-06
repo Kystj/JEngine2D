@@ -51,7 +51,7 @@ public class Texture {
         // Defines a 2D texture with RGBA Channels and generates the image
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 
-        stbi_set_flip_vertically_on_load(true);
+        //stbi_set_flip_vertically_on_load(true);
     }
 
     /**
@@ -104,6 +104,7 @@ public class Texture {
             // Handle the case where the image couldn't be loaded
             assert false : "Error: Could not load texture with path: '" + filePath + "'";
         }
+        stbi_set_flip_vertically_on_load(true);
     }
 
     /**

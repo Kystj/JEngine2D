@@ -11,13 +11,7 @@ import org.joml.Vector3f;
 
 import static engine.ui.settings.EConstants.MAX_DEBUG_LINES;
 
-/**
- * The DebugUtils class provides utility methods for adding various debug shapes
- * such as lines, boxes, circles, and triangles to the debug rendering system.
- */
 public class DebugDraw {
-
-    // TODO: Implement rotation for each shape
 
     // ============================ Add Debug Line ============================
     public static void addLine(Vector2f from, Vector2f to) {

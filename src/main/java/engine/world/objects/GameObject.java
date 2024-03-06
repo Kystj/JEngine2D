@@ -16,6 +16,7 @@ public class GameObject {
     private final String name;
     private final List<Component> componentsList = new ArrayList<>();
     private Transform transform;
+
     private int zIndex;
 
     public GameObject(String name, Transform transform, int zIndex) {
@@ -79,6 +80,14 @@ public class GameObject {
 
     public Transform getTransform() {
         return transform;
+    }
+
+    public int getzIndex() {
+        return zIndex;
+    }
+
+    public void setZIndex(int zIndex) {
+        this.zIndex = zIndex;
     }
 }
 /*End of GameObject class*/

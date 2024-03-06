@@ -24,8 +24,9 @@ public interface EConstants {
         Save,
         Load,
         User,
-        FullPlay,
-        Grid_Lock
+        Launch,
+        Grid_Lock,
+        Grid_Size
     }
 
     // Grid width

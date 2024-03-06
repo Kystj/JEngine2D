@@ -13,14 +13,14 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static engine.ui.settings.EConstants.X_SPACING;
 
 public class ReportHandler {
 
-    private static final Map<DebugReport, Boolean> bugReports = new HashMap<>();
+    private static final List<DebugReport> bugReports = new ArrayList<>();
     private static final String BUG_DIRECTORY_PATH = "bugs/";
     private static final DebugReport selectedReport = new DebugReport("Error", "No file found");
 
@@ -32,7 +32,6 @@ public class ReportHandler {
 
         ImGui.text(selectedReport.getBugDescription());
 
-        // Set the color of the button background
         ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 1.0f, 0.0f, 0.5f); // Yellow color
         ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("-")) {
@@ -43,9 +42,20 @@ public class ReportHandler {
         ImGui.sameLine();
         ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 0.0f, 0.0f, 0.5f);
         if (ImGui.button("x")) {
-            String fileName = BUG_DIRECTORY_PATH + selectedReport.getBugID() + ".json";
+            String fileName = BUG_DIRECTORY_PATH + selectedReport.getBugID();
+            fileName = fileName.replace(" ", "") + ".json";
             ResourceHandler.deleteFile(fileName);
+            // Remove the selected report
             bugReports.remove(selectedReport);
+
+            // Refresh the report list
+            bugReports.clear();
+            loadReports();
+
+            // Reset the selected report
+            selectedReport.setBugID("Error");
+            selectedReport.setBugDescription("No file found");
+
             showReport = false;
         }
         ImGui.popStyleColor();
@@ -64,37 +74,39 @@ public class ReportHandler {
         try (FileWriter writer = new FileWriter(pathName)) {
             writer.write(gson.toJson(newDebugReport));
         } catch (IOException e) {
-            e.printStackTrace();
+            handleIOException(e);
         }
+    }
+
+    private static DebugReport createReport(String bugName, String bugDescription) {
+        DebugReport newDebugReport = new DebugReport(bugName, bugDescription);
+        bugReports.add(newDebugReport); // Add the new report to the list
+        return newDebugReport;
     }
 
     public static void loadReports() {
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Paths.get(BUG_DIRECTORY_PATH))) {
             for (Path filePath : directoryStream) {
-                Gson gson = new GsonBuilder()
-                        .setPrettyPrinting()
-                        .registerTypeAdapter(DebugReport.class, new ReportAdapter())
-                        .create();
-                String data;
-                try {
-                    data = new String(Files.readAllBytes(filePath));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    continue;
-                }
-                DebugReport debugReport = gson.fromJson(data, DebugReport.class);
-                Boolean resolved = debugReport.isResolved();
-                bugReports.put(debugReport, resolved);
+                processReportFile(filePath);
             }
         } catch (IOException e) {
-            System.out.println("No report file found.");
+            handleIOException(e);
         }
     }
 
-    public static void viewBugs() {
+    private static void processReportFile(Path filePath) throws IOException {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(DebugReport.class, new ReportAdapter())
+                .create();
+        String data = new String(Files.readAllBytes(filePath));
+        DebugReport debugReport = gson.fromJson(data, DebugReport.class);
+        bugReports.add(debugReport); // Add the loaded report to the list
+    }
+
+    public static void displayReportList() {
         if (ImGui.beginCombo("##MapKeysCombo", "View reports")) {
-            for (Map.Entry<DebugReport, Boolean> entry : bugReports.entrySet()) {
-                DebugReport report = entry.getKey();
+            for (DebugReport report : bugReports) {
                 if (ImGui.selectable(report.getBugID())) {
                     showReport = true;
                     selectedReport.setBugDescription(report.getBugDescription());
@@ -110,13 +122,12 @@ public class ReportHandler {
         }
     }
 
-    private static DebugReport createReport(String bugName, String bugDescription) {
-        DebugReport newDebugReport = new DebugReport(bugName, bugDescription);
-        bugReports.put(newDebugReport, false);
-        return newDebugReport;
+    private static void handleIOException(IOException e) {
+        // Handle or log the exception
+        e.printStackTrace();
     }
 
-    public static Map<DebugReport, Boolean> getReports() {
+    public static List<DebugReport> getReports() {
         return bugReports;
     }
 

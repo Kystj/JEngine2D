@@ -5,12 +5,9 @@
  */
 package engine.ui.editor;
 
-import engine.eventsystem.Event;
-import engine.eventsystem.EventDispatcher;
 import engine.io.MouseInputs;
 import engine.ui.engine.EngineWindow;
 import engine.ui.engine.ImGuiUtils;
-import engine.ui.settings.EConstants;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
@@ -79,27 +76,22 @@ public class Viewport {
         float leftPadding = (ImGui.getContentRegionAvailX() - totalButtonWidth) * 0.5f;
         float topPadding = (ImGui.getContentRegionAvailY() * 0.025f);
 
+        ImGui.setCursorPosY(topPadding);
+        ImGuiUtils.renderMetricsInfo();
+
         ImGui.setCursorPosX(leftPadding);
         ImGui.setCursorPosY(topPadding);
 
-        if (ImGui.button("Play")) {
-            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Play));
-        }
-
+        ImGuiUtils.renderPlayButton();
         ImGui.sameLine();
 
-        if (ImGui.button("Stop")) {
-            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Stop));
-        }
-
+       ImGuiUtils.renderStopButton();
         ImGui.sameLine();
 
-        if (ImGui.button("Launch")) {
-            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.FullPlay));
-        }
+        ImGuiUtils.renderLaunchButton();
         ImGui.sameLine();
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .95f);
 
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .93f);
         if (isGridLocked) {
             isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.lockTexture, true);
         } else {
@@ -110,8 +102,7 @@ public class Viewport {
         ImGuiUtils.renderAspectRatioButton();
 
         ImGui.sameLine();
-        ImGui.setCursorPosX(leftPadding);
-        ImGuiUtils.renderMetricsInfo();
+        ImGuiUtils.renderGridSizeButton();
     }
 }
 /* End of Viewport class */

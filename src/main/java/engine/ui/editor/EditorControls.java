@@ -48,7 +48,6 @@ public class EditorControls implements EventListener {
                 selectedObject.getTransform().position.x = (int) (selectedObject.getTransform().position.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
                 selectedObject.getTransform().position.y = (int) (selectedObject.getTransform().position.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
             }
-
             spritePos.set(selectedObject.getTransform().position.x, selectedObject.getTransform().position.y);
 
             if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
