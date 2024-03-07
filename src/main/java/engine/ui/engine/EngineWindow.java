@@ -6,7 +6,8 @@
 
 package engine.ui.engine;
 
-import engine.debug.DebugRenderer;
+import engine.debug.draw.DebugRenderer;
+import engine.debug.logger.Logger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
@@ -14,10 +15,11 @@ import engine.graphics.Framebuffer;
 import engine.graphics.OrthographicCamera;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
+import engine.settings.EConstants;
+import engine.utils.MathUtils;
+import engine.world.objects.GameObject;
 import engine.world.scenes.EditorScene;
 import engine.world.scenes.Scene;
-import engine.ui.settings.EConstants;
-import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -44,6 +46,8 @@ public class EngineWindow implements EventListener {
     private float defaultAspectRatio = 16.0f / 9.0f;
 
     private Framebuffer framebuffer;
+
+    private boolean isFrameModeOn = false;
 
     private final ImGuiController imGuiController = new ImGuiController();
 
@@ -99,7 +103,7 @@ public class EngineWindow implements EventListener {
         this.windowHeight = (int) getDefaultScreenSize().y;
 
         // Prints the Window size to the console
-        printWindowDimensions();
+        logLaunchInfo();
 
 
         // Create the Window
@@ -154,6 +158,7 @@ public class EngineWindow implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Play, this);
         EventDispatcher.addListener(EConstants.EventType.Stop, this);
         EventDispatcher.addListener(EConstants.EventType.Launch, this);
+        EventDispatcher.addListener(EConstants.EventType.Wire_Frame, this);
 
         // Load the Editor Scene at launch
         changeScene(0);
@@ -216,19 +221,22 @@ public class EngineWindow implements EventListener {
         }
     }
 
-
+    // TODO: Separate into separate functions and implement time step correctly
     private void fullPlayModeTick(float deltaTime) {
         clear();
         currentScene.render();
         currentScene.tick(deltaTime);
     }
 
-
+    // TODO: Separate into separate functions and implement time step correctly
     private void editorModeTick(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
             this.framebuffer.bind(windowWidth, windowHeight);
             clear();
+            if (isFrameModeOn) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
 
             // Render the editor scene to the framebuffer
             DebugRenderer.render();
@@ -237,6 +245,8 @@ public class EngineWindow implements EventListener {
             // Renderer to the framebuffer
             currentScene.tick(deltaTime);
             this.framebuffer.unbind();
+
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
             // Update the ImGui components
             imGuiController.tick(deltaTime);
@@ -260,16 +270,10 @@ public class EngineWindow implements EventListener {
         return currentScene;
     }
 
-    /**
-     * Check for user input
-     */
     private void pollUserEvents() {
         glfwPollEvents();
     }
 
-    /**
-     * Terminate and cleanup
-     */
     public void terminateProgram() {
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(glfwWindow);
@@ -280,9 +284,6 @@ public class EngineWindow implements EventListener {
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
-    /**
-     * Gets the default screen size of the monitor
-     */
     private Vector2f getDefaultScreenSize() {
         // Get the primary monitor
         long primaryMonitor = glfwGetPrimaryMonitor();
@@ -303,25 +304,13 @@ public class EngineWindow implements EventListener {
         return size;
     }
 
-    /**
-     * Prints the window dimensions to the console
-     */
-    private void printWindowDimensions() {
-        System.out.println("Screen Width: " + this.windowWidth);
-        System.out.println("Screen Height: " + this.windowHeight);
-        System.out.println("Aspect Ratio: " + (float) windowWidth / windowHeight);
+
+    private void logLaunchInfo() {
+        Logger.info("Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight);
+        Logger.info("Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight));
     }
 
-    /**
-     * Frames per second counter
-     */
-    private void FPSCounter(float deltaTime) {
-        System.out.println("FPS: " + (int) (1.0 / deltaTime));
-    }
 
-    /**
-     * Terminate the engine and cleanup ImGui
-     */
     private void closeEngine() {
         if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS &&
                 glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
@@ -332,67 +321,36 @@ public class EngineWindow implements EventListener {
         }
     }
 
-    /**
-     * Get a reference to the glfw window
-     */
-    public long getWindowPointer() {
-        return glfwWindow;
+    public boolean isFrameModeOn() {
+        return isFrameModeOn;
     }
 
-    /**
-     * Get window width
-     */
     public int getWindowWidth() {
         return windowWidth;
     }
 
-    /**
-     * Get window height
-     */
     public int getWindowHeight() {
         return windowHeight;
     }
 
-
-    /**
-     * Get the texture bound to the EngineWindows Framebuffer object
-     */
     public int getFramebufferTexID() {
         return framebuffer.getTextureID();
     }
 
-    /**
-     * Change the window width
-     */
     public void setWindowWidth(int windowWidth) {
         this.windowWidth = windowWidth;
     }
 
-    /**
-     * Change the window height
-     */
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
     }
 
 
-    /**
-     * Clears the color and depth buffers
-     */
     private void clear() {
         glClearColor(0,0,0,1.0f);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
-    /**
-     * Sets wireframe mode on or off.
-     *
-     * @param active True for wireframe mode, false for filled mode.
-     */
-    public void setWireframeMode(boolean active) {
-        // TODO: Add as an option in the editor window
-        glPolygonMode(GL_FRONT_AND_BACK, active ? GL_LINE : GL_FILL);
-    }
 
     public float getDeltaTime() {
         return deltaTime;
@@ -418,6 +376,9 @@ public class EngineWindow implements EventListener {
             case Launch:
                 engineMode = 1;
                 System.out.println("Launching full play mode...");
+                break;
+            case Wire_Frame:
+                isFrameModeOn = !isFrameModeOn;
                 break;
         }
     }

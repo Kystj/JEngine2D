@@ -3,7 +3,7 @@
  Date: 2024-01-24
  Author: Kyle St John
  */
-package engine.debug;
+package engine.debug.draw;
 
 import engine.ui.engine.EngineWindow;
 import engine.graphics.Shader;
@@ -14,8 +14,8 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static engine.ui.settings.EConstants.DEBUG_LINE_WIDTH;
-import static engine.ui.settings.EConstants.MAX_DEBUG_LINES;
+import static engine.settings.EConstants.DEBUG_LINE_WIDTH;
+import static engine.settings.EConstants.MAX_DEBUG_LINES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;

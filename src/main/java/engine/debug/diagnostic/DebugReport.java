@@ -3,7 +3,7 @@
  * Date: 2023-11-09
  * Author: Kyle St John
  */
-package engine.debug;
+package engine.debug.diagnostic;
 
 /**
  * BugReport class representing a report of a software bug.

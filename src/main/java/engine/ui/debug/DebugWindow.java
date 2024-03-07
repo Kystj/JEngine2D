@@ -1,6 +1,6 @@
 package engine.ui.debug;
 
-import engine.debug.DebugRenderer;
+import engine.debug.draw.DebugRenderer;
 import engine.graphics.Texture;
 import engine.utils.ReportHandler;
 import engine.utils.ResourceHandler;
@@ -11,12 +11,12 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 
-import static engine.ui.settings.EConstants.X_SPACING;
+import static engine.settings.EConstants.X_SPACING;
 
-public class DebugPanel {
+public class DebugWindow {
 
     private static final ImBoolean bIsOpen = new ImBoolean(true);
-    private static final ReportPanel reportPanel = new ReportPanel();
+    private static final ReportWindow REPORT_WINDOW = new ReportWindow();
     private static ShapeGenerator shapeGenerator = new LineGenerator();
 
     private static final Texture squareButton = loadTexture("assets/buttons/Square.png");
@@ -28,25 +28,11 @@ public class DebugPanel {
     public static void imgui() {
         if (bIsOpen.get()) {
             ImGui.begin("Debug", bIsOpen);
-            reportPanel.imgui();
+            REPORT_WINDOW.imgui();
             ImGui.spacing();
-            drawConfigurations();
             drawShapes();
             drawReports();
             ImGui.end();
-        }
-    }
-
-    private static void drawConfigurations() {
-        if (ImGui.collapsingHeader("Config")) {
-            ImGui.setCursorPosX(X_SPACING);
-            ImGui.bulletText("Grid Size");
-
-            ImGui.setCursorPosX(X_SPACING);
-            ImGui.bulletText("Clear Color");
-
-            ImGui.setCursorPosX(X_SPACING);
-            ImGui.bulletText("Wireframe mode");
         }
     }
 
@@ -64,7 +50,7 @@ public class DebugPanel {
 
             ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 1.0f, 0.0f, 0.5f);
             if (ImGui.button("+")) {
-                reportPanel.setGenerateNewReport(new ImBoolean(true));
+                REPORT_WINDOW.setGenerateNewReport(new ImBoolean(true));
             }
             ImGui.popStyleColor();
 
@@ -143,6 +129,6 @@ public class DebugPanel {
     }
 
     public static void setIsOpen(boolean bIsOpen) {
-        DebugPanel.bIsOpen.set(bIsOpen);
+        DebugWindow.bIsOpen.set(bIsOpen);
     }
 }

@@ -8,9 +8,9 @@ import imgui.flag.ImGuiInputTextFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
-import static engine.ui.settings.EConstants.X_SPACING;
+import static engine.settings.EConstants.X_SPACING;
 
-public class ReportPanel {
+public class ReportWindow {
 
     private boolean showPopup = false;
     private ImBoolean generateNewReport = new ImBoolean(false);
@@ -18,7 +18,7 @@ public class ReportPanel {
     private final ImString imGuiBugName = new ImString();
     private final ImString imGuiBugDescription = new ImString();
 
-    public ReportPanel() {
+    public ReportWindow() {
         ReportHandler.loadReports();
         imGuiBugDescription.resize(512);
     }

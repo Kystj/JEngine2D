@@ -5,7 +5,7 @@
  */
 package engine.ui.widgets;
 
-import engine.ui.debug.DebugPanel;
+import engine.ui.debug.DebugWindow;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
@@ -20,7 +20,7 @@ public class MainMenuBar {
     /**
      * The menu bars update method
      */
-    public void tick() {
+    public void imgui() {
         ImGui.beginMainMenuBar();
         projectMenuItem();
         debugMenu();
@@ -112,7 +112,7 @@ public class MainMenuBar {
         if (ImGui.beginMenu("Tools")) {
 
             if (ImGui.menuItem("Debug Console", "Ctrl+d")) {
-                DebugPanel.setIsOpen(true);
+                DebugWindow.setIsOpen(true);
 
             }
 

@@ -3,13 +3,13 @@
  Date: 2024-02-01
  Author: Kyle St John
  */
-package engine.debug;
+package engine.debug.draw;
 
 import engine.utils.MathUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static engine.ui.settings.EConstants.MAX_DEBUG_LINES;
+import static engine.settings.EConstants.MAX_DEBUG_LINES;
 
 public class DebugDraw {
 

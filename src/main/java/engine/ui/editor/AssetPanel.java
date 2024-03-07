@@ -5,6 +5,7 @@
  */
 package engine.ui.editor;
 
+import engine.debug.logger.Logger;
 import engine.graphics.SpriteSheet;
 import engine.ui.engine.ImGuiUtils;
 import engine.utils.AssetHandler;
@@ -134,6 +135,7 @@ public class AssetPanel {
                 // Handle the selection of the current asset
                 GameObject obj = GameObjFactory.generateEnvironmentObj(sprite, 32, 32);
                 editorControls.pickUp(obj);
+                Logger.info("Game object has been created");
             }
 
             // Pop the unique ID for ImGui elements

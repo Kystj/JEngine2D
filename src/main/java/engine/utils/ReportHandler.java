@@ -2,7 +2,7 @@ package engine.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.debug.DebugReport;
+import engine.debug.diagnostic.DebugReport;
 import engine.serialization.ReportAdapter;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.ui.settings.EConstants.X_SPACING;
+import static engine.settings.EConstants.X_SPACING;
 
 public class ReportHandler {
 

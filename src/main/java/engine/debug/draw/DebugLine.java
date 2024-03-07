@@ -3,7 +3,7 @@
  Date: 2024-01-24
  Author: Kyle St John
  */
-package engine.debug;
+package engine.debug.draw;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;

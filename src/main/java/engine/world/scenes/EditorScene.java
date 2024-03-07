@@ -5,9 +5,9 @@
  */
 package engine.world.scenes;
 
-import engine.debug.DebugDraw;
+import engine.debug.draw.DebugDraw;
 import engine.graphics.OrthographicCamera;
-import engine.ui.debug.DebugPanel;
+import engine.ui.debug.DebugWindow;
 import engine.ui.editor.AssetPanel;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
@@ -16,7 +16,6 @@ import org.joml.Vector3f;
 public class EditorScene extends Scene {
 
     private final AssetPanel assetPanel = new AssetPanel();
-
     private static int cellSize = 16;
 
     @Override
@@ -25,7 +24,6 @@ public class EditorScene extends Scene {
         this.orthoCamera = new OrthographicCamera();
         loadResources();
         addGameObjToEditor();
-
     }
 
     @Override
@@ -43,7 +41,7 @@ public class EditorScene extends Scene {
     @Override
     public void imgui() {
         assetPanel.imgui();
-        DebugPanel.imgui();
+        DebugWindow.imgui();
     }
 
 

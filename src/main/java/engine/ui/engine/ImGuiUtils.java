@@ -9,7 +9,7 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.Texture;
 import engine.io.MouseInputs;
-import engine.ui.settings.EConstants;
+import engine.settings.EConstants;
 import engine.utils.MathUtils;
 import engine.utils.ResourceHandler;
 import engine.world.scenes.EditorScene;
@@ -18,8 +18,8 @@ import imgui.ImVec2;
 import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 
-import static engine.ui.settings.EConstants.POPUP_WIN_SIZE;
-import static engine.ui.settings.EConstants.X_SPACING;
+import static engine.settings.EConstants.POPUP_WIN_SIZE;
+import static engine.settings.EConstants.X_SPACING;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class ImGuiUtils {
@@ -30,6 +30,8 @@ public class ImGuiUtils {
     public static final Texture launch = ResourceHandler.getOrCreateTexture("assets/buttons/launch.png");
     public static final Texture play = ResourceHandler.getOrCreateTexture("assets/buttons/play.png");
     public static final Texture stop = ResourceHandler.getOrCreateTexture("assets/buttons/stop.png");
+    public static final Texture wireframe = ResourceHandler.getOrCreateTexture("assets/buttons/frame.png");
+
 
     private static final Vector2f[] texCords = new Vector2f[]{
             new Vector2f(1, 1),
@@ -51,6 +53,20 @@ public class ImGuiUtils {
 
     }
 
+    public static void renderWireFrameModeButton(boolean isOn) {
+        if (ImGui.imageButton(wireframe.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Wire_Frame));
+        }
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            if (isOn) {
+                ImGui.setTooltip("Turn On Wireframe Mode");
+            } else {
+                ImGui.setTooltip("Turn Off Wireframe Mode");
+            }
+            ImGui.endTooltip();
+        }
+    }
 
     public static void renderLaunchButton() {
         if (ImGui.imageButton(launch.getTextureID(), 16, 16, texCords[2].x, texCords[0].y, texCords[0].x, texCords[2].y)) {
@@ -87,7 +103,7 @@ public class ImGuiUtils {
 
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
-            ImGui.setTooltip("Change cell Size");
+            ImGui.setTooltip("Change Cell Size");
             ImGui.endTooltip();
         }
     }
@@ -117,11 +133,9 @@ public class ImGuiUtils {
     public static void renderAspectRatioButton() {
         if (ImGui.beginPopupContextItem("aspectRatio")) {
             if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f);
-            String aspectRatio = "16 / 9";
             if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);
-            aspectRatio = "16 / 10";
-            if (ImGui.selectable("21:9"))  EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);  aspectRatio = "21 / 9";
-            if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);  aspectRatio = "4 / 3";
+            if (ImGui.selectable("21:9"))  EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);
+            if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);
             ImGui.endPopup();
         }
 

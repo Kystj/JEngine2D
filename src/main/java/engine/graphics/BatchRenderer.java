@@ -14,7 +14,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.ui.settings.EConstants.MAX_BATCH_SIZE;
+import static engine.settings.EConstants.MAX_BATCH_SIZE;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;

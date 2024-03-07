@@ -22,7 +22,7 @@ public class Viewport {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiViewportFlags.NoTaskBarIcon);
 
-        viewportsMenuBar();
+        viewportControls();
 
         int textureId = EngineWindow.get().getFramebufferTexID();
 
@@ -71,7 +71,7 @@ public class Viewport {
         return windowSize;
     }
 
-    private void viewportsMenuBar() {
+    private void viewportControls() {
         float totalButtonWidth = 3 * ImGui.calcTextSize("Launch").x + ImGui.getStyle().getItemSpacingX() * 2;
         float leftPadding = (ImGui.getContentRegionAvailX() - totalButtonWidth) * 0.5f;
         float topPadding = (ImGui.getContentRegionAvailY() * 0.025f);
@@ -85,13 +85,16 @@ public class Viewport {
         ImGuiUtils.renderPlayButton();
         ImGui.sameLine();
 
-       ImGuiUtils.renderStopButton();
+        ImGuiUtils.renderStopButton();
         ImGui.sameLine();
 
         ImGuiUtils.renderLaunchButton();
         ImGui.sameLine();
 
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .93f);
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .92f);
+        ImGuiUtils.renderAspectRatioButton();
+
+        ImGui.sameLine();
         if (isGridLocked) {
             isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.lockTexture, true);
         } else {
@@ -99,10 +102,10 @@ public class Viewport {
         }
 
         ImGui.sameLine();
-        ImGuiUtils.renderAspectRatioButton();
+        ImGuiUtils.renderGridSizeButton();
 
         ImGui.sameLine();
-        ImGuiUtils.renderGridSizeButton();
+        ImGuiUtils.renderWireFrameModeButton(EngineWindow.get().isFrameModeOn());
     }
 }
 /* End of Viewport class */

@@ -5,6 +5,7 @@
  */
 package engine.ui.engine;
 
+import engine.debug.logger.Logger;
 import engine.ui.editor.Viewport;
 import engine.ui.widgets.MainMenuBar;
 import engine.utils.ShortcutHandler;
@@ -62,7 +63,8 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.get().getCurrentScene().imgui();
-        // ImGui.showDemoWindow();
+        ImGui.showDemoWindow();
+        Logger.imgui();
         endFrame();
     }
 
@@ -78,7 +80,7 @@ public class ImGuiController {
      */
     private void updateWidgets() {
         ShortcutHandler.tick();
-        mainMenuBar.tick();
+        mainMenuBar.imgui();
     }
 
     /**

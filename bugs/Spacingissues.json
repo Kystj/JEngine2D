@@ -1,0 +1,5 @@
+{
+  "Name: ": "Spacing issues",
+  "Description: ": "Fix the spacing issues with the debug panel. \nThe asset panel also needs work, when the window is vertical the\nadd/remove button is not visible",
+  "Resolved: ": false
+}

@@ -5,18 +5,19 @@
  */
 package engine.ui.editor;
 
+import engine.debug.logger.Logger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.MouseInputs;
 import engine.ui.engine.EngineWindow;
-import engine.ui.settings.EConstants;
+import engine.settings.EConstants;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
-import static engine.ui.settings.EConstants.DEFAULT_GRID_HEIGHT;
-import static engine.ui.settings.EConstants.DEFAULT_GRID_WIDTH;
+import static engine.settings.EConstants.DEFAULT_GRID_HEIGHT;
+import static engine.settings.EConstants.DEFAULT_GRID_WIDTH;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class EditorControls implements EventListener {
@@ -34,6 +35,7 @@ public class EditorControls implements EventListener {
     }
 
     public void place() {
+        Logger.info("Game object has been added to the scene");
         selectedObject = null;
     }
 
