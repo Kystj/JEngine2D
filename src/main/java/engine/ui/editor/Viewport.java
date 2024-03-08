@@ -91,7 +91,7 @@ public class Viewport {
         ImGuiUtils.renderLaunchButton();
         ImGui.sameLine();
 
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .92f);
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() * .91f);
         ImGuiUtils.renderAspectRatioButton();
 
         ImGui.sameLine();

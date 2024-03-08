@@ -18,7 +18,6 @@ public class GameObject {
     private Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
     private int objectUID;
-
     private int zIndex;
 
     public GameObject(String name, Transform transform, int zIndex) {
@@ -29,7 +28,7 @@ public class GameObject {
 
     public void init(){
         generateUniqueId();
-        DebugLogger.warning("GameObject with UID: " + objectUID + " has been created");
+        DebugLogger.warning("GameObject with UID: " + objectUID + " has been created", true);
         for (Component component : componentsList) {
             component.init();
         }

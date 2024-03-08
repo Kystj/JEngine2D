@@ -4,5 +4,5 @@
   "NumOfSprites": 108,
   "FilePathOfTexture": "assets/spritesheets/groundTiles.png",
   "SpriteSpacing": 0,
-  "AssetType": "ground"
+  "AssetType": "Ground"
 }

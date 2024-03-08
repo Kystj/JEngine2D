@@ -143,6 +143,7 @@ public class AssetHandler {
         if (ImGui.beginCombo("##MapKeysCombo", "Select SpriteSheet")) {
             // Iterate over existing SpriteSheets
             Iterator<Map.Entry<SpriteSheet, String>> iterator = spriteSheets.entrySet().iterator();
+
             while (iterator.hasNext()) {
                 Map.Entry<SpriteSheet, String> entry = iterator.next();
                 SpriteSheet key = entry.getKey();
@@ -158,6 +159,7 @@ public class AssetHandler {
                 if (ImGui.selectable(option)) {
                     // Remove the selected SpriteSheet from the map
                     iterator.remove();
+                    // TODO: Change. Should be optional to full delete or hide
                     ResourceHandler.deleteFile(filePath);
                     ResourceHandler.removeGSONReferenceFile(filePath, directory, fileType);
                 }

@@ -16,7 +16,7 @@ public abstract class Component {
 
     public void init() {
         generateUniqueId();
-        DebugLogger.warning("Component with UID: " + componentUID + " has been created");
+        DebugLogger.warning("Component with UID: " + componentUID + " has been created", true);
     }
 
     public void tick(float deltaTime) {

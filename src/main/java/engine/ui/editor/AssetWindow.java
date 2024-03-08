@@ -17,17 +17,12 @@ import imgui.ImVec2;
 import org.joml.Vector2f;
 
 import java.util.Map;
-
-/**
- * The AssetPanel class manages the display and interaction with assets in the editor,
- * including importing, removing, and rendering tabs for various asset types.
- */
 public class AssetWindow {
 
     private final AssetHandler assetHandler = new AssetHandler();
+    public final EditorControls editorControls = new EditorControls();
     private boolean bIsImportOpen = false;
     private boolean bIsRemoveOpen = false;
-    public final EditorControls editorControls = new EditorControls();
 
     public void tick(float deltaTime) {
         editorControls.tick(deltaTime);
@@ -73,9 +68,6 @@ public class AssetWindow {
         ImGui.end();
     }
 
-    /**
-     * Updates the asset dropdown, allowing the user to add or remove assets.
-     */
     private void updateAssetDropdown() {
         //Set up columns
         ImGui.columns(2, "Columns", true);
@@ -100,11 +92,6 @@ public class AssetWindow {
         }
     }
 
-    /**
-     * Populates the AssetPanel with buttons representing individual assets in a SpriteSheet.
-     *
-     * @param sprites The SpriteSheet containing the assets.
-     */
     private void generateAssetButtons(SpriteSheet sprites) {
         ImVec2 windowPos = new ImVec2();
         ImGui.getWindowPos(windowPos);
@@ -121,8 +108,10 @@ public class AssetWindow {
         // Iterate through each sprite in the SpriteSheet
         for (int i = 0; i < sprites.numOfSprites(); i++) {
             Sprite sprite = sprites.getSprite(i);
+
             float spriteWidth = sprites.getSpriteWidth() * 2;
             float spriteHeight = sprites.getSpriteHeight() * 2;
+
             int id = sprite.getTextureID();
             Vector2f[] texCoords = sprite.getUvCoordinates();
 
@@ -131,8 +120,9 @@ public class AssetWindow {
 
             // Create an image button for the current sprite
             if (ImGui.imageButton(id, 32, 32, texCoords[0].x, texCoords[2].y, texCoords[2].x, texCoords[0].y)) {
-                // Handle the selection of the current asset
-                GameObject obj = GameObjFactory.generateGameObject(sprite, 32, 32);
+
+                Sprite temp = new Sprite(sprite.getSpriteTexture(), sprite.getUvCoordinates());
+                GameObject obj = GameObjFactory.generateGameObject(temp, 32, 32);
                 editorControls.pickUp(obj);
             }
 
@@ -154,10 +144,7 @@ public class AssetWindow {
         }
     }
 
-    /**
-     * Checks for specific conditions and takes appropriate actions,
-     * including handling error popups and closing import/remove forms.
-     */
+
     private void handleConditionsAndForms() {
         // Perform a safety check for file error popup
         if (assetHandler.bFileErrorPopup) {

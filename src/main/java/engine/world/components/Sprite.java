@@ -34,6 +34,7 @@ public class Sprite extends Component {
         };
     }
 
+
     public Sprite(Texture texture, Vector2f[] textureCoordinate) {
         this.spriteTexture = texture;
         this.uvCoordinates = textureCoordinate;
