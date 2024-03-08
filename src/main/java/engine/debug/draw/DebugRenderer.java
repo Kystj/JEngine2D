@@ -31,7 +31,7 @@ public class DebugRenderer {
     private static int vaoID;
     private static int vboID;
     private static final float[] vertices = new float[MAX_DEBUG_LINES * 6 * 2];
-    private static final Shader debugShader = ResourceHandler.getOrCreateShader("shaders/DebugLines.glsl");
+    private static final Shader debugShader = ResourceHandler.getOrCreateShader("shaders/Debug.glsl");
 
     // Debug Lines
     private static final ArrayList<DebugLine> debugLines = new ArrayList<>();
