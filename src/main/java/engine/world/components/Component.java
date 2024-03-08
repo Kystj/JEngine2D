@@ -5,41 +5,38 @@
  */
 package engine.world.components;
 
+import engine.debug.logger.DebugLogger;
 import engine.world.objects.GameObject;
 
 public abstract class Component {
 
-    private int entityId; // Unique identifier for the component
-    public transient GameObject owningGameObject = null; // Reference to the owning GameObject
-
-    public GameObject getOwningGameObject() {
-        return owningGameObject;
-    }
+    private static int GLOBAL_COMP_ID_COUNTER = -1;
+    private int componentUID;
+    public transient GameObject owningGameObject = null;
 
     public void init() {
-        // Initialize the component
-
-        // Set the componentID
-        setComponentID();
-
-        // Attach to the game object
+        generateUniqueId();
+        DebugLogger.warning("Component with UID: " + componentUID + " has been created");
     }
 
     public void tick(float deltaTime) {
-        // Update the component
+
     }
 
-    private void setComponentID() {
-        // TODO: Implement a local ID system for components
-        entityId = 0;
+    private synchronized void generateUniqueId() {
+        this.componentUID = ++GLOBAL_COMP_ID_COUNTER;
     }
 
     public void assignOwningObject(GameObject gameObject) {
         this.owningGameObject = gameObject;
     }
 
+    public GameObject getOwningGameObject() {
+        return owningGameObject;
+    }
+
     public int getComponentID() {
-        return entityId;
+        return componentUID;
     }
 }
 /*End of BaseComponent class*/

@@ -5,7 +5,6 @@
  */
 package engine.ui.engine;
 
-import engine.debug.logger.DebugLogger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.Texture;
@@ -117,7 +116,6 @@ public class ImGuiUtils {
         if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
-            DebugLogger.warning("Grid Snapping Toggled");
         }
 
         if (ImGui.isItemHovered()) {

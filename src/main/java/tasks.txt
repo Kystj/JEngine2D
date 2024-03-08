@@ -2,7 +2,7 @@ Current Development Tasks
 
    Weekly Plan (March 4 - Mach 10)
 
-       - Implement id system, fix sprite duplication
+       - Fix sprite duplication
 
        - Implement a details window for the active game object.
 
@@ -10,11 +10,9 @@ Current Development Tasks
 
        - Review Editor Controls, Mouse control math and OrthoCamera math/controls carefully and record editor control details in notebook.
 
+       - Fix the @Override method placement. All should be at the top. Stick to one convention
+
 Name Ideas:
  - StellarSprite2D
  - Nova2D
  - Pixel Forge2 || Pixel Forge
-
-
-
-- Fix the @Override method placement. All should be at the top. Stick to one convention

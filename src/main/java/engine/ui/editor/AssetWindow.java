@@ -5,7 +5,6 @@
  */
 package engine.ui.editor;
 
-import engine.debug.logger.DebugLogger;
 import engine.graphics.SpriteSheet;
 import engine.ui.engine.ImGuiUtils;
 import engine.utils.AssetHandler;
@@ -133,9 +132,8 @@ public class AssetWindow {
             // Create an image button for the current sprite
             if (ImGui.imageButton(id, 32, 32, texCoords[0].x, texCoords[2].y, texCoords[2].x, texCoords[0].y)) {
                 // Handle the selection of the current asset
-                GameObject obj = GameObjFactory.generateEnvironmentObj(sprite, 32, 32);
+                GameObject obj = GameObjFactory.generateGameObject(sprite, 32, 32);
                 editorControls.pickUp(obj);
-                DebugLogger.info("Game object has been created");
             }
 
             // Pop the unique ID for ImGui elements

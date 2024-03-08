@@ -306,8 +306,10 @@ public class EngineWindow implements EventListener {
 
 
     private void logLaunchInfo() {
-        DebugLogger.info("Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight);
-        DebugLogger.info("Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight));
+        DebugLogger.info("Launching StellarSprite2D....\n"
+                + "\t...Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight +
+                "\n\t...Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight)
+                + "\n\t...Ready!", true);
     }
 
 

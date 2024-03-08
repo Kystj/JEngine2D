@@ -35,7 +35,7 @@ public class EditorControls implements EventListener {
     }
 
     public void place() {
-        DebugLogger.info("Game object has been added to the scene");
+        DebugLogger.info("Game object has been added to the scene", true);
         selectedObject = null;
     }
 

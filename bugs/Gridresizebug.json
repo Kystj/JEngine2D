@@ -1,0 +1,5 @@
+{
+  "Name: ": "Grid resize bug",
+  "Description: ": "When the grid is resized to a larger cell size\nthe whole grid is thrown off",
+  "Resolved: ": false
+}

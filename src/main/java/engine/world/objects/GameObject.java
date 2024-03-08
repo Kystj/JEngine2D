@@ -5,6 +5,7 @@
  */
 package engine.world.objects;
 
+import engine.debug.logger.DebugLogger;
 import engine.world.components.Component;
 import engine.world.components.Transform;
 
@@ -12,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
-
     private final String name;
     private final List<Component> componentsList = new ArrayList<>();
     private Transform transform;
+    private static int GLOBAL_OBJECT_ID_COUNTER = -1;
+    private int objectUID;
 
     private int zIndex;
 
@@ -26,16 +28,21 @@ public class GameObject {
     }
 
     public void init(){
+        generateUniqueId();
+        DebugLogger.warning("GameObject with UID: " + objectUID + " has been created");
         for (Component component : componentsList) {
             component.init();
         }
-        // TODO: Create a global object ID system and call it here, preform other initialization here
     }
 
     public void update(float dt) {
         for (Component component : componentsList) {
             component.tick(dt);
         }
+    }
+
+    private synchronized void generateUniqueId() {
+        this.objectUID = ++GLOBAL_OBJECT_ID_COUNTER;
     }
 
     public <T extends Component> T getComponent(Class<T> component) {
@@ -50,7 +57,6 @@ public class GameObject {
         }
         return null;
     }
-
 
     public <T extends Component> void removeComponent(Class<T> component) {
         for (int i = 0; i < componentsList.size(); i++) {
@@ -73,9 +79,20 @@ public class GameObject {
         assert false : "Error: Casting component.";
     }
 
+    public void setZIndex(int zIndex) {
+        this.zIndex = zIndex;
+    }
 
     public List<Component> getComponentsList() {
         return componentsList;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getObjectUID() {
+        return objectUID;
     }
 
     public Transform getTransform() {
@@ -84,10 +101,6 @@ public class GameObject {
 
     public int getzIndex() {
         return zIndex;
-    }
-
-    public void setZIndex(int zIndex) {
-        this.zIndex = zIndex;
     }
 }
 /*End of GameObject class*/

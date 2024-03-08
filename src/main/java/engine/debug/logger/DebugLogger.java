@@ -9,6 +9,8 @@ import imgui.ImGui;
 import imgui.type.ImBoolean;
 import org.joml.Vector3f;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,20 +42,32 @@ public class DebugLogger {
         }
     }
 
+    public static void info(String message, boolean... logTime) {
+        log(message, new Vector3f(0.0f, 1.0f, 0.0f), logTime);
+    }
 
-    public static void info(String message) {
-        LogEntry entry = new LogEntry(message, new Vector3f(0.0f, 1.0f, 0.0f));
+    public static void warning(String message, boolean... logTime) {
+        log(message, new Vector3f(1.0f, 1.0f, 0.0f), logTime);
+    }
+
+    public static void error(String message, boolean... logTime) {
+        log(message, new Vector3f(1.0f, 0.0f, 0.0f), logTime);
+    }
+
+    private static void log(String message, Vector3f color, boolean... logTime) {
+        boolean shouldLogTime = logTime.length > 0 && logTime[0];
+        if (shouldLogTime) {
+            message = addTime(message);
+        }
+        LogEntry entry = new LogEntry(message, color);
         addLog(entry);
     }
 
-    public static void warning(String message) {
-        LogEntry entry = new LogEntry(message, new Vector3f(1.0f, 1.0f, 0.0f));
-        addLog(entry);
-    }
-
-    public static void error(String message) {
-        LogEntry entry = new LogEntry(message, new Vector3f(1.0f, 0.0f, 0.0f));
-        addLog(entry);
+    private static String addTime(String message) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedTime = currentTime.format(formatter);
+        return "[" + formattedTime + "] " + message;
     }
 
     private static void addLog(LogEntry log) {

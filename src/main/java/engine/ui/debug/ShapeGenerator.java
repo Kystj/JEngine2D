@@ -9,6 +9,7 @@ package engine.ui.debug;
 import engine.debug.draw.DebugDraw;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiColorEditFlags;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -58,7 +59,7 @@ public class ShapeGenerator {
         ImGui.nextColumn();
 
         float[] imVecColor = {color.x, color.y, color.z};
-        if (ImGui.dragFloat3("##Color", imVecColor)) {
+        if (ImGui.colorEdit3("##Color", imVecColor, ImGuiColorEditFlags.DisplayRGB )) {
             color.set(imVecColor[0], imVecColor[1], imVecColor[2]);
         }
 
