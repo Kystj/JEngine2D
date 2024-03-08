@@ -7,7 +7,7 @@
 package engine.ui.engine;
 
 import engine.debug.draw.DebugRenderer;
-import engine.debug.logger.Logger;
+import engine.debug.logger.DebugLogger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
@@ -306,8 +306,8 @@ public class EngineWindow implements EventListener {
 
 
     private void logLaunchInfo() {
-        Logger.info("Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight);
-        Logger.info("Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight));
+        DebugLogger.info("Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight);
+        DebugLogger.info("Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight));
     }
 
 

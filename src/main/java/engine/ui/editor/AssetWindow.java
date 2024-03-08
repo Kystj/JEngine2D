@@ -5,7 +5,7 @@
  */
 package engine.ui.editor;
 
-import engine.debug.logger.Logger;
+import engine.debug.logger.DebugLogger;
 import engine.graphics.SpriteSheet;
 import engine.ui.engine.ImGuiUtils;
 import engine.utils.AssetHandler;
@@ -23,7 +23,7 @@ import java.util.Map;
  * The AssetPanel class manages the display and interaction with assets in the editor,
  * including importing, removing, and rendering tabs for various asset types.
  */
-public class AssetPanel {
+public class AssetWindow {
 
     private final AssetHandler assetHandler = new AssetHandler();
     private boolean bIsImportOpen = false;
@@ -135,7 +135,7 @@ public class AssetPanel {
                 // Handle the selection of the current asset
                 GameObject obj = GameObjFactory.generateEnvironmentObj(sprite, 32, 32);
                 editorControls.pickUp(obj);
-                Logger.info("Game object has been created");
+                DebugLogger.info("Game object has been created");
             }
 
             // Pop the unique ID for ImGui elements

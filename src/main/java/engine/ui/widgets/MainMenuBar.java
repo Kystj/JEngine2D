@@ -5,6 +5,7 @@
  */
 package engine.ui.widgets;
 
+import engine.debug.logger.DebugLogger;
 import engine.ui.debug.DebugWindow;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
@@ -73,7 +74,6 @@ public class MainMenuBar {
     private void preferencesMenuItem() {
         if (ImGui.menuItem("Preferences", "Ctrl+p")) preferences.setOpen(new ImBoolean(true));
         // TODO: Implement preferences
-        System.out.println("Preferences...");
     }
 
     /**
@@ -82,7 +82,6 @@ public class MainMenuBar {
     private void saveMenuItem() {
         if (ImGui.menuItem("Save", "Ctrl+s")) {
             // TODO: Implement save
-            System.out.println("Saving...");
         }
     }
 
@@ -92,15 +91,13 @@ public class MainMenuBar {
     private void loadMenuItem() {
         if (ImGui.menuItem("Load", "Ctrl+o")) {
             //TODO: Implement load and shortcuts
-            System.out.println("Loading...");
         }
     }
 
     private void helpMenuItem() {
-        if (ImGui.menuItem("Shortcuts", "Ctrl+t"));
         if (ImGui.menuItem("Help", "Ctrl+h")) helpPanelMenu.setOpen(new ImBoolean(true));
         //TODO: Implement load and shortcuts
-        System.out.println("Loading...");
+
     }
 
 
@@ -117,7 +114,11 @@ public class MainMenuBar {
             }
 
             if (ImGui.menuItem("Task Manager", "Ctrl+m")) {
+                System.out.println("Opening task manager");
+            }
 
+            if (ImGui.menuItem("Log Console", "Ctrl+l")) {
+                DebugLogger.setIsOpen(new ImBoolean(true));
             }
             ImGui.endMenu();
         }

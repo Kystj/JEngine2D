@@ -45,13 +45,14 @@ public class ShapeGenerator {
 
         ImGui.columns(2);
         ImGui.spacing();
-        ImGui.setColumnWidth(0, ImGui.getWindowSizeX() / 4.0f);
+        ImGui.setColumnWidth(0, ImGui.getWindowSizeX() / 3.0f);
 
-
+        ImGui.setCursorPosY(ImGui.getCursorPosY());
         ImGui.text("Color");
         ImGui.text("Lifetime");
         ImGui.text("Rotation");
         ImGui.spacing();
+        ImGui.setCursorPosY(ImGui.getCursorPosY()+ 10);
         ImGui.text("Persistent");
 
         ImGui.nextColumn();

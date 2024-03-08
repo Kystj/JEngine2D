@@ -8,11 +8,13 @@ Current Development Tasks
 
        - Implement functionality to allow a user to select objects once they have already been placed in the scene.
 
-       - Implement a debug logger
-
        - Review Editor Controls, Mouse control math and OrthoCamera math/controls carefully and record editor control details in notebook.
 
 Name Ideas:
  - StellarSprite2D
  - Nova2D
  - Pixel Forge2 || Pixel Forge
+
+
+
+- Fix the @Override method placement. All should be at the top. Stick to one convention

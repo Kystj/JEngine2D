@@ -8,14 +8,16 @@ package engine.world.scenes;
 import engine.debug.draw.DebugDraw;
 import engine.graphics.OrthographicCamera;
 import engine.ui.debug.DebugWindow;
-import engine.ui.editor.AssetPanel;
+import engine.ui.editor.AssetWindow;
+import engine.ui.editor.DetailsWindow;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 public class EditorScene extends Scene {
 
-    private final AssetPanel assetPanel = new AssetPanel();
+    private final AssetWindow defaultAssetWindow = new AssetWindow();
+    private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     private static int cellSize = 16;
 
     @Override
@@ -29,7 +31,8 @@ public class EditorScene extends Scene {
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
-        assetPanel.tick(deltaTime);
+        defaultAssetWindow.tick(deltaTime);
+        defaultDetailsWindow.tick(deltaTime);
     }
 
     @Override
@@ -40,8 +43,10 @@ public class EditorScene extends Scene {
 
     @Override
     public void imgui() {
-        assetPanel.imgui();
+        super.imgui();
         DebugWindow.imgui();
+        defaultAssetWindow.imgui();
+        defaultDetailsWindow.imgui();
     }
 
 

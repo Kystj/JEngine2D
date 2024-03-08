@@ -5,7 +5,7 @@
  */
 package engine.ui.editor;
 
-import engine.debug.logger.Logger;
+import engine.debug.logger.DebugLogger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
@@ -35,7 +35,7 @@ public class EditorControls implements EventListener {
     }
 
     public void place() {
-        Logger.info("Game object has been added to the scene");
+        DebugLogger.info("Game object has been added to the scene");
         selectedObject = null;
     }
 

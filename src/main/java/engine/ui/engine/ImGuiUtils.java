@@ -5,6 +5,7 @@
  */
 package engine.ui.engine;
 
+import engine.debug.logger.DebugLogger;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.Texture;
@@ -116,6 +117,7 @@ public class ImGuiUtils {
         if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
+            DebugLogger.warning("Grid Snapping Toggled");
         }
 
         if (ImGui.isItemHovered()) {
@@ -134,7 +136,7 @@ public class ImGuiUtils {
         if (ImGui.beginPopupContextItem("aspectRatio")) {
             if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f);
             if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);
-            if (ImGui.selectable("21:9"))  EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);
+            if (ImGui.selectable("21:9"))   EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);
             if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);
             ImGui.endPopup();
         }

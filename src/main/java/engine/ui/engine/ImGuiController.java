@@ -5,7 +5,7 @@
  */
 package engine.ui.engine;
 
-import engine.debug.logger.Logger;
+import engine.debug.logger.DebugLogger;
 import engine.ui.editor.Viewport;
 import engine.ui.widgets.MainMenuBar;
 import engine.utils.ShortcutHandler;
@@ -15,7 +15,6 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
-import org.joml.Vector2f;
 
 /**
  * The main class in charge of the ImGui configurations. Controls set up, style and
@@ -63,8 +62,8 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.get().getCurrentScene().imgui();
-        ImGui.showDemoWindow();
-        Logger.imgui();
+        // ImGui.showDemoWindow();
+        DebugLogger.imgui();
         endFrame();
     }
 
@@ -155,14 +154,6 @@ public class ImGuiController {
      */
     private void popCustomStyleVars() {
         ImGui.popStyleVar(4);
-    }
-
-
-    public Vector2f getViewportSize() {
-        System.out.println("THIS IS THE ERROR");
-        float width = ImGui.getMainViewport().getSizeX();
-        float height = ImGui.getMainViewport().getSizeY();
-        return new Vector2f(width, height);
     }
 }
 /*End of ImGuiLayer class*/

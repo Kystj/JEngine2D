@@ -45,6 +45,7 @@ public class DebugWindow {
 
     private static void drawReports() {
         if (ImGui.collapsingHeader("Reports")) {
+            ImGui.setCursorPosX(X_SPACING);
             ReportHandler.displayReportList();
             ImGui.setCursorPosX(X_SPACING);
 
@@ -96,7 +97,7 @@ public class DebugWindow {
         for (int i = 0; i < buttons.size(); i++) {
             int id = buttons.get(i).getTextureID();
             ImGui.pushID(i);
-            ImGui.setCursorPosX(X_SPACING + i * ImGui.getWindowSizeX() / 6);
+            ImGui.setCursorPosX(X_SPACING + i * ImGui.getWindowSizeX() / 4);
             if (ImGui.imageButton(id, 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
                 switch (i) {
                     case 0:
