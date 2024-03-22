@@ -24,7 +24,7 @@ public class MainMenuBar {
     public void imgui() {
         ImGui.beginMainMenuBar();
         projectMenuItem();
-        debugMenu();
+        toolsMenu();
         helpMenu();
         ImGui.endMainMenuBar();
     }
@@ -104,7 +104,7 @@ public class MainMenuBar {
     /**
      * The debug menu. The drop-down menu contains various debug functions
      */
-    private void debugMenu() {
+    private void toolsMenu() {
         //TODO: Implement debug window and shortcuts
         if (ImGui.beginMenu("Tools")) {
 

@@ -7,7 +7,7 @@ package engine.ui.editor;
 
 import engine.io.MouseInputs;
 import engine.ui.engine.EngineWindow;
-import engine.ui.engine.ImGuiUtils;
+import engine.utils.ImGuiUtils;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
@@ -18,6 +18,9 @@ public class Viewport {
 
     private boolean isGridLocked = true;
 
+    private static final Vector2f viewportSize = new Vector2f();
+    private static final Vector2f viewportPos = new Vector2f();
+
     public void tick() {
         ImGui.begin("Viewport", ImGuiWindowFlags.NoScrollbar
                 | ImGuiWindowFlags.NoScrollWithMouse | ImGuiViewportFlags.NoTaskBarIcon);
@@ -26,7 +29,7 @@ public class Viewport {
 
         int textureId = EngineWindow.get().getFramebufferTexID();
 
-        ImVec2 windowSize = getViewportSize();
+        ImVec2 windowSize = findViewportSize();
         ImVec2 windowPos = getCenteredPositionForViewport(windowSize);
 
         ImGui.setCursorPos(windowPos.x, windowPos.y);
@@ -38,14 +41,17 @@ public class Viewport {
 
         ImGui.image(textureId, windowSize.x, windowSize.y, 0, 1, 1, 0);
 
+        viewportSize.set(windowSize.x, windowSize.y);
+        viewportPos.set(topLeft.x, topLeft.y);
+
         MouseInputs.setViewportPos(new Vector2f(topLeft.x, topLeft.y));
         MouseInputs.setViewportSize(new Vector2f(windowSize.x, windowSize.y));
 
         ImGui.end();
     }
 
-    private ImVec2 getViewportSize() {
-        ImVec2 windowSize = getWindowSize();
+    private ImVec2 findViewportSize() {
+        ImVec2 windowSize = findWindowSize();
         float aspectWidth = windowSize.x;
         float aspectRatio = EngineWindow.get().getDefaultAspectRatio();
         float aspectHeight = aspectWidth / aspectRatio;
@@ -57,13 +63,13 @@ public class Viewport {
     }
 
     private ImVec2 getCenteredPositionForViewport(ImVec2 aspectSize) {
-        ImVec2 windowSize = getWindowSize();
+        ImVec2 windowSize = findWindowSize();
         float viewportX = (windowSize.x - aspectSize.x) * 0.5f;
         float viewportY = (windowSize.y - aspectSize.y) * 0.5f;
         return new ImVec2(viewportX + ImGui.getCursorPosX(), viewportY + ImGui.getCursorPosY());
     }
 
-    private ImVec2 getWindowSize() {
+    private ImVec2 findWindowSize() {
         ImVec2 windowSize = new ImVec2();
         ImGui.getContentRegionAvail(windowSize);
         windowSize.x -= ImGui.getScrollX();
@@ -106,6 +112,18 @@ public class Viewport {
 
         ImGui.sameLine();
         ImGuiUtils.renderWireFrameModeButton(EngineWindow.get().isFrameModeOn());
+    }
+
+    public boolean isGridLocked() {
+        return isGridLocked;
+    }
+
+    public static Vector2f getViewportPos() {
+        return viewportPos;
+    }
+
+    public static Vector2f getViewportSize() {
+        return viewportSize;
     }
 }
 /* End of Viewport class */

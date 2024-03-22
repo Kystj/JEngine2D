@@ -1,7 +1,7 @@
 package engine.ui.debug;
 
 import engine.io.MouseInputs;
-import engine.ui.engine.ImGuiUtils;
+import engine.utils.ImGuiUtils;
 import engine.utils.ReportHandler;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
@@ -72,9 +72,6 @@ public class ReportWindow {
             }
         }
     }
-
-
-
 
     private void saveAndResetFields() {
         if (this.showPopup) {

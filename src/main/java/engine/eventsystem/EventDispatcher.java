@@ -6,6 +6,8 @@
 package engine.eventsystem;
 
 import engine.settings.EConstants.EventType;
+import engine.world.objects.GameObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,15 @@ public class EventDispatcher {
 
         for (EventListener listener : listeners) {
             listener.onEvent(event);
+        }
+    }
+
+    public static void dispatchEvent(Event event, GameObject gameObject) {
+        EventType eventType = event.getEventType();
+        List<EventListener> listeners = listenersMap.getOrDefault(eventType, new ArrayList<>());
+
+        for (EventListener listener : listeners) {
+            listener.onEvent(event, gameObject);
         }
     }
 }

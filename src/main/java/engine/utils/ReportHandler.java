@@ -2,7 +2,7 @@ package engine.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.debug.diagnostic.DebugReport;
+import engine.debug.diagnostic.BugReport;
 import engine.serialization.ReportAdapter;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -16,13 +16,14 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.settings.EConstants.X_SPACING;
+import static engine.settings.EConstants.*;
+import static engine.settings.EConstants.RED_BUTTON;
 
 public class ReportHandler {
 
-    private static final List<DebugReport> bugReports = new ArrayList<>();
+    private static final List<BugReport> bugReports = new ArrayList<>();
     private static final String BUG_DIRECTORY_PATH = "bugs/";
-    private static final DebugReport selectedReport = new DebugReport("Error", "No file found");
+    private static final BugReport selectedReport = new BugReport("Error", "No file found");
 
     private static boolean showReport = false;
 
@@ -30,9 +31,9 @@ public class ReportHandler {
         ImGui.spacing();
         ImGui.setCursorPosX(X_SPACING);
 
-        ImGui.text(selectedReport.getBugDescription());
+        ImGui.textWrapped(selectedReport.getBugDescription());
 
-        ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 1.0f, 0.0f, 0.5f); // Yellow color
+        ImGui.pushStyleColor(ImGuiCol.Button, YELLOW_BUTTON.x, YELLOW_BUTTON.y, YELLOW_BUTTON.z, YELLOW_BUTTON.w); // Yellow color
         ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("-")) {
             showReport = false;
@@ -40,7 +41,7 @@ public class ReportHandler {
         ImGui.popStyleColor();
 
         ImGui.sameLine();
-        ImGui.pushStyleColor(ImGuiCol.Button, 1.0f, 0.0f, 0.0f, 0.5f);
+        ImGui.pushStyleColor(ImGuiCol.Button, RED_BUTTON.x, RED_BUTTON.y, RED_BUTTON.z, RED_BUTTON.w);
         if (ImGui.button("x")) {
             String fileName = BUG_DIRECTORY_PATH + selectedReport.getBugID();
             fileName = fileName.replace(" ", "") + ".json";
@@ -62,26 +63,26 @@ public class ReportHandler {
     }
 
     public static void saveReport(String bugName, String bugDescription) {
-        DebugReport newDebugReport = createReport(bugName, bugDescription);
+        BugReport newBugReport = createReport(bugName, bugDescription);
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(DebugReport.class, new ReportAdapter())
+                .registerTypeAdapter(BugReport.class, new ReportAdapter())
                 .create();
 
         String fileName = bugName.replace(" ", "") + ".json";
         String pathName = BUG_DIRECTORY_PATH + fileName;
 
         try (FileWriter writer = new FileWriter(pathName)) {
-            writer.write(gson.toJson(newDebugReport));
+            writer.write(gson.toJson(newBugReport));
         } catch (IOException e) {
             handleIOException(e);
         }
     }
 
-    private static DebugReport createReport(String bugName, String bugDescription) {
-        DebugReport newDebugReport = new DebugReport(bugName, bugDescription);
-        bugReports.add(newDebugReport); // Add the new report to the list
-        return newDebugReport;
+    private static BugReport createReport(String bugName, String bugDescription) {
+        BugReport newBugReport = new BugReport(bugName, bugDescription);
+        bugReports.add(newBugReport); // Add the new report to the list
+        return newBugReport;
     }
 
     public static void loadReports() {
@@ -97,16 +98,16 @@ public class ReportHandler {
     private static void processReportFile(Path filePath) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(DebugReport.class, new ReportAdapter())
+                .registerTypeAdapter(BugReport.class, new ReportAdapter())
                 .create();
         String data = new String(Files.readAllBytes(filePath));
-        DebugReport debugReport = gson.fromJson(data, DebugReport.class);
-        bugReports.add(debugReport); // Add the loaded report to the list
+        BugReport bugReport = gson.fromJson(data, BugReport.class);
+        bugReports.add(bugReport); // Add the loaded report to the list
     }
 
     public static void displayReportList() {
         if (ImGui.beginCombo("##MapKeysCombo", "View reports")) {
-            for (DebugReport report : bugReports) {
+            for (BugReport report : bugReports) {
                 if (ImGui.selectable(report.getBugID())) {
                     showReport = true;
                     selectedReport.setBugDescription(report.getBugDescription());
@@ -127,7 +128,7 @@ public class ReportHandler {
         e.printStackTrace();
     }
 
-    public static List<DebugReport> getReports() {
+    public static List<BugReport> getReports() {
         return bugReports;
     }
 

@@ -6,7 +6,7 @@
 package engine.ui.editor;
 
 import engine.graphics.SpriteSheet;
-import engine.ui.engine.ImGuiUtils;
+import engine.utils.ImGuiUtils;
 import engine.utils.AssetHandler;
 import engine.utils.ShortcutHandler;
 import engine.world.components.Sprite;
@@ -14,9 +14,13 @@ import engine.world.objects.GameObjFactory;
 import engine.world.objects.GameObject;
 import imgui.ImGui;
 import imgui.ImVec2;
+import imgui.flag.ImGuiCol;
 import org.joml.Vector2f;
 
 import java.util.Map;
+
+import static engine.settings.EConstants.*;
+
 public class AssetWindow {
 
     private final AssetHandler assetHandler = new AssetHandler();
@@ -35,13 +39,24 @@ public class AssetWindow {
         // Create the main window
         ImGui.begin("Assets");
         ImGui.spacing();
+        ImGui.setCursorPosX(X_SPACING);
+        ImGui.pushStyleColor(ImGuiCol.Button, GREEN_BUTTON.x, GREEN_BUTTON.y, GREEN_BUTTON.z, GREEN_BUTTON.w);
+        if (ImGui.button("+")) {
+            bIsRemoveOpen = false;
+            bIsImportOpen = true;
+        }
+        ImGui.popStyleColor();
 
-        // Update the asset dropdown for adding or removing assets
-        updateAssetDropdown();
+        ImGui.sameLine();
 
-        // Move to the second column for organizing UI elements
-        ImGui.nextColumn();
+        ImGui.pushStyleColor(ImGuiCol.Button, RED_BUTTON.x, RED_BUTTON.y, RED_BUTTON.z, RED_BUTTON.w);
+        if (ImGui.button("-")) {
+            bIsRemoveOpen = true;
+            bIsImportOpen = false;
+        }
+        ImGui.popStyleColor();
 
+        ImGui.setCursorPosX(X_SPACING);
         // Create tabs to represent different asset types
         if (ImGui.beginTabBar("Tabs")) {
             // Iterate through each SpriteSheet in the AssetManager
@@ -68,29 +83,6 @@ public class AssetWindow {
         ImGui.end();
     }
 
-    private void updateAssetDropdown() {
-        //Set up columns
-        ImGui.columns(2, "Columns", true);
-
-        // First column
-        ImGui.setColumnWidth(0, ImGui.getWindowSizeX() * .05f);
-        ImGui.text(" ");
-        ImGui.setCursorPos(25,50);
-
-        if (ImGui.beginCombo("##combo", "+/-")) {
-            // Add new sprite sheet
-            if (ImGui.selectable("Add")) {
-                bIsRemoveOpen = false;
-                bIsImportOpen = true;
-            }
-            // Remove existing sprite sheer
-            if (ImGui.selectable("Remove")) {
-                bIsImportOpen = false;
-                bIsRemoveOpen = true;
-            }
-            ImGui.endCombo();
-        }
-    }
 
     private void generateAssetButtons(SpriteSheet sprites) {
         ImVec2 windowPos = new ImVec2();
@@ -106,6 +98,7 @@ public class AssetWindow {
         float windowX2 = windowPos.x + windowSize.x;
 
         // Iterate through each sprite in the SpriteSheet
+        ImGui.setCursorPosX(X_SPACING);
         for (int i = 0; i < sprites.numOfSprites(); i++) {
             Sprite sprite = sprites.getSprite(i);
 
@@ -140,6 +133,8 @@ public class AssetWindow {
             // If there are more sprites and there's enough space, place the next button on the same line
             if (i + 1 < sprites.numOfSprites() && nextButtonX2 < windowX2) {
                 ImGui.sameLine();
+            } else {
+                ImGui.setCursorPosX(X_SPACING);
             }
         }
     }

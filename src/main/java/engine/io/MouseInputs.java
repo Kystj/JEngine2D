@@ -6,6 +6,7 @@
 package engine.io;
 
 import engine.graphics.OrthographicCamera;
+import engine.ui.editor.Viewport;
 import engine.ui.engine.EngineWindow;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -64,6 +65,19 @@ public class MouseInputs {
         scrollY = 0;
         lastX = xPos;
         lastY = yPos;
+    }
+
+
+    public static float getScreenX() {
+        float currentX = getX() - Viewport.getViewportPos().x;
+        currentX = (currentX / Viewport.getViewportSize().x) * EngineWindow.get().getWindowWidth();
+        return currentX;
+    }
+
+    public static float getScreenY() {
+        float currentY = getY() - Viewport.getViewportPos().y;
+        currentY = 1440.0f - ((currentY / Viewport.getViewportSize().y) * EngineWindow.get().getWindowHeight());
+        return currentY;
     }
 
     public static float getX() {

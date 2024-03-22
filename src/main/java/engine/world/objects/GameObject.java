@@ -5,7 +5,6 @@
  */
 package engine.world.objects;
 
-import engine.debug.logger.DebugLogger;
 import engine.world.components.Component;
 import engine.world.components.Transform;
 
@@ -13,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
-    private final String name;
+    private String name;
     private final List<Component> componentsList = new ArrayList<>();
-    private Transform transform;
+    private final Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
-    private int objectUID;
+    protected int objectUID;
     private int zIndex;
 
     public GameObject(String name, Transform transform, int zIndex) {
@@ -26,9 +25,9 @@ public class GameObject {
         this.zIndex = zIndex;
     }
 
+
     public void init(){
         generateUniqueId();
-        DebugLogger.warning("GameObject with UID: " + objectUID + " has been created", true);
         for (Component component : componentsList) {
             component.init();
         }
@@ -39,6 +38,7 @@ public class GameObject {
             component.tick(dt);
         }
     }
+
 
     private synchronized void generateUniqueId() {
         this.objectUID = ++GLOBAL_OBJECT_ID_COUNTER;
@@ -90,7 +90,11 @@ public class GameObject {
         return name;
     }
 
-    public int getObjectUID() {
+    public void setName(String objName) {
+        this.name = objName;
+    }
+
+    public int getUID() {
         return objectUID;
     }
 
@@ -98,7 +102,7 @@ public class GameObject {
         return transform;
     }
 
-    public int getzIndex() {
+    public int getZIndex() {
         return zIndex;
     }
 }

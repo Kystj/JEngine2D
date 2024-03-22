@@ -12,7 +12,7 @@ import org.joml.Vector2f;
 public class GameObjFactory {
 
     public static GameObject generateGameObject(Sprite sprite, float width, float height) {
-        GameObject object = new GameObject("Environment_block",
+        GameObject object = new GameObject("Game_Object",
                             new Transform(new Vector2f( ),
                                         new Vector2f(width, height)),0);
         object.addComponent(sprite);

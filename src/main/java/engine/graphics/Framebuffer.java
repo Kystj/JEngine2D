@@ -42,7 +42,7 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    public void bind(int width, int height) {
+    public void use(int width, int height) {
         //glViewport(0, 0, width, height);
         glClearColor(1, 1, 1, 0);
 
@@ -50,7 +50,7 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, framebufferID);
     }
 
-    public void unbind() {
+    public void detatch() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 

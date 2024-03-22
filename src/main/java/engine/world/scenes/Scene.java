@@ -11,6 +11,7 @@ import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The Scene class represents a scene in the game, containing game objects and managing rendering.
@@ -117,6 +118,13 @@ public class Scene {
      */
     public OrthographicCamera getOrthoCamera() {
         return orthoCamera;
+    }
+
+    public GameObject getGameObject(int gameObjectId) {
+        Optional<GameObject> result = this.gameObjects.stream()
+                .filter(gameObject -> gameObject.getUID() == gameObjectId)
+                .findFirst();
+        return result.orElse(null);
     }
 }
 /*End of Scene class*/

@@ -32,13 +32,12 @@ public class EditorScene extends Scene {
     public void tick(float deltaTime) {
         super.tick(deltaTime);
         defaultAssetWindow.tick(deltaTime);
-        defaultDetailsWindow.tick(deltaTime);
     }
 
     @Override
     public void render() {
-         super.render();
-          drawGridLines();
+        super.render();
+        drawGridLines();
     }
 
     @Override

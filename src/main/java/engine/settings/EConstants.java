@@ -1,6 +1,7 @@
 package engine.settings;
 
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 /**
  * This class contains all the constants used throughout the engine
@@ -12,6 +13,9 @@ public interface EConstants {
 
     // ImGui
     int X_SPACING = 10;
+    Vector4f GREEN_BUTTON = new Vector4f(0.0f, 1.0f, 0.0f, 0.5f);
+    Vector4f RED_BUTTON = new Vector4f(1.0f, 0.0f, 0.0f, 0.5f);
+    Vector4f YELLOW_BUTTON = new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
 
     // Event Types
     enum EventType {

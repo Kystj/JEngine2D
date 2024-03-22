@@ -7,9 +7,9 @@
 package engine.ui.debug;
 
 import engine.debug.draw.DebugDraw;
+import engine.utils.ImGuiUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
-import imgui.flag.ImGuiColorEditFlags;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -44,40 +44,18 @@ public class ShapeGenerator {
             ImGui.endTooltip();
         }
 
-        ImGui.columns(2);
-        ImGui.spacing();
-        ImGui.setColumnWidth(0, ImGui.getWindowSizeX() / 3.0f);
-
-        ImGui.setCursorPosY(ImGui.getCursorPosY());
-        ImGui.text("Color");
-        ImGui.text("Lifetime");
-        ImGui.text("Rotation");
-        ImGui.spacing();
-        ImGui.setCursorPosY(ImGui.getCursorPosY()+ 10);
-        ImGui.text("Persistent");
-
-        ImGui.nextColumn();
-
-        float[] imVecColor = {color.x, color.y, color.z};
-        if (ImGui.colorEdit3("##Color", imVecColor, ImGuiColorEditFlags.DisplayRGB )) {
-            color.set(imVecColor[0], imVecColor[1], imVecColor[2]);
-        }
-
-        int[] imFloatLifetime = {lifeTime};
-        if (ImGui.dragInt("##Lifetime", imFloatLifetime)) {
-            lifeTime = imFloatLifetime[0];
-        }
-
-        float[] imFloatRotation = {rotation};
-        if (ImGui.dragFloat("##Rotation", imFloatRotation)) {
-            rotation = imFloatRotation[0];
-        }
-
-        ImGui.spacing();
-        if (ImGui.checkbox("##Persistent", bIsPersistent)) {
+        color = ImGuiUtils.renderColorPicker3f("Color", color);
+        lifeTime = ImGuiUtils.renderIntSlider("Life", lifeTime);
+        ImGui.sameLine();
+        if (ImGui.checkbox("##Persist", bIsPersistent)) {
             bIsPersistent = !bIsPersistent;
         }
-        ImGui.nextColumn();
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip("Persist?");
+            ImGui.endTooltip();
+        }
+        rotation = ImGuiUtils.renderFloatSlider("Rotation", rotation);
     }
 
     protected void drawButtonAndDrawShape(Runnable drawShape) {
@@ -113,23 +91,9 @@ class BoxGenerator extends ShapeGenerator {
     @Override
     public void drawUI() {
         drawCommonUI();
+        ImGuiUtils.renderVec2Sliders("Position", position, position);
+        ImGuiUtils.renderVec2Sliders("Size", size, size);
 
-        ImGui.text("Position");
-        ImGui.text("Size");
-
-        ImGui.nextColumn();
-
-        float[] imVecPos = {position.x, position.y};
-        if (ImGui.dragFloat2("##Position", imVecPos)) {
-            position.set(imVecPos[0], imVecPos[1]);
-        }
-
-        float[] imVecSize = {size.x, size.y};
-        if (ImGui.dragFloat2("##Size", imVecSize)) {
-            size.set(imVecSize[0], imVecSize[1]);
-        }
-
-        ImGui.columns(1);
         if (bIsPersistent) {
             drawButtonAndDrawShape(() -> DebugDraw.addBox(position, size, rotation, color, true));
         } else {
@@ -162,27 +126,9 @@ class TriangleGenerator extends ShapeGenerator {
     @Override
     public void drawUI() {
         drawCommonUI();
-        ImGui.text("V1");
-        ImGui.text("V2");
-        ImGui.text("V3");
-
-        ImGui.nextColumn();
-        float[] imVecV1 = {v1.x, v1.y};
-        if (ImGui.dragFloat2("##V1", imVecV1)) {
-            v1.set(imVecV1[0], imVecV1[1]);
-        }
-
-        float[] imVecV2 = {v2.x, v2.y};
-        if (ImGui.dragFloat2("##V2", imVecV2)) {
-            v2.set(imVecV2[0], imVecV2[1]);
-        }
-
-        float[] imVecV3 = {v3.x, v3.y};
-        if (ImGui.dragFloat2("##V3", imVecV3)) {
-            v3.set(imVecV3[0], imVecV3[1]);
-        }
-        ImGui.columns(1);
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGuiUtils.renderVec2Sliders("V1", v1, v1);
+        ImGuiUtils.renderVec2Sliders("V2", v2, v2);
+        ImGuiUtils.renderVec2Sliders("V3", v3, v3);
 
         if (bIsPersistent) {
             drawButtonAndDrawShape(() -> DebugDraw.addTriangle(v1, v2, v3, color,
@@ -218,26 +164,10 @@ class CircleGenerator extends ShapeGenerator {
     @Override
     public void drawUI() {
         drawCommonUI();
-        ImGui.text("Centre");
-        ImGui.text("Radius");
-        ImGui.text("Segments");
+        ImGuiUtils.renderVec2Sliders("Centre", centre, centre);
+        radius = ImGuiUtils.renderFloatSlider("Radius", radius);
+        segments = ImGuiUtils.renderIntSlider("Segments", segments);
 
-        ImGui.nextColumn();
-        float[] imVecFrom = {centre.x, centre.y};
-        if (ImGui.dragFloat2("##Centre", imVecFrom)) {
-            centre.set(imVecFrom[0], imVecFrom[1]);
-        }
-
-        float[] imVecTo = {radius};
-        if (ImGui.dragFloat("##Radius", imVecTo)) {
-            radius = imVecTo[0];
-        }
-
-
-        int[] imIntSegments = {segments};
-        if (ImGui.dragInt("##Segments", imIntSegments)) {
-            segments = imIntSegments[0];
-        }
         ImGui.sameLine();
         ImGui.text("?");
         if (ImGui.isItemHovered()) {
@@ -246,8 +176,6 @@ class CircleGenerator extends ShapeGenerator {
             ImGui.endTooltip();
         }
 
-        ImGui.columns(1);
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
         if (bIsPersistent) {
             drawButtonAndDrawShape(() -> DebugDraw.addCircle(centre, radius, rotation, color,
                     segments, true));
@@ -280,21 +208,8 @@ class LineGenerator extends ShapeGenerator {
     @Override
     public void drawUI() {
         drawCommonUI();
-        ImGui.text("From");
-        ImGui.text("To");
-
-        ImGui.nextColumn();
-
-        float[] imVecFrom = {from.x, from.y};
-        if (ImGui.dragFloat2("##From", imVecFrom)) {
-            from.set(imVecFrom[0], imVecFrom[1]);
-        }
-        float[] imVecTo = {to.x, to.y};
-        if (ImGui.dragFloat2("##To", imVecTo)) {
-            to.set(imVecTo[0], imVecTo[1]);
-        }
-        ImGui.columns(1);
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGuiUtils.renderVec2Sliders("From", from, from);
+        ImGuiUtils.renderVec2Sliders("To", to, to);
 
         if (bIsPersistent) {
             drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color, true));

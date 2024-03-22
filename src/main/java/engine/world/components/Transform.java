@@ -25,9 +25,19 @@ public class Transform {
     }
 
 
-    public Vector2f getPosition() {
-        return position;
+    @Override
+    public boolean equals(Object t2) {
+        if (t2 == null) {
+            return false;
+        }
+        if (!(t2 instanceof Transform)) {
+            return false;
+        }
+        Transform transform = (Transform) t2;
+        return transform.position.equals(this.position) && transform.scale.equals(this.scale) &&
+                transform.rotation == this.rotation;
     }
+
 
     public void setPosition(Vector2f position) {
         this.position = position;
@@ -41,12 +51,15 @@ public class Transform {
         this.scale.y = deltaY;
     }
 
-    public Vector2f getScale() {
-        return scale;
+
+    public void setRotation(float rotation) {
+        this.rotation = rotation;
     }
 
+
     public void setScale(Vector2f scale) {
-        this.scale = scale;
+        this.scale.x = scale.x;
+        this.scale.y = scale.y;
     }
 
     public void setScaleZ(float deltaZ) {
@@ -57,12 +70,17 @@ public class Transform {
         this.position.y = deltaY;
     }
 
-    public float getRotation() {
-        return rotation;
+    public Vector2f getPosition() {
+        return position;
     }
 
-    public void setRotation(float rotation) {
-        this.rotation = rotation;
+
+    public Vector2f getScale() {
+        return scale;
+    }
+
+    public float getRotation() {
+        return rotation;
     }
 
     public Transform copy() {
@@ -70,22 +88,9 @@ public class Transform {
     }
 
     public void copy(Transform to) {
-        to.position.set(this.position);
-        to.scale.set(this.scale);
-    }
-
-
-    @Override
-    public boolean equals(Object t2) {
-        if (t2 == null) {
-            return false;
-        }
-        if (!(t2 instanceof Transform)) {
-            return false;
-        }
-        Transform transform = (Transform) t2;
-        return transform.position.equals(this.position) && transform.scale.equals(this.scale) &&
-                transform.rotation == this.rotation;
+        this.position.set(to.position);
+        this.position.set(to.scale);
+        this.rotation = to.getRotation();
     }
 }
 /*End of Transform class*/

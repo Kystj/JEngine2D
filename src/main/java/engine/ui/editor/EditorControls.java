@@ -10,8 +10,8 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.MouseInputs;
-import engine.ui.engine.EngineWindow;
 import engine.settings.EConstants;
+import engine.ui.engine.EngineWindow;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
@@ -29,13 +29,29 @@ public class EditorControls implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Grid_Lock, this);
     }
 
+
+    @Override
+    public void onEvent(Event event, GameObject gameObject) {
+
+    }
+
+    @Override
+    public void onEvent(Event event) {
+        if (event.getEventType() == EConstants.EventType.Grid_Lock) {
+            onButtonClick();
+        }
+    }
+
     public void pickUp(GameObject gameObject) {
         selectedObject = gameObject;
         EngineWindow.get().getCurrentScene().addGameObject(selectedObject);
+        EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User), gameObject);
     }
 
+
+
     public void place() {
-        DebugLogger.info("Game object has been added to the scene", true);
+        DebugLogger.warning("Game Object with UID: " + selectedObject.getUID() +" has been added to the scene", true);
         selectedObject = null;
     }
 
@@ -59,21 +75,8 @@ public class EditorControls implements EventListener {
         }
     }
 
-
     private void onButtonClick() {
         enableGridSnap = !enableGridSnap;
-    }
-
-    @Override
-    public void onEvent(GameObject gameObject, Event event) {
-
-    }
-
-    @Override
-    public void onEvent(Event event) {
-        if (event.getEventType() == EConstants.EventType.Grid_Lock) {
-           onButtonClick();
-        }
     }
 }
 /*End of EditorMouseController class*/

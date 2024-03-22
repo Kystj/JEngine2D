@@ -15,6 +15,7 @@ import imgui.flag.*;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.type.ImBoolean;
+import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 /**
  * The main class in charge of the ImGui configurations. Controls set up, style and
@@ -27,6 +28,7 @@ public class ImGuiController {
 
     private final MainMenuBar mainMenuBar = new MainMenuBar();
     private final Viewport viewport = new Viewport();
+    private GLFWMouseButtonCallback mouseButtonCallback;
 
     /**
      * Initialize ImGui context and configs
@@ -36,6 +38,8 @@ public class ImGuiController {
         setIOConfigs();
         imGuiGlfw.init(glfwWindow, true);
         imGuiGl3.init(glslVersion);
+
+
     }
 
     /**
@@ -62,7 +66,7 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.get().getCurrentScene().imgui();
-        // ImGui.showDemoWindow();
+        ImGui.showDemoWindow();
         DebugLogger.imgui();
         endFrame();
     }

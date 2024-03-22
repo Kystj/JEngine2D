@@ -1,16 +1,14 @@
 Current Development Tasks
 
-   Weekly Plan (March 4 - Mach 10)
+   Weekly Plan (March 11 - Mach 17)
 
-       - Fix sprite duplication
-
-       - Implement a details window for the active game object.
+       - Fix bugs
 
        - Implement functionality to allow a user to select objects once they have already been placed in the scene.
 
-       - Review Editor Controls, Mouse control math and OrthoCamera math/controls carefully and record editor control details in notebook.
+       - Begin implementing physics
 
-       - Fix the @Override method placement. All should be at the top. Stick to one convention
+       - Review and document
 
 Name Ideas:
  - StellarSprite2D

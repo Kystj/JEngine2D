@@ -181,6 +181,12 @@ public class Shader {
         glUniform3f(uniformLocation, vec.x, vec.y, vec.z);
     }
 
+    public void uploadInt(String uniformName, int intVal) {
+        int uniformLocation = glGetUniformLocation(shaderProgramID, uniformName);
+        use();
+        glGetUniformi(uniformLocation, intVal);
+    }
+
     /**
      * Get the location of and upload a texture uniform variable
      */

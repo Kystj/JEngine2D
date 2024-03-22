@@ -1,0 +1,5 @@
+{
+  "Name: ": "ZIndexing bug",
+  "Description: ": "When the ZIndex is changed in the details panel it is not\nreflected in the scene",
+  "Resolved: ": false
+}

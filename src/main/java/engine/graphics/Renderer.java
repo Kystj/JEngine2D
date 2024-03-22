@@ -5,6 +5,7 @@
  */
 package engine.graphics;
 
+import engine.utils.ResourceHandler;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 
@@ -15,6 +16,10 @@ import java.util.List;
 public class Renderer {
 
     private final List<BatchRenderer> batchList = new ArrayList<>();
+    private static Shader activeShader;
+    private static final Shader defaultShader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
+    private static final Shader pickingShader =  ResourceHandler.getOrCreateShader("shaders/PickingShader.glsl");
+
 
     public void render() {
         // Update the batches
@@ -39,7 +44,7 @@ public class Renderer {
     private boolean addToExistingBatch(Sprite sprite) {
         for (BatchRenderer batch : batchList) {
             // Only add sprites of the same z-index onto the same batch
-            if (batch.getBatchHasRoom() && batch.getzIndex() == sprite.owningGameObject.getzIndex()) {
+            if (batch.getBatchHasRoom() && batch.getzIndex() == sprite.owningGameObject.getZIndex()) {
                 Texture tex = sprite.getSpriteTexture();
                 if (tex == null || (batch.hasTexture(tex) || batch.isTexSlotsFull())) {
                     batch.addSpriteToBatch(sprite);
@@ -51,12 +56,24 @@ public class Renderer {
     }
 
     private void createNewBatch(Sprite sprite) {
-        BatchRenderer newBatch = new BatchRenderer(sprite.owningGameObject.getzIndex());
+        BatchRenderer newBatch = new BatchRenderer(sprite.owningGameObject.getZIndex());
         newBatch.addSpriteToBatch(sprite);
         batchList.add(newBatch);
         // Sorts the batches by their z index to ensure they are in the correct order
         // Can also call .reverseOrder()
         Collections.sort(batchList);
+    }
+
+    public static void setPickingShader() {
+        activeShader = pickingShader;
+    }
+
+    public static void setDefaultShader() {
+        activeShader = defaultShader;
+    }
+
+    public static Shader getActiveShader() {
+        return activeShader;
     }
 }
 /*End of Renderer class*/

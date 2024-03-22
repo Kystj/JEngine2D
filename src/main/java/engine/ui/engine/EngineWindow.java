@@ -13,6 +13,8 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
 import engine.graphics.OrthographicCamera;
+import engine.graphics.PickingTexture;
+import engine.graphics.Renderer;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
 import engine.settings.EConstants;
@@ -55,6 +57,8 @@ public class EngineWindow implements EventListener {
     private Scene currentScene;
 
     private float deltaTime = -1;
+
+    private PickingTexture pickingTexture;
 
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
@@ -149,6 +153,8 @@ public class EngineWindow implements EventListener {
     private void loadEngineConfigs() {
         // Initialize the frame buffer
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
+        this.pickingTexture = new PickingTexture(windowWidth, windowHeight);
+
         glViewport(0, 0, windowWidth, windowHeight);
 
         // Initialize ImGui functionality
@@ -176,7 +182,7 @@ public class EngineWindow implements EventListener {
             DebugRenderer.tick();
 
             if (deltaTime >= 0) {
-                updateEngineMode(deltaTime);
+                renderEditor(deltaTime);
             }
             glfwSwapBuffers(glfwWindow);
 
@@ -187,6 +193,29 @@ public class EngineWindow implements EventListener {
             closeEngine();
         }
     }
+
+    private float debounce = 0.8f;
+
+    public void selectObject(float dt) {
+        debounce -= dt;
+
+        if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
+            int x = (int) MouseInputs.getScreenX();
+            int y = (int) MouseInputs.getScreenY();
+
+            int gameObjectId = pickingTexture.readPixel(x, y);
+
+            DebugLogger.info(String.valueOf("Selected pixel UID: " + gameObjectId));
+
+            GameObject pickedObj = currentScene.getGameObject(gameObjectId);
+            if (pickedObj != null) {
+                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User), pickedObj);
+                this.debounce = 0.8f;
+            }
+            this.debounce = 0.8f;
+        }
+    }
+
 
     public void changeScene(int newScene) {
         switch (newScene) {
@@ -204,47 +233,43 @@ public class EngineWindow implements EventListener {
     }
 
 
-    private void updateEngineMode(float deltaTime) {
-        if (KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
-            engineMode = 0;
-        }
 
-        switch (engineMode) {
-            case 0:
-                editorModeTick(deltaTime);
-                break;
-            case 1:
-                fullPlayModeTick(deltaTime);
-                break;
-            default:
-                assert false : "No play mode selected";
-        }
-    }
 
     // TODO: Separate into separate functions and implement time step correctly
-    private void fullPlayModeTick(float deltaTime) {
-        clear();
-        currentScene.render();
-        currentScene.tick(deltaTime);
-    }
-
-    // TODO: Separate into separate functions and implement time step correctly
-    private void editorModeTick(float deltaTime) {
+    private void renderEditor(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
-            this.framebuffer.bind(windowWidth, windowHeight);
+            // Render pass 1. Render to picking texture
+            glDisable(GL_BLEND); // Turn off blending so we maintain just pixel data
+            pickingTexture.enableWriting(); //  binds GL_DRAW_FRAMEBUFFER as the target for drawing or rendering operations.
+
+            glViewport(0, 0, windowWidth, windowHeight); // Ensures the whole texture will be drawn
+            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            Renderer.setPickingShader();
+            currentScene.render();
+            pickingTexture.disableWriting();
+
+            selectObject(deltaTime);
+
+            // Must enable blend so the actual rendering of the game world can make use of it
+            glEnable(GL_BLEND);
+
+            // Render the editor scene to the framebuffer
+            this.framebuffer.use(windowWidth, windowHeight);
             clear();
             if (isFrameModeOn) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             }
-
-            // Render the editor scene to the framebuffer
             DebugRenderer.render();
+
+            Renderer.setDefaultShader();
             currentScene.render();
 
             // Renderer to the framebuffer
             currentScene.tick(deltaTime);
-            this.framebuffer.unbind();
+            this.framebuffer.detatch();
 
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -360,10 +385,9 @@ public class EngineWindow implements EventListener {
 
 
     @Override
-    public void onEvent(GameObject gameObject, Event event) {
+    public void onEvent(Event event, GameObject gameObject) {
 
     }
-
 
     @Override
     public void onEvent(Event event) {

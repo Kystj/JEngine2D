@@ -11,12 +11,13 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 
+import static engine.settings.EConstants.GREEN_BUTTON;
 import static engine.settings.EConstants.X_SPACING;
 
 public class DebugWindow {
 
     private static final ImBoolean bIsOpen = new ImBoolean(true);
-    private static final ReportWindow REPORT_WINDOW = new ReportWindow();
+    private static final ReportWindow reportWindow = new ReportWindow();
     private static ShapeGenerator shapeGenerator = new LineGenerator();
 
     private static final Texture squareButton = loadTexture("assets/buttons/Square.png");
@@ -28,7 +29,7 @@ public class DebugWindow {
     public static void imgui() {
         if (bIsOpen.get()) {
             ImGui.begin("Debug", bIsOpen);
-            REPORT_WINDOW.imgui();
+            reportWindow.imgui();
             ImGui.spacing();
             drawShapes();
             drawReports();
@@ -44,14 +45,14 @@ public class DebugWindow {
     }
 
     private static void drawReports() {
-        if (ImGui.collapsingHeader("Reports")) {
+        if (ImGui.collapsingHeader("Bugs")) {
             ImGui.setCursorPosX(X_SPACING);
             ReportHandler.displayReportList();
             ImGui.setCursorPosX(X_SPACING);
 
-            ImGui.pushStyleColor(ImGuiCol.Button, 0.0f, 1.0f, 0.0f, 0.5f);
+            ImGui.pushStyleColor(ImGuiCol.Button, GREEN_BUTTON.x, GREEN_BUTTON.y, GREEN_BUTTON.z, GREEN_BUTTON.w);
             if (ImGui.button("+")) {
-                REPORT_WINDOW.setGenerateNewReport(new ImBoolean(true));
+                reportWindow.setGenerateNewReport(new ImBoolean(true));
             }
             ImGui.popStyleColor();
 

@@ -24,7 +24,7 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class BatchRenderer implements Comparable<BatchRenderer> {
 
-    private final int vertexSize = 9;
+    private final int vertexSize = 10;
 
     private final Sprite[] sprites = new Sprite[MAX_BATCH_SIZE];
     private int numSprites = 0;
@@ -35,7 +35,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
-    private final Shader shader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
+    private Shader shader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
     private final int NUM_TEXTURE_SLOTS = 16; // Define the number of texture slots
@@ -46,6 +46,11 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     public BatchRenderer(int zIndex) {
         this.zIndex = zIndex;
         init();
+    }
+
+    @Override
+    public int compareTo(BatchRenderer o) {
+        return Integer.compare(this.zIndex, o.zIndex);
     }
 
     public void init() {
@@ -75,9 +80,9 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
 
         // Enable the buffer attribute pointers
         int vertexSizeInBytes = vertexSize * Float.BYTES;
+
         int vertexPosOffset = 0;
         int vertexPosSize = 2;
-
         glVertexAttribPointer(0, vertexPosSize, GL_FLOAT, false, vertexSizeInBytes, vertexPosOffset);
         glEnableVertexAttribArray(0);
 
@@ -86,8 +91,8 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         glVertexAttribPointer(1, vertexColorSize, GL_FLOAT, false, vertexSizeInBytes, colorPosOffset);
         glEnableVertexAttribArray(1);
 
-        int uvCoordinateOffset = colorPosOffset + vertexColorSize * Float.BYTES;
         int uvCoordinateSize = 2;
+        int uvCoordinateOffset = colorPosOffset + vertexColorSize * Float.BYTES;
         glVertexAttribPointer(2, uvCoordinateSize, GL_FLOAT, false, vertexSizeInBytes, uvCoordinateOffset);
         glEnableVertexAttribArray(2);
 
@@ -95,6 +100,11 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         int textureIdOffset = uvCoordinateOffset + uvCoordinateSize * Float.BYTES;
         glVertexAttribPointer(3, textureIdSize, GL_FLOAT, false, vertexSizeInBytes, textureIdOffset);
         glEnableVertexAttribArray(3);
+
+        int objectUIDSize = 1;
+        int objectUIDOffset = textureIdOffset + textureIdSize * Float.BYTES;
+        glVertexAttribPointer(4, objectUIDSize, GL_FLOAT, false, vertexSizeInBytes, objectUIDOffset);
+        glEnableVertexAttribArray(4);
     }
 
     public void render() {
@@ -114,6 +124,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         }
 
         // Use shader
+        shader = Renderer.getActiveShader();
         shader.use();
         shader.uploadMat4f("uProjection", EngineWindow.get().getCurrentScene().getOrthoCamera().getProjectionMatrix());
         shader.uploadMat4f("uView", EngineWindow.get().getCurrentScene().getOrthoCamera().calculateViewMatrix());
@@ -223,6 +234,9 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
             // Load texture id
             vertices[offset + 8] = textureID;
 
+            // Load entity id
+            vertices[offset + 9] = sprite.getOwningGameObject().getUID() + 1;
+
             offset += vertexSize;
         }
     }
@@ -271,6 +285,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         glEnableVertexAttribArray(1);
         glEnableVertexAttribArray(2);
         glEnableVertexAttribArray(3);
+        glEnableVertexAttribArray(4);
     }
 
     private void disableVertexAttributes() {
@@ -278,6 +293,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(2);
         glDisableVertexAttribArray(3);
+        glDisableVertexAttribArray(4);
     }
 
 
@@ -305,11 +321,6 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
 
     public boolean hasTexture(Texture tex) {
         return this.textures.contains(tex);
-    }
-
-    @Override
-    public int compareTo(BatchRenderer o) {
-        return Integer.compare(this.zIndex, o.zIndex);
     }
 }
 /*End of BatchRenderer class*/
