@@ -5,7 +5,7 @@
  */
 package engine.world.scenes;
 
-import engine.graphics.OrthographicCamera;
+import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
 import engine.world.objects.GameObject;
 
@@ -32,7 +32,7 @@ public class Scene {
     protected List<GameObject> gameObjects = new ArrayList<>();
 
     // Orthographic camera for the scene
-    protected OrthographicCamera orthoCamera;
+    protected OrthoCamera orthoCamera;
 
     // Flag indicating whether the scene is active
     private boolean bIsSceneActive;
@@ -116,7 +116,7 @@ public class Scene {
      *
      * @return The orthographic camera.
      */
-    public OrthographicCamera getOrthoCamera() {
+    public OrthoCamera getOrthoCamera() {
         return orthoCamera;
     }
 

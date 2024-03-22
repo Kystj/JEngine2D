@@ -9,7 +9,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-public class OrthographicCamera {
+public class OrthoCamera {
 
     private final Matrix4f viewMatrix = new Matrix4f();
     private final Matrix4f projectionMatrix = new Matrix4f();
@@ -19,12 +19,12 @@ public class OrthographicCamera {
     public Vector2f position;
     public Vector2f size = new Vector2f(32.0f * 40.0f, 32.0f * 20.0f);
 
-    public OrthographicCamera(Vector2f position) {
+    public OrthoCamera(Vector2f position) {
         this.position = position;
         setOrthographicProjection();
     }
 
-    public OrthographicCamera() {
+    public OrthoCamera() {
         this.position = new Vector2f(0.0f, 0.0f);
         setOrthographicProjection();
     }

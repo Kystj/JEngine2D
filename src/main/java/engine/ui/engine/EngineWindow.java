@@ -12,15 +12,14 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.Framebuffer;
-import engine.graphics.OrthographicCamera;
-import engine.graphics.PickingTexture;
+import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
 import engine.settings.EConstants;
+import engine.ui.editor.EditorScene;
 import engine.utils.MathUtils;
 import engine.world.objects.GameObject;
-import engine.world.scenes.EditorScene;
 import engine.world.scenes.Scene;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
@@ -41,14 +40,11 @@ public class EngineWindow implements EventListener {
     private static EngineWindow engine = null;
 
     private long glfwWindow;
-
     private int windowWidth;
     private int windowHeight;
-
     private float defaultAspectRatio = 16.0f / 9.0f;
 
     private Framebuffer framebuffer;
-
     private boolean isFrameModeOn = false;
 
     private final ImGuiController imGuiController = new ImGuiController();
@@ -57,8 +53,6 @@ public class EngineWindow implements EventListener {
     private Scene currentScene;
 
     private float deltaTime = -1;
-
-    private PickingTexture pickingTexture;
 
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
@@ -153,7 +147,6 @@ public class EngineWindow implements EventListener {
     private void loadEngineConfigs() {
         // Initialize the frame buffer
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
-        this.pickingTexture = new PickingTexture(windowWidth, windowHeight);
 
         glViewport(0, 0, windowWidth, windowHeight);
 
@@ -182,7 +175,7 @@ public class EngineWindow implements EventListener {
             DebugRenderer.tick();
 
             if (deltaTime >= 0) {
-                renderEditor(deltaTime);
+                updateEditor(deltaTime);
             }
             glfwSwapBuffers(glfwWindow);
 
@@ -191,28 +184,6 @@ public class EngineWindow implements EventListener {
             startTime = endTime;
 
             closeEngine();
-        }
-    }
-
-    private float debounce = 0.8f;
-
-    public void selectObject(float dt) {
-        debounce -= dt;
-
-        if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
-            int x = (int) MouseInputs.getScreenX();
-            int y = (int) MouseInputs.getScreenY();
-
-            int gameObjectId = pickingTexture.readPixel(x, y);
-
-            DebugLogger.info(String.valueOf("Selected pixel UID: " + gameObjectId));
-
-            GameObject pickedObj = currentScene.getGameObject(gameObjectId);
-            if (pickedObj != null) {
-                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User), pickedObj);
-                this.debounce = 0.8f;
-            }
-            this.debounce = 0.8f;
         }
     }
 
@@ -233,37 +204,18 @@ public class EngineWindow implements EventListener {
     }
 
 
-
-
     // TODO: Separate into separate functions and implement time step correctly
-    private void renderEditor(float deltaTime) {
+    private void updateEditor(float deltaTime) {
         // Safety check
         if (engineMode == 0) {
-            // Render pass 1. Render to picking texture
-            glDisable(GL_BLEND); // Turn off blending so we maintain just pixel data
-            pickingTexture.enableWriting(); //  binds GL_DRAW_FRAMEBUFFER as the target for drawing or rendering operations.
-
-            glViewport(0, 0, windowWidth, windowHeight); // Ensures the whole texture will be drawn
-            glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            Renderer.setPickingShader();
-            currentScene.render();
-            pickingTexture.disableWriting();
-
-            selectObject(deltaTime);
-
-            // Must enable blend so the actual rendering of the game world can make use of it
-            glEnable(GL_BLEND);
-
             // Render the editor scene to the framebuffer
             this.framebuffer.use(windowWidth, windowHeight);
             clear();
             if (isFrameModeOn) {
                 glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
             }
-            DebugRenderer.render();
 
+            DebugRenderer.render();
             Renderer.setDefaultShader();
             currentScene.render();
 
@@ -271,12 +223,15 @@ public class EngineWindow implements EventListener {
             currentScene.tick(deltaTime);
             this.framebuffer.detatch();
 
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            if (isFrameModeOn) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
 
             // Update the ImGui components
             imGuiController.tick(deltaTime);
         }
     }
+
 
     public float getDefaultAspectRatio() {
         return defaultAspectRatio;
@@ -287,17 +242,21 @@ public class EngineWindow implements EventListener {
         this.defaultAspectRatio = defaultAspectRatio;
     }
 
-    public OrthographicCamera getCamera() {
+
+    public OrthoCamera getCamera() {
         return currentScene.getOrthoCamera();
     }
+
 
     public Scene getCurrentScene() {
         return currentScene;
     }
 
+
     private void pollUserEvents() {
         glfwPollEvents();
     }
+
 
     public void terminateProgram() {
         // Free the window callbacks and destroy the window
@@ -308,6 +267,7 @@ public class EngineWindow implements EventListener {
         glfwTerminate();
         Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
+
 
     private Vector2f getDefaultScreenSize() {
         // Get the primary monitor
@@ -348,25 +308,31 @@ public class EngineWindow implements EventListener {
         }
     }
 
+
     public boolean isFrameModeOn() {
         return isFrameModeOn;
     }
+
 
     public int getWindowWidth() {
         return windowWidth;
     }
 
+
     public int getWindowHeight() {
         return windowHeight;
     }
+
 
     public int getFramebufferTexID() {
         return framebuffer.getTextureID();
     }
 
+
     public void setWindowWidth(int windowWidth) {
         this.windowWidth = windowWidth;
     }
+
 
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
@@ -388,6 +354,7 @@ public class EngineWindow implements EventListener {
     public void onEvent(Event event, GameObject gameObject) {
 
     }
+
 
     @Override
     public void onEvent(Event event) {

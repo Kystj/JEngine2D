@@ -3,42 +3,46 @@
  Date: 2023-12-28
  Author: Kyle St John
  */
-package engine.world.scenes;
+package engine.ui.editor;
 
 import engine.debug.draw.DebugDraw;
-import engine.graphics.OrthographicCamera;
+import engine.graphics.OrthoCamera;
+import engine.graphics.ObjectPicker;
+import engine.graphics.Renderer;
 import engine.ui.debug.DebugWindow;
-import engine.ui.editor.AssetWindow;
-import engine.ui.editor.DetailsWindow;
+import engine.ui.engine.EngineWindow;
 import engine.world.objects.GameObject;
+import engine.world.scenes.Scene;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+
+import static org.lwjgl.opengl.GL11.*;
 
 public class EditorScene extends Scene {
 
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     private static int cellSize = 16;
+    private final EditorControls editorControls = new EditorControls();
+    public static ObjectPicker objectPicker =
+            new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
 
     @Override
     public void init() {
         super.init();
-        this.orthoCamera = new OrthographicCamera();
+        this.orthoCamera = new OrthoCamera();
         loadResources();
         addGameObjToEditor();
     }
 
+
     @Override
     public void tick(float deltaTime) {
         super.tick(deltaTime);
-        defaultAssetWindow.tick(deltaTime);
+        editorControls.tick(deltaTime);
+        renderForPicking();
     }
 
-    @Override
-    public void render() {
-        super.render();
-        drawGridLines();
-    }
 
     @Override
     public void imgui() {
@@ -48,6 +52,27 @@ public class EditorScene extends Scene {
         defaultDetailsWindow.imgui();
     }
 
+
+    @Override
+    public void render() {
+        super.render();
+        drawGridLines();
+    }
+
+
+    public void renderForPicking() {
+        glDisable(GL_BLEND);
+        objectPicker.bind();
+
+        glViewport(0, 0, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        Renderer.setPickingShader();
+        render();
+        objectPicker.unbind();
+        glEnable(GL_BLEND);
+    }
 
 
     private void loadResources() {
@@ -60,6 +85,7 @@ public class EditorScene extends Scene {
             this.addGameObject(gameObject);
         }
     }
+
 
     public void drawGridLines() {
         Vector2f cameraPos = orthoCamera.position;
@@ -86,6 +112,7 @@ public class EditorScene extends Scene {
             DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), color);
         }
     }
+
 
     public static void setCellSize(int cellSize) {
         EditorScene.cellSize = cellSize;

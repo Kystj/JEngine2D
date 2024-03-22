@@ -1,6 +1,5 @@
 package engine.ui.debug;
 
-import engine.io.MouseInputs;
 import engine.utils.ImGuiUtils;
 import engine.utils.ReportHandler;
 import imgui.ImGui;
@@ -12,7 +11,7 @@ import static engine.settings.EConstants.X_SPACING;
 
 public class ReportWindow {
 
-    private boolean showPopup = false;
+    private boolean bRefreshFields = false;
     private ImBoolean generateNewReport = new ImBoolean(false);
 
     private final ImString imGuiBugName = new ImString();
@@ -32,8 +31,11 @@ public class ReportWindow {
         if (generateNewReport.get()) {
             ImGui.begin("Bug Report", generateNewReport);
             generateFields();
-            saveAndResetFields();
             ImGui.end();
+        }
+        if (bRefreshFields) {
+            resetFields();
+            bRefreshFields = ImGuiUtils.activatePopup("Saving!");
         }
     }
 
@@ -59,12 +61,13 @@ public class ReportWindow {
 
         ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("Generate Report")) {
+            ImGuiUtils.activatePopup("Saving!");
             String bugName = imGuiBugName.get();
             String bugDescription = imGuiBugDescription.get();
 
             if (!bugName.isEmpty() && !bugDescription.isEmpty()) {
                 ReportHandler.saveReport(bugName, bugDescription);
-                this.showPopup = true;
+                this.bRefreshFields = true;
                 generateNewReport.set(false);
             } else {
                 // Handle empty fields
@@ -73,15 +76,9 @@ public class ReportWindow {
         }
     }
 
-    private void saveAndResetFields() {
-        if (this.showPopup) {
-            ImGuiUtils.activatePopup("Saving!");
-            imGuiBugName.set("");
-            imGuiBugDescription.set("");
-        }
-        if (MouseInputs.mouseButtonDown(0)) {
-            showPopup = false;
-        }
+    private void resetFields() {
+        imGuiBugName.set("");
+        imGuiBugDescription.set("");
     }
 
     public void setGenerateNewReport(ImBoolean generateNewReport) {

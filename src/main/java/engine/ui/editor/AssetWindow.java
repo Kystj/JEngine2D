@@ -24,13 +24,9 @@ import static engine.settings.EConstants.*;
 public class AssetWindow {
 
     private final AssetHandler assetHandler = new AssetHandler();
-    public final EditorControls editorControls = new EditorControls();
     private boolean bIsImportOpen = false;
     private boolean bIsRemoveOpen = false;
 
-    public void tick(float deltaTime) {
-        editorControls.tick(deltaTime);
-    }
 
     public void imgui() {
         // Check the Asset Managers state
@@ -116,7 +112,7 @@ public class AssetWindow {
 
                 Sprite temp = new Sprite(sprite.getSpriteTexture(), sprite.getUvCoordinates());
                 GameObject obj = GameObjFactory.generateGameObject(temp, 32, 32);
-                editorControls.pickUp(obj);
+                EditorControls.pickUp(obj);
             }
 
             // Pop the unique ID for ImGui elements

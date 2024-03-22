@@ -11,7 +11,7 @@ import engine.graphics.Texture;
 import engine.io.MouseInputs;
 import engine.settings.EConstants;
 import engine.ui.engine.EngineWindow;
-import engine.world.scenes.EditorScene;
+import engine.ui.editor.EditorScene;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -34,6 +34,7 @@ public class ImGuiUtils {
     public static final Texture play = ResourceHandler.getOrCreateTexture("assets/buttons/play.png");
     public static final Texture stop = ResourceHandler.getOrCreateTexture("assets/buttons/stop.png");
     public static final Texture wireframe = ResourceHandler.getOrCreateTexture("assets/buttons/frame.png");
+
     private static final Vector2f[] texCords = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),
@@ -60,9 +61,9 @@ public class ImGuiUtils {
         if (ImGui.isItemHovered()) {
             ImGui.beginTooltip();
             if (isOn) {
-                ImGui.setTooltip("Turn On Wireframe Mode");
-            } else {
                 ImGui.setTooltip("Turn Off Wireframe Mode");
+            } else {
+                ImGui.setTooltip("Turn On Wireframe Mode");
             }
             ImGui.endTooltip();
         }
@@ -277,41 +278,6 @@ public class ImGuiUtils {
 
         return valArr[0];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public static boolean activatePopup(String description) {
