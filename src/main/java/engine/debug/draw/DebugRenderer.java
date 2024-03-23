@@ -5,17 +5,17 @@
  */
 package engine.debug.draw;
 
-import engine.ui.engine.EngineWindow;
+import engine.graphics.EngineWindow;
 import engine.graphics.Shader;
-import engine.utils.ResourceHandler;
+import engine.utils.ResourceUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static engine.settings.EConstants.DEBUG_LINE_WIDTH;
-import static engine.settings.EConstants.MAX_DEBUG_LINES;
+import static engine.utils.EConstants.DEBUG_LINE_WIDTH;
+import static engine.utils.EConstants.MAX_DEBUG_LINES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
@@ -31,7 +31,7 @@ public class DebugRenderer {
     private static int vaoID;
     private static int vboID;
     private static final float[] vertices = new float[MAX_DEBUG_LINES * 6 * 2];
-    private static final Shader debugShader = ResourceHandler.getOrCreateShader("shaders/Debug.glsl");
+    private static final Shader debugShader = ResourceUtils.getOrCreateShader("shaders/Debug.glsl");
 
     // Debug Lines
     private static final ArrayList<DebugLine> debugLines = new ArrayList<>();

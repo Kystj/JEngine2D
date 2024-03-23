@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.utils.ResourceHandler;
+import engine.utils.ResourceUtils;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 
@@ -17,8 +17,8 @@ public class Renderer {
 
     private final List<BatchRenderer> batchList = new ArrayList<>();
     private static Shader activeShader;
-    private static final Shader defaultShader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
-    private static final Shader pickingShader =  ResourceHandler.getOrCreateShader("shaders/PickingShader.glsl");
+    private static final Shader defaultShader = ResourceUtils.getOrCreateShader("shaders/Default.glsl");
+    private static final Shader pickingShader =  ResourceUtils.getOrCreateShader("shaders/ObjPicker.glsl");
 
 
     public void render() {

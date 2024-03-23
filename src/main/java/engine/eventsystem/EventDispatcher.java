@@ -5,7 +5,7 @@
  */
 package engine.eventsystem;
 
-import engine.settings.EConstants.EventType;
+import engine.utils.EConstants.EventType;
 import engine.world.objects.GameObject;
 
 import java.util.ArrayList;

@@ -4,7 +4,7 @@ Current Development Tasks
 
        - Fix bugs
 
-       - Implement functionality to allow a user to select objects once they have already been placed in the scene.
+       - Implement gizmos
 
        - Begin implementing physics
 

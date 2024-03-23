@@ -6,8 +6,8 @@
 package engine.io;
 
 import engine.graphics.OrthoCamera;
-import engine.ui.editor.Viewport;
-import engine.ui.engine.EngineWindow;
+import engine.editor.ui.Viewport;
+import engine.graphics.EngineWindow;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 

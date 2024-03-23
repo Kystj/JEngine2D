@@ -9,9 +9,8 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.Texture;
 import engine.io.MouseInputs;
-import engine.settings.EConstants;
-import engine.ui.engine.EngineWindow;
-import engine.ui.editor.EditorScene;
+import engine.graphics.EngineWindow;
+import engine.editor.ui.EditorScene;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -21,19 +20,19 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import static engine.settings.EConstants.POPUP_WIN_SIZE;
-import static engine.settings.EConstants.X_SPACING;
+import static engine.utils.EConstants.POPUP_WIN_SIZE;
+import static engine.utils.EConstants.X_SPACING;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class ImGuiUtils {
 
-    public static final Texture lockTexture = ResourceHandler.getOrCreateTexture("assets/buttons/locked.png");
-    public static final Texture unlock = ResourceHandler.getOrCreateTexture("assets/buttons/unlocked.png");
-    public static final Texture grid = ResourceHandler.getOrCreateTexture("assets/buttons/grid.png");
-    public static final Texture launch = ResourceHandler.getOrCreateTexture("assets/buttons/launch.png");
-    public static final Texture play = ResourceHandler.getOrCreateTexture("assets/buttons/play.png");
-    public static final Texture stop = ResourceHandler.getOrCreateTexture("assets/buttons/stop.png");
-    public static final Texture wireframe = ResourceHandler.getOrCreateTexture("assets/buttons/frame.png");
+    public static final Texture lockTexture = ResourceUtils.getOrCreateTexture("assets/buttons/locked.png");
+    public static final Texture unlock = ResourceUtils.getOrCreateTexture("assets/buttons/unlocked.png");
+    public static final Texture grid = ResourceUtils.getOrCreateTexture("assets/buttons/grid.png");
+    public static final Texture launch = ResourceUtils.getOrCreateTexture("assets/buttons/launch.png");
+    public static final Texture play = ResourceUtils.getOrCreateTexture("assets/buttons/play.png");
+    public static final Texture stop = ResourceUtils.getOrCreateTexture("assets/buttons/stop.png");
+    public static final Texture wireframe = ResourceUtils.getOrCreateTexture("assets/buttons/frame.png");
 
     private static final Vector2f[] texCords = new Vector2f[]{
             new Vector2f(1, 1),

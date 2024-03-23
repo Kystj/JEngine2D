@@ -5,16 +5,15 @@
  */
 package engine.graphics;
 
-import engine.ui.engine.EngineWindow;
 import engine.world.components.Sprite;
-import engine.utils.ResourceHandler;
+import engine.utils.ResourceUtils;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.settings.EConstants.MAX_BATCH_SIZE;
+import static engine.utils.EConstants.MAX_BATCH_SIZE;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -35,7 +34,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
-    private Shader shader = ResourceHandler.getOrCreateShader("shaders/Default.glsl");
+    private Shader shader = ResourceUtils.getOrCreateShader("shaders/Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
     private final int NUM_TEXTURE_SLOTS = 16; // Define the number of texture slots

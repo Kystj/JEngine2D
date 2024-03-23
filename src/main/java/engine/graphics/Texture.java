@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.utils.ResourceHandler;
+import engine.utils.ResourceUtils;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
@@ -73,7 +73,7 @@ public class Texture {
      * Loads a texture from a file using the STB Image library.
      */
     private void loadTextureFromFile() {
-        if (!ResourceHandler.isValidFilePath(filePath)) {
+        if (!ResourceUtils.isValidFilePath(filePath)) {
             throw new UnsupportedOperationException("Error: Invalid file path provided: '" + filePath + "'");
         }
 

@@ -6,7 +6,7 @@
 package engine.serialization;
 
 import com.google.gson.*;
-import engine.debug.diagnostic.BugReport;
+import engine.debug.info.BugReport;
 
 import java.lang.reflect.Type;
 
