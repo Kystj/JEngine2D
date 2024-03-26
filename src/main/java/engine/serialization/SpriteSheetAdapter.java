@@ -45,7 +45,6 @@ public class SpriteSheetAdapter implements JsonSerializer<SpriteSheet>, JsonDese
                 spriteWidth,
                 spriteHeight,
                 spacing,
-                numOfSprites,
                 assetType);
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 public class Renderer {
 
     private final List<BatchRenderer> batchList = new ArrayList<>();
+
     private static Shader activeShader;
     private static final Shader defaultShader = ResourceUtils.getOrCreateShader("shaders/Default.glsl");
     private static final Shader pickingShader =  ResourceUtils.getOrCreateShader("shaders/ObjPicker.glsl");
@@ -29,6 +30,7 @@ public class Renderer {
     }
 
     public void addGameObject(GameObject go) {
+        // TODO: Consider adding a loop here to loop through and add all sprites attached to the game object
         Sprite sprite = go.getComponent(Sprite.class);
         if (sprite != null) {
             add(sprite);
@@ -54,6 +56,8 @@ public class Renderer {
         }
         return false;
     }
+
+
 
     private void createNewBatch(Sprite sprite) {
         BatchRenderer newBatch = new BatchRenderer(sprite.owningGameObject.getZIndex());

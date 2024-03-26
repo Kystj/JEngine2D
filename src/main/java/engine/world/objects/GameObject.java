@@ -1,12 +1,8 @@
-/*
- Title: GameObject
- Date: 2023-11-06
- Author: Kyle St John
- */
 package engine.world.objects;
 
 import engine.world.components.Component;
 import engine.world.components.Transform;
+import engine.world.components.Sprite; // Import the Sprite class
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +10,7 @@ import java.util.List;
 public class GameObject {
     private String name;
     private final List<Component> componentsList = new ArrayList<>();
+    private final List<Sprite> sprites = new ArrayList<>(); // List to hold sprites
     private final Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
     protected int objectUID;
@@ -44,6 +41,7 @@ public class GameObject {
         this.objectUID = ++GLOBAL_OBJECT_ID_COUNTER;
     }
 
+
     public <T extends Component> T getComponent(Class<T> component) {
         for (Component comp : componentsList) {
             if (component.isInstance(comp)) {
@@ -70,8 +68,10 @@ public class GameObject {
     public void addComponent(Component component) {
         component.assignOwningObject(this);
         this.componentsList.add(component);
+        if (component instanceof Sprite) { // Check if the added component is a Sprite
+            sprites.add((Sprite) component); // If it is, add it to the sprites list
+        }
     }
-
 
     private void handleComponentCastException(ClassCastException e) {
         e.printStackTrace();
@@ -84,6 +84,10 @@ public class GameObject {
 
     public List<Component> getComponentsList() {
         return componentsList;
+    }
+
+    public List<Sprite> getSprites() {
+        return sprites; // Return the list of sprites
     }
 
     public String getName() {
@@ -106,4 +110,3 @@ public class GameObject {
         return zIndex;
     }
 }
-/*End of GameObject class*/

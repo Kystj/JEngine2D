@@ -6,12 +6,16 @@
 package engine.editor.ui;
 
 import engine.debug.draw.DebugDraw;
-import engine.editor.controls.EditorControls;
-import engine.graphics.OrthoCamera;
-import engine.editor.controls.ObjectPicker;
-import engine.graphics.Renderer;
 import engine.debug.ui.DebugWindow;
-import engine.graphics.EngineWindow;
+import engine.editor.controls.EditorControls;
+import engine.editor.controls.ObjectPicker;
+import engine.eventsystem.Event;
+import engine.eventsystem.EventDispatcher;
+import engine.eventsystem.EventListener;
+import engine.graphics.*;
+import engine.utils.EConstants;
+import engine.utils.ResourceUtils;
+import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
 import org.joml.Vector2f;
@@ -19,7 +23,7 @@ import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class EditorScene extends Scene {
+public class EditorScene extends Scene implements EventListener {
 
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
@@ -28,9 +32,27 @@ public class EditorScene extends Scene {
     public static ObjectPicker objectPicker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
 
+    public static GameObject activeGameObject = new GameObject("Active", new Transform(), 1);
+
+    private final Texture gizmoTexture = ResourceUtils.getOrCreateTexture("assets/gizmos/gizmos.png");
+    private final SpriteSheet gizmoSprites = new SpriteSheet(gizmoTexture, 24, 48, 0, "Gizmos");
+
+
+
+    @Override
+    public void onEvent(Event event, GameObject gameObject) {
+
+    }
+
+    @Override
+    public void onEvent(Event event) {
+
+    }
+
     @Override
     public void init() {
         super.init();
+        EventDispatcher.addListener(EConstants.EventType.User, this);
         this.orthoCamera = new OrthoCamera();
         loadResources();
         addGameObjToEditor();

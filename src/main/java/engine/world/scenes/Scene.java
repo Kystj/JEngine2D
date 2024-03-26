@@ -77,6 +77,8 @@ public class Scene {
         }
     }
 
+
+
     /**
      * Updates all game objects in the scene based on the elapsed time.
      *

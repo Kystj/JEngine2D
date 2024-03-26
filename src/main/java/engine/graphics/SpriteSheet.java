@@ -19,17 +19,15 @@ public class SpriteSheet {
     private final int spriteWidth;
     private final int spriteHeight;
     private final int spriteSpacing;
-    private final int spritesPerSheet;
 
     private final String assetType;
 
     public SpriteSheet(Texture spriteSheet, int spriteWidth, int spriteHeight,
-                       int spriteSpacing, int spritesPerSheet, String assetType) {
+                       int spriteSpacing, String assetType) {
         this.spriteSheetTexture = spriteSheet;
         this.spriteWidth = spriteWidth;
         this.spriteHeight = spriteHeight;
         this.spriteSpacing = spriteSpacing;
-        this.spritesPerSheet = spritesPerSheet;
         this.assetType = assetType;
         extractSprites();
     }

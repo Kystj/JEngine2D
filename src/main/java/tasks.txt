@@ -1,10 +1,10 @@
 Current Development Tasks
 
-   Weekly Plan (March 11 - Mach 17)
-
-       - Fix bugs
+   Weekly Plan - March 30
 
        - Implement gizmos
+
+       - Fix bugs
 
        - Begin implementing physics
 

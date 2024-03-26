@@ -6,24 +6,25 @@
 package engine.editor.controls;
 
 import engine.debug.info.DebugLogger;
+import engine.editor.ui.EditorScene;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
+import engine.graphics.EngineWindow;
 import engine.io.MouseInputs;
 import engine.utils.EConstants;
-import engine.graphics.EngineWindow;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
+import static engine.editor.ui.EditorScene.objectPicker;
 import static engine.utils.EConstants.DEFAULT_GRID_HEIGHT;
 import static engine.utils.EConstants.DEFAULT_GRID_WIDTH;
-import static engine.editor.ui.EditorScene.objectPicker;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class EditorControls implements EventListener {
 
-    private static GameObject activeObject = null;
+    private static GameObject active = null;
     private boolean enableGridSnap = true;
     private float debounce = 0.5f;
 
@@ -54,19 +55,19 @@ public class EditorControls implements EventListener {
     public void tick(float deltaTime) {
         handleObjectSelection(deltaTime);
         Vector2f spritePos = new Vector2f();
-        if (activeObject != null) {
-            activeObject.getTransform().position.x = MouseInputs.getOrthoX() + 16;
-            activeObject.getTransform().position.y = MouseInputs.getOrthoY() + 16;
+        if (active != null) {
+            active.getTransform().position.x = MouseInputs.getOrthoX() + 16;
+            active.getTransform().position.y = MouseInputs.getOrthoY() + 16;
 
             // Implement snap to grid
             if (enableGridSnap) {
-                activeObject.getTransform().position.x = (int) (activeObject.getTransform().position.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
-                activeObject.getTransform().position.y = (int) (activeObject.getTransform().position.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
+                active.getTransform().position.x = (int) (active.getTransform().position.x / DEFAULT_GRID_WIDTH) * DEFAULT_GRID_WIDTH;
+                active.getTransform().position.y = (int) (active.getTransform().position.y / DEFAULT_GRID_HEIGHT) * DEFAULT_GRID_HEIGHT;
             }
-            spritePos.set(activeObject.getTransform().position.x, activeObject.getTransform().position.y);
+            spritePos.set(active.getTransform().position.x, active.getTransform().position.y);
 
             if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT)) {
-                activeObject.getComponent(Sprite.class).getTransform().setPosition(spritePos);
+                active.getComponent(Sprite.class).getTransform().setPosition(spritePos);
                 place();
             }
         }
@@ -74,15 +75,16 @@ public class EditorControls implements EventListener {
 
 
     public void place() {
-        DebugLogger.warning("Game Object with UID: " + activeObject.getUID() +" has been added to the scene", true);
-        activeObject = null;
+        DebugLogger.warning("Game Object with UID: " + active.getUID() +" has been added to the scene", true);
+        active = null;
     }
 
 
     public static void selectAsset(GameObject gameObject) {
-        activeObject = gameObject;
-        EngineWindow.get().getCurrentScene().addGameObject(activeObject);
-        EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User), gameObject);
+        active = gameObject;
+        EngineWindow.get().getCurrentScene().addGameObject(active);
+        EditorScene.activeGameObject = active;
+        EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User));
     }
 
 
@@ -97,7 +99,8 @@ public class EditorControls implements EventListener {
 
             GameObject pickedObj = EngineWindow.get().getCurrentScene().getGameObject(gameObjectId);
             if (pickedObj != null) {
-                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User), pickedObj);
+                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User));
+                EditorScene.activeGameObject = pickedObj;
             }
             this.debounce = 0.5f;
         }

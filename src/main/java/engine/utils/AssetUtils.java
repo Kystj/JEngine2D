@@ -117,7 +117,7 @@ public class AssetUtils {
         ResourceUtils.addSpriteSheet(filePath,
                 new SpriteSheet(new Texture(filePath),
                         spriteWidth, spriteHeight,
-                        spriteSpacing, amount, type));
+                        spriteSpacing, type));
 
         // Save the sprite sheets info to a GSON file
         SpriteSheetSerializer.saveSpriteSheet(ResourceUtils.getSpriteSheet(filePath));

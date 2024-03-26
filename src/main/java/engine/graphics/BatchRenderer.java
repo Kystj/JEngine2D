@@ -109,6 +109,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     public void render() {
         for (int i=0; i < numSprites; i++) {
             Sprite sprite = sprites[i];
+            // TODO: Add a check to ensure the ZIndex matches and if it does not remove it and re add it
             if (sprite.isBisModified()) {
                 updateVertexAttribArray(i);
                 sprite.setModified(false);
@@ -315,7 +316,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     }
 
     public boolean isTexSlotsFull() {
-        return this.textures.size() < 8;
+        return this.textures.size() < 16;
     }
 
     public boolean hasTexture(Texture tex) {

@@ -44,8 +44,8 @@ void main()
         texColor = fColor * texture(uTextures[id], fTexCoords);
     }
 
-    if (texColor.a < 0.5) { // Discard any image with a alhpa lower than 0.5 as it is basically invisibile
-        discard;           // This solves the donut or bird in cage problem
+    if (texColor.a < 0.3) {
+        discard;
 
     }
     color = vec3(fEntityId, fEntityId, fEntityId);
