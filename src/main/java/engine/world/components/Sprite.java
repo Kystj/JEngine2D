@@ -80,6 +80,10 @@ public class Sprite extends Component {
         return this.getOwningGameObject().getTransform().getPosition();
     }
 
+    public float getSpriteRotation() {
+        return this.getOwningGameObject().getTransform().getRotation();
+    }
+
     public boolean isBisModified() {
         return bisModified;
     }

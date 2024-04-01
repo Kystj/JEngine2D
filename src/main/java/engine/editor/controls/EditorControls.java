@@ -6,20 +6,23 @@
 package engine.editor.controls;
 
 import engine.debug.info.DebugLogger;
-import engine.editor.ui.EditorScene;
+import engine.editor.gizmo.MasterGizmo;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
+import engine.io.KeyInputs;
 import engine.io.MouseInputs;
 import engine.utils.EConstants;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
+import engine.world.scenes.Scene;
 import org.joml.Vector2f;
 
 import static engine.editor.ui.EditorScene.objectPicker;
 import static engine.utils.EConstants.DEFAULT_GRID_HEIGHT;
 import static engine.utils.EConstants.DEFAULT_GRID_WIDTH;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
 public class EditorControls implements EventListener {
@@ -27,8 +30,12 @@ public class EditorControls implements EventListener {
     private static GameObject active = null;
     private boolean enableGridSnap = true;
     private float debounce = 0.5f;
+    private Scene currentScene;
+    private MasterGizmo masterGizmo;
 
-    public EditorControls() {
+    public EditorControls(Scene scene) {
+        this.currentScene = scene;
+        this.masterGizmo = new MasterGizmo(scene);
         EventDispatcher.addListener(EConstants.EventType.Grid_Lock, this);
     }
 
@@ -53,7 +60,10 @@ public class EditorControls implements EventListener {
 
 
     public void tick(float deltaTime) {
+        masterGizmo.tick();
         handleObjectSelection(deltaTime);
+        deleteGameObject();
+
         Vector2f spritePos = new Vector2f();
         if (active != null) {
             active.getTransform().position.x = MouseInputs.getOrthoX() + 16;
@@ -80,11 +90,19 @@ public class EditorControls implements EventListener {
     }
 
 
+    public void deleteGameObject() {
+        if (this.currentScene.getActiveGameObject() != null && KeyInputs.keyPressed(GLFW_KEY_DELETE)) {
+            this.currentScene.removeGameObject(this.currentScene.getActiveGameObject().getUID());
+            masterGizmo.remove();
+            active = null;
+        }
+    }
+
+
     public static void selectAsset(GameObject gameObject) {
         active = gameObject;
         EngineWindow.get().getCurrentScene().addGameObject(active);
-        EditorScene.activeGameObject = active;
-        EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User));
+        EventDispatcher.dispatchEvent(new Event(EConstants.EventType.New_Asset), gameObject);
     }
 
 
@@ -96,11 +114,10 @@ public class EditorControls implements EventListener {
             int y = (int) MouseInputs.getScreenY();
 
             int gameObjectId = objectPicker.readObjectIDByPixel(x, y);
-
             GameObject pickedObj = EngineWindow.get().getCurrentScene().getGameObject(gameObjectId);
-            if (pickedObj != null) {
-                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.User));
-                EditorScene.activeGameObject = pickedObj;
+
+            if (pickedObj != null && gameObjectId != -1) {
+                EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Active_Object), pickedObj);
             }
             this.debounce = 0.5f;
         }

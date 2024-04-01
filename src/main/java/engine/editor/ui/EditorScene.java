@@ -15,7 +15,6 @@ import engine.eventsystem.EventListener;
 import engine.graphics.*;
 import engine.utils.EConstants;
 import engine.utils.ResourceUtils;
-import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
 import org.joml.Vector2f;
@@ -28,20 +27,16 @@ public class EditorScene extends Scene implements EventListener {
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     private static int cellSize = 16;
-    private final EditorControls editorControls = new EditorControls();
+    private final EditorControls editorControls = new EditorControls(this);
     public static ObjectPicker objectPicker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
-
-    public static GameObject activeGameObject = new GameObject("Active", new Transform(), 1);
-
-    private final Texture gizmoTexture = ResourceUtils.getOrCreateTexture("assets/gizmos/gizmos.png");
-    private final SpriteSheet gizmoSprites = new SpriteSheet(gizmoTexture, 24, 48, 0, "Gizmos");
-
 
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
-
+        if (event.getEventType() == EConstants.EventType.Active_Object) {
+            activeGameObject = gameObject;
+        }
     }
 
     @Override
@@ -53,9 +48,13 @@ public class EditorScene extends Scene implements EventListener {
     public void init() {
         super.init();
         EventDispatcher.addListener(EConstants.EventType.User, this);
-        this.orthoCamera = new OrthoCamera();
+        EventDispatcher.addListener(EConstants.EventType.New_Asset, this);
+        EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
+
         loadResources();
         addGameObjToEditor();
+
+        this.orthoCamera = new OrthoCamera();
     }
 
 
@@ -63,6 +62,7 @@ public class EditorScene extends Scene implements EventListener {
     public void tick(float deltaTime) {
         super.tick(deltaTime);
         editorControls.tick(deltaTime);
+
         renderForPicking();
     }
 
@@ -70,9 +70,10 @@ public class EditorScene extends Scene implements EventListener {
     @Override
     public void imgui() {
         super.imgui();
-        DebugWindow.imgui();
         defaultAssetWindow.imgui();
         defaultDetailsWindow.imgui();
+
+        DebugWindow.imgui();
     }
 
 
@@ -99,7 +100,9 @@ public class EditorScene extends Scene implements EventListener {
 
 
     private void loadResources() {
-
+        Texture gizmoSpriteSheetTexture = new Texture("assets/spritesheets/gizmos.png");
+        ResourceUtils.addSpriteSheet("assets/spritesheets/gizmos.png",
+                new SpriteSheet(gizmoSpriteSheetTexture, 32,32,0, "Gizmos"));
     }
 
 

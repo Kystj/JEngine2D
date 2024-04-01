@@ -11,17 +11,19 @@ public class Transform {
 
     public Vector2f position;
     public Vector2f scale;
-    private float rotation = 0.0f;
+    private float rotation;
 
     public Transform() {
         this.position = new Vector2f();
         this.scale = new Vector2f();
+        this.rotation = 0.0f;
     }
 
 
     public Transform(Vector2f position, Vector2f scale) {
         this.position = position;
         this.scale = scale;
+        this.rotation = 0.0f;
     }
 
 

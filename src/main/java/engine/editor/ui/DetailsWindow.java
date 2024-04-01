@@ -24,37 +24,40 @@ import java.lang.reflect.Modifier;
 public class DetailsWindow implements EventListener {
 
     private final ImBoolean bIsOpen = new ImBoolean(true);
+    private GameObject activeGameObject;
 
     public DetailsWindow() {
-        EventDispatcher.addListener(EConstants.EventType.User, this);
+        EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
     }
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
-
+        if (event.getEventType() == EConstants.EventType.Active_Object) {
+            bIsOpen.set(true);
+            activeGameObject = gameObject;
+        }
     }
 
     @Override
     public void onEvent(Event event) {
-        if (event.getEventType() == EConstants.EventType.User) {
-            bIsOpen.set(true);
-        }
+
+
     }
 
 
     public void imgui() {
-        if (EditorScene.activeGameObject != null && bIsOpen.get()) {
+        if (activeGameObject != null && bIsOpen.get()) {
             ImGui.begin("Details", bIsOpen);
 
             ImGui.spacing();
-            ImGuiUtils.renderVec2Sliders("Scale", EditorScene.activeGameObject.getTransform().getScale(), EditorScene.activeGameObject.getTransform().getScale());
-            ImGuiUtils.renderVec2Sliders("Position", EditorScene.activeGameObject.getTransform().getPosition(), EditorScene.activeGameObject.getTransform().getPosition());
-            EditorScene.activeGameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", EditorScene.activeGameObject.getTransform().getRotation()));
-            EditorScene.activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", EditorScene.activeGameObject.getZIndex()));
+            ImGuiUtils.renderVec2Sliders("Scale", activeGameObject.getTransform().getScale(), activeGameObject.getTransform().getScale());
+            ImGuiUtils.renderVec2Sliders("Position", activeGameObject.getTransform().getPosition(), activeGameObject.getTransform().getPosition());
+            activeGameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", activeGameObject.getTransform().getRotation()));
+           activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
 
-            for (int i = 0; i < EditorScene.activeGameObject.getComponentsList().size(); i++) {
+            for (int i = 0; i < activeGameObject.getComponentsList().size(); i++) {
                 try {
-                    Component component = EditorScene.activeGameObject.getComponentsList().get(i);
+                    Component component = activeGameObject.getComponentsList().get(i);
                     Field[] fields = component.getClass().getDeclaredFields();
                     for (Field field : fields) {
                         boolean isTransient = Modifier.isTransient(field.getModifiers());
@@ -103,8 +106,8 @@ public class DetailsWindow implements EventListener {
 
 
                         } else if (type == Vector4f.class) {
-                            EditorScene.activeGameObject.getComponent(Sprite.class).setColor(ImGuiUtils.renderColorPicker4f("Color",
-                                    EditorScene.activeGameObject.getComponent(Sprite.class).getColor()));
+                            activeGameObject.getComponent(Sprite.class).setColor(ImGuiUtils.renderColorPicker4f("Color",
+                                    activeGameObject.getComponent(Sprite.class).getColor()));
                         }
 
                         if (isPrivate) {

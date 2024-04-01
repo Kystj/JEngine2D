@@ -7,6 +7,7 @@ package engine.world.scenes;
 
 import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
+import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public class Scene {
     // Flag indicating whether the scene is active
     private boolean bIsSceneActive;
 
-    /**
-     * Initializes the scene by initializing game objects and the renderer.
-     */
+    protected GameObject activeGameObject = new GameObject("Active", new Transform(), 1);
+
+
     public void init() {
         // Initialize each game object and add it to the renderer
         for (GameObject gameObject : gameObjects) {
@@ -50,20 +51,12 @@ public class Scene {
         bIsSceneActive = true;
     }
 
-    /**
-     * Updates the game objects in the scene based on the elapsed time.
-     *
-     * @param deltaTime The time elapsed since the last frame.
-     */
+
     public void tick(float deltaTime) {
         updateGameObjects(deltaTime);
     }
 
-    /**
-     * Adds a game object to the scene.
-     *
-     * @param gameObject The game object to be added.
-     */
+
     public void addGameObject(GameObject gameObject) {
         // Check if the scene is active
         if (!bIsSceneActive) {
@@ -78,49 +71,53 @@ public class Scene {
     }
 
 
+    public void removeGameObject(int gameObjectUID) {
+        // Iterate through the gameObjects list
+        for (int i = 0; i < gameObjects.size(); i++) {
+            GameObject gameObject = gameObjects.get(i);
+            // If the UID of the current gameObject matches the given UID, remove it from the scene
+            if (gameObject.getUID() == gameObjectUID) {
+                renderer.removeSpriteFromRenderer(gameObjectUID);
+                gameObjects.remove(i);
+                break;
+            }
+        }
+    }
 
-    /**
-     * Updates all game objects in the scene based on the elapsed time.
-     *
-     * @param deltaTime The time elapsed since the last frame.
-     */
+
     private void updateGameObjects(float deltaTime) {
         for (GameObject go : this.gameObjects) {
-            // Update each game object in the scene
             go.update(deltaTime);
         }
     }
 
-    /**
-     * Placeholder method for ImGui integration for scene editing.
-     */
+
     public void imgui() {
         // TODO: Implement ImGui integration for scene editing
     }
 
-    /**
-     * Renders the scene using the renderer.
-     */
+
+
     public void render() {
         // Render the scene using the renderer
         renderer.render();
     }
 
-    /**
-     * Placeholder method for scene cleanup.
-     */
+
     public void cleanup() {
         // TODO: Implement scene cleanup
     }
 
-    /**
-     * Retrieves the orthographic camera used in the scene.
-     *
-     * @return The orthographic camera.
-     */
+
     public OrthoCamera getOrthoCamera() {
         return orthoCamera;
     }
+
+
+    public GameObject getActiveGameObject() {
+        return activeGameObject;
+    }
+
 
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()

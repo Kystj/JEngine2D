@@ -5,8 +5,9 @@
  */
 package engine.graphics;
 
-import engine.world.components.Sprite;
+import engine.utils.MathUtils;
 import engine.utils.ResourceUtils;
+import engine.world.components.Sprite;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
@@ -26,6 +27,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     private final int vertexSize = 10;
 
     private final Sprite[] sprites = new Sprite[MAX_BATCH_SIZE];
+
     private int numSprites = 0;
 
     private boolean bBatchHasRoom = true;
@@ -159,11 +161,44 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         checkCapacity();
     }
 
+
     private void addTexture(Sprite sprite) {
         if (sprite.getSpriteTexture() != null) {
             if (!textures.contains(sprite.getSpriteTexture())) {
                 textures.add(sprite.getSpriteTexture());
             }
+        }
+    }
+
+    public void removeSpriteFromBatch(int spriteUID) {
+        int index = -1;
+        // Find the index of the sprite with the given UID in the array
+        for (int i = 0; i < numSprites; i++) {
+            if (sprites[i].getOwningGameObject().getUID() == spriteUID) {
+                index = i;
+                break;
+            }
+        }
+
+        // If the sprite with the given UID was found, remove it
+        if (index != -1) {
+            // Shift the remaining sprites to fill the gap
+            if (numSprites - 1 - index >= 0)
+                System.arraycopy(sprites, index + 1, sprites, index, numSprites - 1 - index);
+            // Decrement the number of sprites
+            numSprites--;
+
+            // Update the vertex attribute array
+            updateVerticesArray();
+
+            // Mark for re-buffering
+            reBuffer = true;
+        }
+    }
+
+    private void updateVerticesArray() {
+        for (int i = 0; i < numSprites; i++) {
+            updateVertexAttribArray(i);
         }
     }
 
@@ -179,7 +214,8 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         Vector2f spriteSize = sprite.getSpriteSize();
         Vector4f color = sprite.getColor();
         Vector2f[] uvCoordinates = sprite.getUvCoordinates();
-        float rotation = sprite.getTransform().getRotation(); // Get the rotation angle
+
+        float rotation = sprite.getSpriteRotation(); // Get the rotation angle
 
         // Check if the sprite has a texture, and if so, find its corresponding ID in the textures array
         int textureID = 0;
@@ -188,7 +224,6 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         if (spriteTexture != null) {
             for (int i = 0; i < textures.size(); i++) {
                 if (textures.get(i) == spriteTexture) {
-                    // [0, tex, tex, tex, tex]: Adding texId = i + 1; gives us that special reserve slot for color
                     textureID = i + 1;
                     break;
                 }
@@ -205,21 +240,19 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         float halfWidth = xSize * 0.5f;
         float halfHeight = ySize * 0.5f;
 
-        // Calculate the cosine and sine of the rotation angle
-        float cos = (float) Math.cos(Math.toRadians(rotation)); // Ensure angle is in radians
-        float sin = (float) Math.sin(Math.toRadians(rotation));
-
-        // Add vertices with the appropriate properties
+        // Apply rotation to each vertex
+        Vector2f origin = new Vector2f(xPos, yPos); // Origin for rotation
         for (int i = 0; i < 4; i++) {
             // Calculate vertex position relative to the sprite's center and apply rotation
             float localX = ((i == 0 || i == 1) ? -halfWidth : halfWidth);
             float localY = ((i == 0 || i == 3) ? -halfHeight : halfHeight);
-            float rotatedX = localX * cos - localY * sin;
-            float rotatedY = localX * sin + localY * cos;
+
+            Vector2f vertex = new Vector2f(xPos + localX, yPos + localY);
+            MathUtils.rotate(vertex, rotation, origin);
 
             // Load position
-            vertices[offset] = xPos + rotatedX;
-            vertices[offset + 1] = yPos + rotatedY;
+            vertices[offset] = vertex.x;
+            vertices[offset + 1] = vertex.y;
 
             // Load color
             vertices[offset + 2] = color.x;
@@ -240,6 +273,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
             offset += vertexSize;
         }
     }
+
 
     private void bindTextures() {
         for (int i = 0; i < textures.size(); i++) {
@@ -309,6 +343,10 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
 
     public int getzIndex() {
         return zIndex;
+    }
+
+    public int getNumSprites() {
+        return numSprites;
     }
 
     public void setZIndex(int zIndex) {

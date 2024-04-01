@@ -27,7 +27,9 @@ public interface EConstants {
         Launch,
         Grid_Lock,
         Grid_Size,
-        Wire_Frame
+        Wire_Frame,
+        New_Asset,
+        Active_Object
     }
 
     // Grid width

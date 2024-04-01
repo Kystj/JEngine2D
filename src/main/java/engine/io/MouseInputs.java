@@ -46,11 +46,12 @@ public class MouseInputs {
         if (action == GLFW_PRESS) {
             if (button < mouseButtonPressed.length) {
                 mouseButtonPressed[button] = true;
+                isDragging = mouseButtonPressed[0] || mouseButtonPressed[1] || mouseButtonPressed[2];
             }
         } else if (action == GLFW_RELEASE) {
             if (button < mouseButtonPressed.length) {
                 mouseButtonPressed[button] = false;
-               isDragging = false;
+                isDragging = mouseButtonPressed[0] || mouseButtonPressed[1] || mouseButtonPressed[2];
             }
         }
     }

@@ -29,19 +29,21 @@ public class Renderer {
         }
     }
 
+
     public void addGameObject(GameObject go) {
-        // TODO: Consider adding a loop here to loop through and add all sprites attached to the game object
         Sprite sprite = go.getComponent(Sprite.class);
         if (sprite != null) {
             add(sprite);
         }
     }
 
+
     private void add(Sprite sprite) {
         if (!addToExistingBatch(sprite)) {
             createNewBatch(sprite);
         }
     }
+
 
     private boolean addToExistingBatch(Sprite sprite) {
         for (BatchRenderer batch : batchList) {
@@ -58,6 +60,19 @@ public class Renderer {
     }
 
 
+    public void removeSpriteFromRenderer(int spriteUID) {
+        // Iterate through the batches in reverse order to efficiently remove the sprite
+        for (int i = batchList.size() - 1; i >= 0; i--) {
+            BatchRenderer batch = batchList.get(i);
+            // Remove the sprite from the batch
+            batch.removeSpriteFromBatch(spriteUID);
+            // If the batch becomes empty after removing the sprite, remove the batch from the renderer
+            if (batch.getNumSprites() == 0) {
+                batchList.remove(i);
+            }
+        }
+    }
+
 
     private void createNewBatch(Sprite sprite) {
         BatchRenderer newBatch = new BatchRenderer(sprite.owningGameObject.getZIndex());
@@ -68,13 +83,16 @@ public class Renderer {
         Collections.sort(batchList);
     }
 
+
     public static void setPickingShader() {
         activeShader = pickingShader;
     }
 
+
     public static void setDefaultShader() {
         activeShader = defaultShader;
     }
+
 
     public static Shader getActiveShader() {
         return activeShader;

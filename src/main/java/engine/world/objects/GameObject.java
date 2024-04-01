@@ -2,7 +2,6 @@ package engine.world.objects;
 
 import engine.world.components.Component;
 import engine.world.components.Transform;
-import engine.world.components.Sprite; // Import the Sprite class
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.List;
 public class GameObject {
     private String name;
     private final List<Component> componentsList = new ArrayList<>();
-    private final List<Sprite> sprites = new ArrayList<>(); // List to hold sprites
     private final Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
     protected int objectUID;
@@ -22,9 +20,17 @@ public class GameObject {
         this.zIndex = zIndex;
     }
 
+    public GameObject(Transform transform, int objectUID) {
+        this.transform = transform;
+        this.zIndex = 10; // TODO: Add a constant
+        this.objectUID = objectUID;
+    }
 
-    public void init(){
-        generateUniqueId();
+
+    public void init() {
+        if (objectUID != -1) {
+            generateUniqueId();
+        }
         for (Component component : componentsList) {
             component.init();
         }
@@ -68,9 +74,6 @@ public class GameObject {
     public void addComponent(Component component) {
         component.assignOwningObject(this);
         this.componentsList.add(component);
-        if (component instanceof Sprite) { // Check if the added component is a Sprite
-            sprites.add((Sprite) component); // If it is, add it to the sprites list
-        }
     }
 
     private void handleComponentCastException(ClassCastException e) {
@@ -82,13 +85,6 @@ public class GameObject {
         this.zIndex = zIndex;
     }
 
-    public List<Component> getComponentsList() {
-        return componentsList;
-    }
-
-    public List<Sprite> getSprites() {
-        return sprites; // Return the list of sprites
-    }
 
     public String getName() {
         return name;
@@ -109,4 +105,9 @@ public class GameObject {
     public int getZIndex() {
         return zIndex;
     }
+
+    public List<Component> getComponentsList() {
+        return componentsList;
+    }
+
 }
