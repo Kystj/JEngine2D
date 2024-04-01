@@ -6,7 +6,6 @@
 package engine.editor.gizmo;
 
 import engine.debug.info.DebugLogger;
-import engine.io.MouseInputs;
 import engine.world.components.Sprite;
 import engine.world.components.Transform;
 import engine.world.objects.GameObject;
@@ -35,8 +34,14 @@ public class PosGizmo extends Gizmo {
     protected void tick() {
         super.tick();
 
-        if (MouseInputs.isDragging() && (xActive || yActive)) {
-            DebugLogger.warning("Is Dragging");
+        if (xHasChanged) {
+            DebugLogger.warning("PosGizmo X Activated");
+            xHasChanged = false;
+        }
+
+        if (yHasChanged) {
+            DebugLogger.warning("PosGizmo Y Activated");
+            yHasChanged = false;
         }
     }
 }

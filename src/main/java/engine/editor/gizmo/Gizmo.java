@@ -24,9 +24,12 @@ public class Gizmo {
 
     protected GameObject posGizmoX;
     protected GameObject posGizmoY;
+    protected  GameObject activeGameObject;
 
     protected boolean xActive = false;
     protected boolean yActive = false;
+    protected boolean xHasChanged = false;
+    protected boolean yHasChanged = false;
 
     protected Vector4f gizmoColorX = new Vector4f(0,0.7f,0,0.5f); // TODO: Make constants
     protected Vector4f gizmoColorY = new Vector4f(0,0,0.7f,0.5f); // TODO: Make constants
@@ -40,6 +43,8 @@ public class Gizmo {
     Vector2f posGizmoYPosition;
 
     public Gizmo(GameObject gameObject) {
+        // Assign the active game object
+        this.activeGameObject = gameObject;
         // Get GameObject position and size
         transform = gameObject.getTransform();
         gameObjectPosition = transform.getPosition();
@@ -52,6 +57,14 @@ public class Gizmo {
     }
 
     protected void tick() {
+        if (MouseInputs.isDragging() && xActive) {
+            xHasChanged = true;
+        }
+
+        else if (MouseInputs.isDragging() && yActive) {
+            yHasChanged = true;
+        }
+
         if (isMouseHoveringX(new Vector2f(MouseInputs.getOrthoX(), MouseInputs.getOrthoY())) && !yActive) {
             xPosGizmoSprite.setColor(new Vector4f(0, 1, 0, 1));
             xActive = true;

@@ -19,7 +19,8 @@ public class MasterGizmo implements EventListener {
 
     private Scene currentScene;
     private Gizmo activeGizmo;
-    private GameObject activeGameObject;
+
+    private boolean isGizmoActive = true;
 
     public MasterGizmo(Scene scene) {
         this.currentScene = scene;
@@ -29,7 +30,6 @@ public class MasterGizmo implements EventListener {
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
-        activeGameObject = gameObject;
         if (activeGizmo != null) {
             this.currentScene.removeGameObject(activeGizmo.getGizmoUIDs()[0]);
             this.currentScene.removeGameObject(activeGizmo.getGizmoUIDs()[0]);
@@ -46,7 +46,9 @@ public class MasterGizmo implements EventListener {
         } else {
             activeGizmo = new PosGizmo(gameObject);
         }
-        activeGizmo.addToScene();
+        if (isGizmoActive) {
+            activeGizmo.addToScene();
+        }
     }
 
 
@@ -65,24 +67,32 @@ public class MasterGizmo implements EventListener {
 
 
     private void switchGizmos() {
-        if (activeGameObject != null) {
-            if (KeyInputs.keyPressed(GLFW_KEY_Q)) {
+        // TODO: Add an explanation in the shortcuts window
+        if (activeGizmo != null) {
+            if (KeyInputs.keyPressed(GLFW_KEY_T)) {
                 remove();
-                activeGizmo = new PosGizmo(activeGameObject);
+                isGizmoActive = true;
+                activeGizmo = new PosGizmo(activeGizmo.activeGameObject);
                 activeGizmo.addToScene();
             }
 
             if (KeyInputs.keyPressed(GLFW_KEY_E)) {
                 remove();
-                activeGizmo = new ScaleGizmo(activeGameObject);
+                isGizmoActive = true;
+                activeGizmo = new ScaleGizmo(activeGizmo.activeGameObject);
                 activeGizmo.addToScene();
             }
 
             if (KeyInputs.keyPressed(GLFW_KEY_R)) {
                 remove();
-                activeGizmo = new RotateGizmo(activeGameObject);
+                isGizmoActive = true;
+                activeGizmo = new RotateGizmo(activeGizmo.activeGameObject);
                 activeGizmo.addToScene();
             }
+        }
+        if (KeyInputs.keyPressed(GLFW_KEY_Q)) {
+            remove();
+            isGizmoActive = false;
         }
     }
 

@@ -5,6 +5,7 @@
  */
 package engine.editor.gizmo;
 
+import engine.debug.info.DebugLogger;
 import engine.world.components.Sprite;
 import engine.world.components.Transform;
 import engine.world.objects.GameObject;
@@ -32,6 +33,16 @@ public class RotateGizmo extends Gizmo {
     @Override
     protected void tick() {
         super.tick();
+
+        if (xHasChanged) {
+            DebugLogger.warning("PosGizmo X Activated");
+            xHasChanged = false;
+        }
+
+        if (yHasChanged) {
+            DebugLogger.warning("PosGizmo Y Activated");
+            yHasChanged = false;
+        }
     }
 }
 /*End of RotateGizmo class*/
