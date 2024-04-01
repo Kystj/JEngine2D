@@ -20,8 +20,7 @@ import engine.world.scenes.Scene;
 import org.joml.Vector2f;
 
 import static engine.editor.ui.EditorScene.objectPicker;
-import static engine.utils.EConstants.DEFAULT_GRID_HEIGHT;
-import static engine.utils.EConstants.DEFAULT_GRID_WIDTH;
+import static engine.utils.EConstants.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 
@@ -31,7 +30,7 @@ public class EditorControls implements EventListener {
     private boolean enableGridSnap = true;
     private float debounce = 0.5f;
     private Scene currentScene;
-    private MasterGizmo masterGizmo;
+    private final MasterGizmo masterGizmo;
 
     public EditorControls(Scene scene) {
         this.currentScene = scene;
@@ -116,7 +115,7 @@ public class EditorControls implements EventListener {
             int gameObjectId = objectPicker.readObjectIDByPixel(x, y);
             GameObject pickedObj = EngineWindow.get().getCurrentScene().getGameObject(gameObjectId);
 
-            if (pickedObj != null && gameObjectId != -1) {
+            if (pickedObj != null && gameObjectId != GIZMO_GAME_OBJECT_UID) {
                 EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Active_Object), pickedObj);
             }
             this.debounce = 0.5f;

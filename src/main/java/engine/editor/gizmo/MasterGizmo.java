@@ -13,6 +13,7 @@ import engine.utils.EConstants;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
 
+import static engine.utils.EConstants.GIZMO_GAME_OBJECT_UID;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MasterGizmo implements EventListener {
@@ -31,8 +32,8 @@ public class MasterGizmo implements EventListener {
     @Override
     public void onEvent(Event event, GameObject gameObject) {
         if (activeGizmo != null) {
-            this.currentScene.removeGameObject(activeGizmo.getGizmoUIDs()[0]);
-            this.currentScene.removeGameObject(activeGizmo.getGizmoUIDs()[0]);
+            this.currentScene.removeGameObject(GIZMO_GAME_OBJECT_UID);
+            this.currentScene.removeGameObject(GIZMO_GAME_OBJECT_UID);
 
             if (activeGizmo.getClass().isAssignableFrom(PosGizmo.class)) {
                 activeGizmo = new PosGizmo(gameObject);

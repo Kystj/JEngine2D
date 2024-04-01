@@ -34,21 +34,17 @@ public class Gizmo {
     protected Vector4f gizmoColorX = new Vector4f(0,0.7f,0,0.5f); // TODO: Make constants
     protected Vector4f gizmoColorY = new Vector4f(0,0,0.7f,0.5f); // TODO: Make constants
 
-    Vector2f scale = new Vector2f(26, 26); // TODO: Make constants
-
-    Transform transform;
-    Vector2f gameObjectPosition;
-    Vector2f gameObjectSize;
-    Vector2f posGizmoXPosition;
-    Vector2f posGizmoYPosition;
+    protected Vector2f posGizmoXPosition;
+    protected Vector2f posGizmoYPosition;
 
     public Gizmo(GameObject gameObject) {
         // Assign the active game object
         this.activeGameObject = gameObject;
+
         // Get GameObject position and size
-        transform = gameObject.getTransform();
-        gameObjectPosition = transform.getPosition();
-        gameObjectSize = transform.getScale();
+        Transform transform = gameObject.getTransform();
+        Vector2f gameObjectPosition = transform.getPosition();
+        Vector2f gameObjectSize = transform.getScale();
 
         // Calculate position for the gizmos
         posGizmoXPosition = new Vector2f(gameObjectPosition.x - gameObjectSize.x / 2f, gameObjectPosition.y);
@@ -124,10 +120,6 @@ public class Gizmo {
             return mousePosition.x >= gizmoPosition.x - gizmoSize.x / 2f && mousePosition.x <= gizmoPosition.x + gizmoSize.x / 2f &&
                     mousePosition.y >= gizmoPosition.y - gizmoSize.y / 2f && mousePosition.y <= gizmoPosition.y + gizmoSize.y / 2f;
         }
-    }
-
-    public int[] getGizmoUIDs() {
-        return new int[]{-1, -1};
     }
 }
 /*End of Gizmo class*/

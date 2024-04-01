@@ -8,6 +8,10 @@ import org.joml.Vector4f;
  */
 public interface EConstants {
 
+    // Gizmos
+    int GIZMO_GAME_OBJECT_UID = -1;
+    Vector2f GIZMO_GAME_OBJECT_SIZE = new Vector2f(26, 26);
+
     // Popup Window constants
     Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
 
