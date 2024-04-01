@@ -6,5 +6,6 @@
 package engine.editor.ui;
 
 public class Editor {
+
 }
 /*End of Editor class*/
