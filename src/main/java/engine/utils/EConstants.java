@@ -33,12 +33,14 @@ public interface EConstants {
         Grid_Size,
         Wire_Frame,
         New_Asset,
-        Active_Object
+        Active_Object,
+        Load_New_Scene
     }
 
     // Grid width
     int DEFAULT_GRID_WIDTH = 32;
     int DEFAULT_GRID_HEIGHT = 32;
+    int DEFAULT_CELL_SIZE = 16;
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;

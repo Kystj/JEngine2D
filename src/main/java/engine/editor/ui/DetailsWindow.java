@@ -13,6 +13,7 @@ import engine.utils.ImGuiUtils;
 import engine.world.components.Component;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
+import engine.world.scenes.Scene;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 import org.joml.Vector3f;
@@ -36,6 +37,11 @@ public class DetailsWindow implements EventListener {
             bIsOpen.set(true);
             activeGameObject = gameObject;
         }
+    }
+
+    @Override
+    public void onEvent(Event event, Scene scene) {
+
     }
 
     @Override

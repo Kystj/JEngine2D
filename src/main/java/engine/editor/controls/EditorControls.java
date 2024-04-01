@@ -45,6 +45,11 @@ public class EditorControls implements EventListener {
     }
 
     @Override
+    public void onEvent(Event event, Scene scene) {
+
+    }
+
+    @Override
     public void onEvent(Event event) {
         if (event.getEventType() == EConstants.EventType.Grid_Lock) {
             onButtonClick();

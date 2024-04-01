@@ -1,47 +1,50 @@
 /*
  Title: Editor
- Date: 2023-12-28
+ Date: 2024-04-01
  Author: Kyle St John
  */
-package engine.editor.ui;
+package engine.testing;
 
 import engine.debug.draw.DebugDraw;
 import engine.debug.ui.DebugWindow;
 import engine.editor.controls.EditorControls;
 import engine.editor.controls.ObjectPicker;
+import engine.editor.ui.AssetWindow;
+import engine.editor.ui.DetailsWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
-import engine.graphics.*;
+import engine.graphics.EngineWindow;
+import engine.graphics.Renderer;
 import engine.utils.EConstants;
-import engine.utils.ResourceUtils;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import static engine.utils.EConstants.DEFAULT_CELL_SIZE;
 import static org.lwjgl.opengl.GL11.*;
 
-public class EditorScene extends Scene implements EventListener {
+public class Editor implements EventListener {
 
+    public Scene currentScene;
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
-    private static int cellSize = 16;
-    private final EditorControls editorControls = new EditorControls(this);
-    public static ObjectPicker objectPicker =
+    public  ObjectPicker objectPicker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
+    private EditorControls editorControls;
 
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
-        if (event.getEventType() == EConstants.EventType.Active_Object) {
-            activeGameObject = gameObject;
-        }
+
     }
 
     @Override
     public void onEvent(Event event, Scene scene) {
-
+        if (event.getEventType() == EConstants.EventType.Load_New_Scene) {
+            this.currentScene = scene;
+        }
     }
 
     @Override
@@ -49,47 +52,28 @@ public class EditorScene extends Scene implements EventListener {
 
     }
 
-    @Override
     public void init() {
-        super.init();
         EventDispatcher.addListener(EConstants.EventType.User, this);
         EventDispatcher.addListener(EConstants.EventType.New_Asset, this);
         EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
+        EventDispatcher.addListener(EConstants.EventType.Load_New_Scene, this);
+    }
 
-        loadResources();
-        addGameObjToEditor();
-
-        this.orthoCamera = new OrthoCamera();
+    public void loadScene(Scene scene) {
+        currentScene = scene;
+        scene.init();
+        editorControls = new EditorControls(scene);
     }
 
 
-    @Override
     public void tick(float deltaTime) {
-        super.tick(deltaTime);
+        currentScene.tick(deltaTime);
         editorControls.tick(deltaTime);
-
-        renderForPicking();
+        renderEditor();
     }
 
 
-    @Override
-    public void imgui() {
-        super.imgui();
-        defaultAssetWindow.imgui();
-        defaultDetailsWindow.imgui();
-
-        DebugWindow.imgui();
-    }
-
-
-    @Override
-    public void render() {
-        super.render();
-        drawGridLines();
-    }
-
-
-    public void renderForPicking() {
+    private void renderEditor() {
         glDisable(GL_BLEND);
         objectPicker.bind();
 
@@ -98,55 +82,50 @@ public class EditorScene extends Scene implements EventListener {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Renderer.setPickingShader();
-        render();
+        currentScene.render();
         objectPicker.unbind();
         glEnable(GL_BLEND);
     }
 
 
-    private void loadResources() {
-        Texture gizmoSpriteSheetTexture = new Texture("assets/spritesheets/gizmos.png");
-        ResourceUtils.addSpriteSheet("assets/spritesheets/gizmos.png",
-                new SpriteSheet(gizmoSpriteSheetTexture, 32,32,0, "Gizmos"));
+    public void renderScene() {
+        currentScene.render();
+        drawGridLines();
     }
 
 
-    private void addGameObjToEditor() {
-        for (GameObject gameObject : gameObjects) {
-            this.addGameObject(gameObject);
-        }
-    }
 
+    public void imgui() {
+        defaultAssetWindow.imgui();
+        defaultDetailsWindow.imgui();
+        currentScene.imgui();
+        DebugWindow.imgui();
+    }
 
     public void drawGridLines() {
-        Vector2f cameraPos = orthoCamera.position;
+        Vector2f cameraPos = currentScene.getOrthoCamera().position;
 
         // Calculate the size of the grid based on the camera's size
-        Vector2f projectionSize = orthoCamera.size;
+        Vector2f projectionSize = currentScene.getOrthoCamera().size;
 
         // Determine the number of rows and columns in the grid
-        int numColumns = (int) (projectionSize.x / cellSize);
-        int numRows = (int) (projectionSize.y / cellSize);
+        int numColumns = (int) (projectionSize.x / DEFAULT_CELL_SIZE);
+        int numRows = (int) (projectionSize.y / DEFAULT_CELL_SIZE);
 
         // Set the color for the grid lines
         Vector3f color = new Vector3f(0.08f, 0.08f, 0.08f); // TODO: Make constants
 
         // Draw vertical grid lines
         for (int i = 0; i <= numColumns; i++) {
-            float x = cameraPos.x + i * cellSize;
+            float x = cameraPos.x + i * DEFAULT_CELL_SIZE;
             DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), color);
         }
 
         // Draw horizontal grid lines
         for (int i = 0; i <= numRows; i++) {
-            float y = cameraPos.y + i * cellSize;
+            float y = cameraPos.y + i * DEFAULT_CELL_SIZE;
             DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), color);
         }
-    }
-
-
-    public static void setCellSize(int cellSize) {
-        EditorScene.cellSize = cellSize;
     }
 }
 /*End of Editor class*/

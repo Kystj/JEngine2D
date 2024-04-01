@@ -1,21 +1,28 @@
 /*
+ Title: EWindow
+ Date: 2024-04-01
+ Author: Kyle St John
+ */
+/*
  Title: EngineWindow
  Date: 2023-11-06
  Author: Kyle St John
  */
 
-package engine.graphics;
+package engine.testing;
 
 import engine.debug.draw.DebugRenderer;
 import engine.debug.info.DebugLogger;
+import engine.editor.controls.ImGuiController;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
+import engine.graphics.Framebuffer;
+import engine.graphics.OrthoCamera;
+import engine.graphics.Renderer;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.editor.controls.ImGuiController;
 import engine.utils.EConstants;
-import engine.editor.ui.EditorScene;
 import engine.utils.MathUtils;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
@@ -33,9 +40,9 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class EngineWindow implements EventListener {
+public class EWindow implements EventListener {
 
-    private static EngineWindow engine = null;
+    private static EWindow engine = null;
 
     private long glfwWindow;
     private int windowWidth;
@@ -48,15 +55,17 @@ public class EngineWindow implements EventListener {
     private final ImGuiController imGuiController = new ImGuiController();
 
     private int engineMode = 0; // 0: Editor. 1: Full play
-    private Scene currentScene;
+    //private Scene currentScene;
 
     private float deltaTime = -1;
 
-    public static EngineWindow get() {
-        if (EngineWindow.engine == null) {
-            EngineWindow.engine = new EngineWindow();
+    public Editor editor;
+
+    public static EWindow get() {
+        if (EWindow.engine == null) {
+            EWindow.engine = new EWindow();
         }
-        return EngineWindow.engine;
+        return EWindow.engine;
     }
 
     /**
@@ -157,6 +166,8 @@ public class EngineWindow implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Launch, this);
         EventDispatcher.addListener(EConstants.EventType.Wire_Frame, this);
 
+        editor = new Editor();
+
         // Load the Editor Scene at launch
         changeScene(0);
     }
@@ -189,8 +200,7 @@ public class EngineWindow implements EventListener {
     public void changeScene(int newScene) {
         switch (newScene) {
             case 0:
-                currentScene = new EditorScene();
-                currentScene.init();
+                editor.loadScene(new EScene());
                 break;
             case 1:
                 System.out.println("Initializing scene");
@@ -215,10 +225,10 @@ public class EngineWindow implements EventListener {
 
             DebugRenderer.render();
             Renderer.setDefaultShader();
-            currentScene.render();
+            editor.renderScene();//currentScene.render();
 
             // Renderer to the framebuffer
-            currentScene.tick(deltaTime);
+            editor.tick(deltaTime);//currentScene.tick(deltaTime);
             this.framebuffer.detatch();
 
             if (isFrameModeOn) {
@@ -242,12 +252,12 @@ public class EngineWindow implements EventListener {
 
 
     public OrthoCamera getCamera() {
-        return currentScene.getOrthoCamera();
+        return editor.currentScene.getOrthoCamera();
     }
 
 
     public Scene getCurrentScene() {
-        return currentScene;
+        return editor.currentScene;
     }
 
 
@@ -379,4 +389,3 @@ public class EngineWindow implements EventListener {
         }
     }
 }
-/*End of EngineWindow class*/

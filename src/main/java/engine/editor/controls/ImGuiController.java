@@ -5,11 +5,11 @@
  */
 package engine.editor.controls;
 
-import engine.utils.ShortcutUtils;
 import engine.debug.info.DebugLogger;
 import engine.editor.ui.MainMenuBar;
 import engine.editor.ui.Viewport;
 import engine.graphics.EngineWindow;
+import engine.utils.ShortcutUtils;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.*;
@@ -67,6 +67,9 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.get().getCurrentScene().imgui();
+
+        // EWindow.get().editor.imgui();
+
         ImGui.showDemoWindow();
         DebugLogger.imgui();
         endFrame();
