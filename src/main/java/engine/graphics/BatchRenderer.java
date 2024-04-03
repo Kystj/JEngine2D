@@ -5,6 +5,7 @@
  */
 package engine.graphics;
 
+import engine.testing.GameEditor;
 import engine.utils.MathUtils;
 import engine.utils.ResourceUtils;
 import engine.world.components.Sprite;
@@ -128,8 +129,8 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         // Use shader
         shader = Renderer.getActiveShader();
         shader.use();
-        shader.uploadMat4f("uProjection", EngineWindow.get().getCurrentScene().getOrthoCamera().getProjectionMatrix());
-        shader.uploadMat4f("uView", EngineWindow.get().getCurrentScene().getOrthoCamera().calculateViewMatrix());
+        shader.uploadMat4f("uProjection", GameEditor.Current_Scene.getOrthoCamera().getProjectionMatrix());
+        shader.uploadMat4f("uView", GameEditor.Current_Scene.getOrthoCamera().calculateViewMatrix());
 
         // Bind textures
         bindTextures();

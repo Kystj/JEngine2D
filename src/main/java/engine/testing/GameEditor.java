@@ -16,21 +16,21 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.graphics.Renderer;
-import engine.utils.EConstants;
+import engine.utils.EConstants.EventType;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 
 import static engine.utils.EConstants.DEFAULT_CELL_SIZE;
+import static engine.utils.EConstants.GRID_COLOR;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Editor implements EventListener {
+public class GameEditor implements EventListener {
 
-    public Scene currentScene;
+    public static Scene Current_Scene;
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
-    public  ObjectPicker objectPicker =
+    public  static ObjectPicker Object_Picker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
     private EditorControls editorControls;
 
@@ -42,8 +42,8 @@ public class Editor implements EventListener {
 
     @Override
     public void onEvent(Event event, Scene scene) {
-        if (event.getEventType() == EConstants.EventType.Load_New_Scene) {
-            this.currentScene = scene;
+        if (event.getEventType() == EventType.Load_New_Scene) {
+            Current_Scene = scene;
         }
     }
 
@@ -53,78 +53,77 @@ public class Editor implements EventListener {
     }
 
     public void init() {
-        EventDispatcher.addListener(EConstants.EventType.User, this);
-        EventDispatcher.addListener(EConstants.EventType.New_Asset, this);
-        EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
-        EventDispatcher.addListener(EConstants.EventType.Load_New_Scene, this);
+        EventDispatcher.addListener(EventType.Load_New_Scene, this);
     }
 
-    public void loadScene(Scene scene) {
-        currentScene = scene;
+    public void loadNewScene(Scene scene) {
+        Current_Scene = scene;
         scene.init();
         editorControls = new EditorControls(scene);
     }
 
 
     public void tick(float deltaTime) {
-        currentScene.tick(deltaTime);
+        Current_Scene.tick(deltaTime);
         editorControls.tick(deltaTime);
-        renderEditor();
     }
 
 
-    private void renderEditor() {
+    public void renderEditor() {
         glDisable(GL_BLEND);
-        objectPicker.bind();
+        Object_Picker.bind();
 
         glViewport(0, 0, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Renderer.setPickingShader();
-        currentScene.render();
-        objectPicker.unbind();
+        Current_Scene.render();
+        Object_Picker.unbind();
         glEnable(GL_BLEND);
+
+        drawGridLines();
     }
 
 
     public void renderScene() {
-        currentScene.render();
-        drawGridLines();
+        Current_Scene.render();
     }
-
 
 
     public void imgui() {
         defaultAssetWindow.imgui();
         defaultDetailsWindow.imgui();
-        currentScene.imgui();
         DebugWindow.imgui();
     }
 
+
+    public void addToScene(GameObject obj) {
+        Current_Scene.addGameObject(obj);
+    }
+
+
+
     public void drawGridLines() {
-        Vector2f cameraPos = currentScene.getOrthoCamera().position;
+        Vector2f cameraPos = Current_Scene.getOrthoCamera().position;
 
         // Calculate the size of the grid based on the camera's size
-        Vector2f projectionSize = currentScene.getOrthoCamera().size;
+        Vector2f projectionSize = Current_Scene.getOrthoCamera().size;
 
         // Determine the number of rows and columns in the grid
         int numColumns = (int) (projectionSize.x / DEFAULT_CELL_SIZE);
         int numRows = (int) (projectionSize.y / DEFAULT_CELL_SIZE);
 
-        // Set the color for the grid lines
-        Vector3f color = new Vector3f(0.08f, 0.08f, 0.08f); // TODO: Make constants
-
         // Draw vertical grid lines
         for (int i = 0; i <= numColumns; i++) {
             float x = cameraPos.x + i * DEFAULT_CELL_SIZE;
-            DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), color);
+            DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), GRID_COLOR);
         }
 
         // Draw horizontal grid lines
         for (int i = 0; i <= numRows; i++) {
             float y = cameraPos.y + i * DEFAULT_CELL_SIZE;
-            DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), color);
+            DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), GRID_COLOR);
         }
     }
 }

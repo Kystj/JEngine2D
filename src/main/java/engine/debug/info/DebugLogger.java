@@ -18,17 +18,20 @@ import static engine.utils.EConstants.X_SPACING;
 
 public class DebugLogger {
 
-    private static final List<LogEntry> logs = new ArrayList<>();
+    private static final List<LogEntry> Logs = new ArrayList<>();
     private static final int MAX_LOGS = 100; // Change this value according to your needs
-    private static ImBoolean bIsOpen = new ImBoolean(true);
+    private static ImBoolean Is_Open = new ImBoolean(true);
 
     public static void imgui() {
-        if (bIsOpen.get()) {
-            ImGui.begin("Log", bIsOpen);
+
+
+        if (Is_Open.get()) {
+            ImGui.begin("Log", Is_Open);
+
 
             // Iterate through the logs in reverse order and display them
-            for (int i = logs.size() - 1; i >= 0; i--) {
-                LogEntry entry = logs.get(i);
+            for (int i = Logs.size() - 1; i >= 0; i--) {
+                LogEntry entry = Logs.get(i);
                 float r = entry.getColor().x;
                 float g = entry.getColor().y;
                 float b = entry.getColor().z;
@@ -71,14 +74,14 @@ public class DebugLogger {
     }
 
     private static void addLog(LogEntry log) {
-        logs.add(log);
-        if (logs.size() > MAX_LOGS) {
-            logs.remove(0);
+        Logs.add(log);
+        if (Logs.size() > MAX_LOGS) {
+            Logs.remove(0);
         }
     }
 
     public static void setIsOpen(ImBoolean isOpen) {
-        DebugLogger.bIsOpen = isOpen;
+        DebugLogger.Is_Open = isOpen;
     }
 
     private static class LogEntry {

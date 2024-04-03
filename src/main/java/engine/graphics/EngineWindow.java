@@ -1,21 +1,26 @@
+package engine.graphics;/*
+ Title: EWindow
+ Date: 2024-04-01
+ Author: Kyle St John
+ */
 /*
  Title: EngineWindow
  Date: 2023-11-06
  Author: Kyle St John
  */
 
-package engine.graphics;
 
 import engine.debug.draw.DebugRenderer;
 import engine.debug.info.DebugLogger;
+import engine.editor.controls.ImGuiController;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.editor.controls.ImGuiController;
+import engine.testing.EScene;
+import engine.testing.GameEditor;
 import engine.utils.EConstants;
-import engine.editor.ui.EditorScene;
 import engine.utils.MathUtils;
 import engine.world.objects.GameObject;
 import engine.world.scenes.Scene;
@@ -28,6 +33,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 
+import static engine.utils.EConstants.DEFAULT_ASPECT_RATIO;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -40,18 +46,18 @@ public class EngineWindow implements EventListener {
     private long glfwWindow;
     private int windowWidth;
     private int windowHeight;
-    private float defaultAspectRatio = 16.0f / 9.0f;
+    private float aspectRatio;
+
+    public static float FPS;
+    public static float FRAME_TIME;
+    private float DELTA_TIME = -1;
 
     private Framebuffer framebuffer;
-    private boolean isFrameModeOn = false;
+    private final boolean isWireFrameEnabled = false;
 
-    private final ImGuiController imGuiController = new ImGuiController();
-
-    private int engineMode = 0; // 0: Editor. 1: Full play
-    private Scene currentScene;
-
-    private float deltaTime = -1;
-
+    private final ImGuiController ImGui_Controller = new ImGuiController();
+    public static GameEditor Game_Editor;
+    
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
             EngineWindow.engine = new EngineWindow();
@@ -97,6 +103,7 @@ public class EngineWindow implements EventListener {
         // Create the window
         this.windowWidth = (int) getDefaultScreenSize().x;
         this.windowHeight = (int) getDefaultScreenSize().y;
+        this.aspectRatio =  DEFAULT_ASPECT_RATIO;
 
         // Prints the Window size to the console
         logLaunchInfo();
@@ -145,11 +152,7 @@ public class EngineWindow implements EventListener {
     private void loadEngineConfigs() {
         // Initialize the frame buffer
         this.framebuffer = new Framebuffer(windowWidth, windowHeight);
-
         glViewport(0, 0, windowWidth, windowHeight);
-
-        // Initialize ImGui functionality
-        imGuiController.initImGui(glfwWindow);
 
         // Add the various events the EngineWindow should respond to and register it as a listener
         EventDispatcher.addListener(EConstants.EventType.Play, this);
@@ -157,98 +160,99 @@ public class EngineWindow implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Launch, this);
         EventDispatcher.addListener(EConstants.EventType.Wire_Frame, this);
 
-        // Load the Editor Scene at launch
-        changeScene(0);
+        // Initialize ImGui functionality
+        ImGui_Controller.initImGui(glfwWindow);
+
+        // Load and initialize the editor
+        Game_Editor = new GameEditor();
+        Game_Editor.init();
+        Game_Editor.loadNewScene(new EScene());
     }
 
 
     public void tick() {
-        double startTime = glfwGetTime();
-        double endTime;
+        float lastUpdateTime = (float) glfwGetTime();
+        float accumulatedTime = 0.0f;
+        float timePerFrame = 0.0f;
+        int frames = 0;
+        final int NUM_FRAMES_TO_AVERAGE = 100; // Number of frames to average for FPS calculation
+        DELTA_TIME = 1.0f / 60.0f; // Fixed logical time step
 
         while (!glfwWindowShouldClose(glfwWindow)) {
+            float currentTime = (float) glfwGetTime();
+            float elapsedTime = currentTime - lastUpdateTime;
+            lastUpdateTime = currentTime;
+
+            accumulatedTime += elapsedTime;
+            timePerFrame += elapsedTime;
 
             pollUserEvents();
 
-            DebugRenderer.tick();
-
-            if (deltaTime >= 0) {
-                updateEditor(deltaTime);
+            // Update logic at fixed rate
+            while (accumulatedTime >= DELTA_TIME) {
+                tick(DELTA_TIME);
+                accumulatedTime -= DELTA_TIME;
             }
+
+            // Render
+            render();
             glfwSwapBuffers(glfwWindow);
 
-            endTime = glfwGetTime();
-            deltaTime = (float) (endTime - startTime);
-            startTime = endTime;
+            frames++;
 
-            closeEngine();
-        }
-    }
-
-
-    public void changeScene(int newScene) {
-        switch (newScene) {
-            case 0:
-                currentScene = new EditorScene();
-                currentScene.init();
-                break;
-            case 1:
-                System.out.println("Initializing scene");
-                break;
-            default:
-                assert false : "Unknown scene '" + newScene + "'";
-                break;
-        }
-    }
-
-
-    // TODO: Separate into separate functions and implement time step correctly
-    private void updateEditor(float deltaTime) {
-        // Safety check
-        if (engineMode == 0) {
-            // Render the editor scene to the framebuffer
-            this.framebuffer.use(windowWidth, windowHeight);
-            clear();
-            if (isFrameModeOn) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            // Calculate FPS after a certain number of frames
+            if (frames >= NUM_FRAMES_TO_AVERAGE) {
+                FPS = frames / FRAME_TIME; // fps is a global variable used to pass metrics around
+                // Reset frame time and frame count
+                frames = 0;
+                FRAME_TIME = timePerFrame; // frameTime is a global variable used to pass metrics around
+                timePerFrame = 0.0f;
             }
-
-            DebugRenderer.render();
-            Renderer.setDefaultShader();
-            currentScene.render();
-
-            // Renderer to the framebuffer
-            currentScene.tick(deltaTime);
-            this.framebuffer.detatch();
-
-            if (isFrameModeOn) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-            }
-
-            // Update the ImGui components
-            imGuiController.tick(deltaTime);
         }
+        closeEngine();
     }
 
 
-    public float getDefaultAspectRatio() {
-        return defaultAspectRatio;
+    private void tick(float deltaTime) {
+        DebugRenderer.tick();
+        // Update game logic here with the fixed deltaTime
+        Game_Editor.tick(deltaTime);
+
     }
 
 
-    public void setDefaultAspectRatio(float defaultAspectRatio) {
-        this.defaultAspectRatio = defaultAspectRatio;
+    private void render() {
+        Game_Editor.renderEditor();
+        // Render the editor scene to the framebuffer
+        this.framebuffer.use(windowWidth, windowHeight);
+        clear();
+        if (isWireFrameEnabled) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        }
+
+        DebugRenderer.render();
+        Renderer.setDefaultShader();
+        Game_Editor.renderScene();//currentScene.render();
+        this.framebuffer.detatch();
+
+        if (isWireFrameEnabled) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+        // Render/Update the ImGui components
+        ImGui_Controller.render();
     }
 
 
-    public OrthoCamera getCamera() {
-        return currentScene.getOrthoCamera();
+    public float getAspectRatio() {
+        return aspectRatio;
     }
 
 
-    public Scene getCurrentScene() {
-        return currentScene;
+    public void setAspectRatio(float aspectRatio) {
+        this.aspectRatio = aspectRatio;
     }
+    
+    
 
 
     private void pollUserEvents() {
@@ -300,15 +304,15 @@ public class EngineWindow implements EventListener {
         if (glfwGetKey(glfwWindow, GLFW_KEY_ESCAPE) == GLFW_PRESS &&
                 glfwGetKey(glfwWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
 
-            imGuiController.destroy();
+            ImGui_Controller.destroy();
             glfwSetWindowShouldClose(glfwWindow, true);
             System.out.println("Engine terminated");
         }
     }
 
 
-    public boolean isFrameModeOn() {
-        return isFrameModeOn;
+    public boolean isWireFrameEnabled() {
+        return isWireFrameEnabled;
     }
 
 
@@ -338,13 +342,13 @@ public class EngineWindow implements EventListener {
 
 
     private void clear() {
-        glClearColor(0,0,0,1.0f);
+        glClearColor(0, 0, 0, 1.0f);
         glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
     }
 
 
     public float getDeltaTime() {
-        return deltaTime;
+        return DELTA_TIME;
     }
 
 
@@ -361,22 +365,6 @@ public class EngineWindow implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        switch (event.getEventType()) {
-            case Play:
-                engineMode = 0;
-                System.out.println("Playing...");
-                break;
-            case Stop:
-                System.out.println("Stopping...");
-                break;
-            case Launch:
-                engineMode = 1;
-                System.out.println("Launching full play mode...");
-                break;
-            case Wire_Frame:
-                isFrameModeOn = !isFrameModeOn;
-                break;
-        }
+
     }
 }
-/*End of EngineWindow class*/

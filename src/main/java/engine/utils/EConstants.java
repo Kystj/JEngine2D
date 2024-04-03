@@ -1,6 +1,7 @@
 package engine.utils;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 /**
@@ -37,10 +38,14 @@ public interface EConstants {
         Load_New_Scene
     }
 
+    // Window
+    float DEFAULT_ASPECT_RATIO = 16.0f / 9.0f;
+
     // Grid width
     int DEFAULT_GRID_WIDTH = 32;
     int DEFAULT_GRID_HEIGHT = 32;
     int DEFAULT_CELL_SIZE = 16;
+    Vector3f GRID_COLOR = new Vector3f(0.08f, 0.08f, 0.08f);
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;

@@ -5,8 +5,8 @@
  */
 package engine.debug.draw;
 
-import engine.graphics.EngineWindow;
 import engine.graphics.Shader;
+import engine.testing.GameEditor;
 import engine.utils.ResourceUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -28,14 +28,14 @@ import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 public class DebugRenderer {
 
     // Rendering
-    private static int vaoID;
-    private static int vboID;
-    private static final float[] vertices = new float[MAX_DEBUG_LINES * 6 * 2];
-    private static final Shader debugShader = ResourceUtils.getOrCreateShader("shaders/Debug.glsl");
+    private static int VAO_ID;
+    private static int VBO_ID;
+    private static final float[] Vertices = new float[MAX_DEBUG_LINES * 6 * 2];
+    private static final Shader Debug_Shader = ResourceUtils.getOrCreateShader("shaders/Debug.glsl");
 
     // Debug Lines
-    private static final ArrayList<DebugLine> debugLines = new ArrayList<>();
-    private static boolean running = false;
+    private static final ArrayList<DebugLine> Debug_Lines = new ArrayList<>();
+    private static boolean Is_Running = false;
 
     /**
      * Initializes the DebugDraw class by generating vertex array and buffer objects,
@@ -43,13 +43,13 @@ public class DebugRenderer {
      */
     public static void init() {
         // Generate the vertex array object
-        vaoID = glGenVertexArrays();
-        glBindVertexArray(vaoID);
+        VAO_ID = glGenVertexArrays();
+        glBindVertexArray(VAO_ID);
 
         // Generate the vertex buffer object
-        vboID = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferData(GL_ARRAY_BUFFER, vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
+        VBO_ID = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_ID);
+        glBufferData(GL_ARRAY_BUFFER, Vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
 
         // Enable the attributes
         // Position
@@ -70,19 +70,19 @@ public class DebugRenderer {
      */
     public static void tick() {
         // Initialize the Draw class
-        if (!running) {
+        if (!Is_Running) {
             init();
-            running = true;
+            Is_Running = true;
         }
 
         // Check and remove lines that are not live
-        for (int i = 0; i < debugLines.size(); i++) {
-            if (debugLines.get(i).isPersistent) {
+        for (int i = 0; i < Debug_Lines.size(); i++) {
+            if (Debug_Lines.get(i).isPersistent) {
                 continue;
             }
 
-            if (debugLines.get(i).isLineLive() < 0) {
-                debugLines.remove(i);
+            if (Debug_Lines.get(i).isLineLive() < 0) {
+                Debug_Lines.remove(i);
                 i--;
             }
         }
@@ -94,7 +94,7 @@ public class DebugRenderer {
      */
     public static void render() {
         // Check if there are any lines to render
-        if (debugLines.isEmpty()) {
+        if (Debug_Lines.isEmpty()) {
             return;
         }
 
@@ -102,7 +102,7 @@ public class DebugRenderer {
         int index = 0;
 
         // Iterate through each line in the list
-        for (DebugLine debugLine : debugLines) {
+        for (DebugLine debugLine : Debug_Lines) {
             // Iterate twice for the start and end points of the line
             for (int i = 0; i < 2; i++) {
                 // Determine whether to get the start or end point of the line
@@ -110,14 +110,14 @@ public class DebugRenderer {
                 Vector3f color = debugLine.getLineColor();
 
                 // Load position into the vertices array
-                vertices[index] = position.x;
-                vertices[index + 1] = position.y;
-                vertices[index + 2] = 0.0f;
+                Vertices[index] = position.x;
+                Vertices[index + 1] = position.y;
+                Vertices[index + 2] = 0.0f;
 
                 // Load color into the vertices array
-                vertices[index + 3] = color.x;
-                vertices[index + 4] = color.y;
-                vertices[index + 5] = color.z;
+                Vertices[index + 3] = color.x;
+                Vertices[index + 4] = color.y;
+                Vertices[index + 5] = color.z;
 
                 // Move to the next set of coordinates in the vertices array
                 index += 6;
@@ -125,27 +125,27 @@ public class DebugRenderer {
         }
 
         // Update the buffer data with the new vertices
-        glBindBuffer(GL_ARRAY_BUFFER, vboID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(vertices, 0, debugLines.size() * 6 * 2));
+        glBindBuffer(GL_ARRAY_BUFFER, VBO_ID);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(Vertices, 0, Debug_Lines.size() * 6 * 2));
 
         // Use the debug shader
-        debugShader.use();
-        debugShader.uploadMat4f("uProjection", EngineWindow.get().getCamera().getProjectionMatrix());
-        debugShader.uploadMat4f("uView", EngineWindow.get().getCamera().calculateViewMatrix());
+        Debug_Shader.use();
+        Debug_Shader.uploadMat4f("uProjection", GameEditor.Current_Scene.getOrthoCamera().getProjectionMatrix());
+        Debug_Shader.uploadMat4f("uView", GameEditor.Current_Scene.getOrthoCamera().calculateViewMatrix());
 
         // Bind the vertex array object (VAO) and enable vertex attributes
-        glBindVertexArray(vaoID);
+        glBindVertexArray(VAO_ID);
         enableVertexAttributes();
 
         // Draw the lines
-        glDrawArrays(GL_LINES, 0, debugLines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, Debug_Lines.size() * 6 * 2);
 
         // Disable vertex attributes and unbind the VAO
         disableVertexAttributes();
         glBindVertexArray(0);
 
         // Detach the shader
-        debugShader.detach();
+        Debug_Shader.detach();
     }
 
     /**
@@ -169,8 +169,8 @@ public class DebugRenderer {
      *
      * @return ArrayList of DebugLine objects.
      */
-    public static ArrayList<DebugLine> getDebugLines() {
-        return debugLines;
+    public static ArrayList<DebugLine> getDebug_Lines() {
+        return Debug_Lines;
     }
 
     /**
@@ -178,15 +178,15 @@ public class DebugRenderer {
      *
      * @return Shader object.
      */
-    public static Shader getDebugShader() {
-        return debugShader;
+    public static Shader getDebug_Shader() {
+        return Debug_Shader;
     }
 
     /**
      * Clears all persistent lines
      */
     public static void clearPersistentLines() {
-        debugLines.clear();
+        Debug_Lines.clear();
     }
 }
 /*End of Draw class*/

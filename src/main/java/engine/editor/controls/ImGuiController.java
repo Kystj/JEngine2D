@@ -26,7 +26,6 @@ public class ImGuiController {
 
     private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
     private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
-
     private final MainMenuBar mainMenuBar = new MainMenuBar();
     private final Viewport viewport = new Viewport();
     private GLFWMouseButtonCallback mouseButtonCallback;
@@ -61,15 +60,12 @@ public class ImGuiController {
     /**
      * Update ImGui and its various widgets
      */
-    public void tick(float deltaTime) {
-        startFrame(deltaTime);
+    public void render() {
+        startFrame();
         enableDocking();
         updateViewport();
         updateWidgets();
-        EngineWindow.get().getCurrentScene().imgui();
-
-        // EWindow.get().editor.imgui();
-
+        EngineWindow.Game_Editor.imgui();
         ImGui.showDemoWindow();
         DebugLogger.imgui();
         endFrame();
@@ -114,7 +110,7 @@ public class ImGuiController {
      * Sets the style for ImGui, begins the new frame and pushes the engiens custom ImGui style
      * options onto the stack
      */
-    private void startFrame(final float deltaTime) {
+    private void startFrame() {
         ImGui.styleColorsClassic();
         imGuiGlfw.newFrame();
         ImGui.newFrame();

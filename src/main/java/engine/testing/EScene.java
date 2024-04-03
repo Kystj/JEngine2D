@@ -18,7 +18,6 @@ import engine.world.scenes.Scene;
 
 public class EScene extends Scene implements EventListener {
 
-
     @Override
     public void onEvent(Event event, GameObject gameObject) {
         if (event.getEventType() == EConstants.EventType.Active_Object) {

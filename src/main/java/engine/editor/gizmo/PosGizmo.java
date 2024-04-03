@@ -42,6 +42,8 @@ public class PosGizmo extends Gizmo {
             xHasChanged = false;
         }
 
+
+
         if (yHasChanged) {
             DebugLogger.warning("PosGizmo Y Activated");
             yHasChanged = false;

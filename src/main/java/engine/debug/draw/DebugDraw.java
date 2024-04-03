@@ -23,13 +23,13 @@ public class DebugDraw {
     }
 
     public static void addLine(Vector2f from, Vector2f to, Vector3f color, boolean bIsPersistent) {
-        if (DebugRenderer.getDebugLines().size() >= MAX_DEBUG_LINES) return;
-        DebugRenderer.getDebugLines().add(new DebugLine(from, to, color, -1, bIsPersistent));
+        if (DebugRenderer.getDebug_Lines().size() >= MAX_DEBUG_LINES) return;
+        DebugRenderer.getDebug_Lines().add(new DebugLine(from, to, color, -1, bIsPersistent));
     }
 
     public static void addLine(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
-        if (DebugRenderer.getDebugLines().size() >= MAX_DEBUG_LINES) return;
-        DebugRenderer.getDebugLines().add(new DebugLine(from, to, color, lifetime, false));
+        if (DebugRenderer.getDebug_Lines().size() >= MAX_DEBUG_LINES) return;
+        DebugRenderer.getDebug_Lines().add(new DebugLine(from, to, color, lifetime, false));
     }
 
     // ============================ Add Debug Box ============================

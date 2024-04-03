@@ -53,7 +53,7 @@ public class Viewport {
     private ImVec2 findViewportSize() {
         ImVec2 windowSize = findWindowSize();
         float aspectWidth = windowSize.x;
-        float aspectRatio = EngineWindow.get().getDefaultAspectRatio();
+        float aspectRatio = EngineWindow.get().getAspectRatio();
         float aspectHeight = aspectWidth / aspectRatio;
         if (aspectHeight > windowSize.y) {
             aspectHeight = windowSize.y;
@@ -111,7 +111,7 @@ public class Viewport {
         ImGuiUtils.renderGridSizeButton();
 
         ImGui.sameLine();
-        ImGuiUtils.renderWireFrameModeButton(EngineWindow.get().isFrameModeOn());
+        ImGuiUtils.renderWireFrameModeButton(EngineWindow.get().isWireFrameEnabled());
     }
 
     public boolean isGridLocked() {

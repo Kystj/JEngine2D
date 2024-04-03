@@ -7,10 +7,9 @@ package engine.utils;
 
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
+import engine.graphics.EngineWindow;
 import engine.graphics.Texture;
 import engine.io.MouseInputs;
-import engine.graphics.EngineWindow;
-import engine.editor.ui.EditorScene;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
@@ -44,13 +43,10 @@ public class ImGuiUtils {
     public static void renderMetricsInfo() {
         ImGui.setCursorPosX(X_SPACING);
         float deltaTimeInSeconds = EngineWindow.get().getDeltaTime();
-        double deltaTimeInMilliseconds = deltaTimeInSeconds * 1000; // Convert seconds to milliseconds
-        double fps = 1.0 / deltaTimeInSeconds; // Calculate frames per second
 
-        String string = " TPF(ms): " + String.format("%.2f", deltaTimeInMilliseconds) +
-                "    FPS: " + String.format("%.2f", fps);
+        String string = " TPF(ms): " + String.format("%.2f", EngineWindow.FRAME_TIME) +
+                "    FPS: " + String.format("%.0f", EngineWindow.FPS);
         ImGui.text(string);
-
     }
 
     public static void renderWireFrameModeButton(boolean isOn) {
@@ -88,11 +84,11 @@ public class ImGuiUtils {
 
     public static void renderGridSizeButton() {
         if (ImGui.beginPopupContextItem("cellSize")) {
-            if (ImGui.selectable("16"))   EditorScene.setCellSize(16);
-            if (ImGui.selectable("32"))   EditorScene.setCellSize(32);
-            if (ImGui.selectable("64"))   EditorScene.setCellSize(64);
-            if (ImGui.selectable("128"))  EditorScene.setCellSize(128);
-            if (ImGui.selectable("256"))  EditorScene.setCellSize(256);
+            if (ImGui.selectable("16"));
+            if (ImGui.selectable("32"));
+            if (ImGui.selectable("64"));
+            if (ImGui.selectable("128"));
+            if (ImGui.selectable("256"));
             ImGui.endPopup();
         }
 
@@ -130,14 +126,14 @@ public class ImGuiUtils {
 
     public static void renderAspectRatioButton() {
         if (ImGui.beginPopupContextItem("aspectRatio")) {
-            if (ImGui.selectable("16:9"))   EngineWindow.get().setDefaultAspectRatio(16.0f / 9.0f);
-            if (ImGui.selectable("16:10"))  EngineWindow.get().setDefaultAspectRatio(16.0f / 10.0f);
-            if (ImGui.selectable("21:9"))   EngineWindow.get().setDefaultAspectRatio(21.0f / 9.0f);
-            if (ImGui.selectable("4:3"))    EngineWindow.get().setDefaultAspectRatio(4.0f / 3.0f);
+            if (ImGui.selectable("16:9"))   EngineWindow.get().setAspectRatio(16.0f / 9.0f);
+            if (ImGui.selectable("16:10"))  EngineWindow.get().setAspectRatio(16.0f / 10.0f);
+            if (ImGui.selectable("21:9"))   EngineWindow.get().setAspectRatio(21.0f / 9.0f);
+            if (ImGui.selectable("4:3"))    EngineWindow.get().setAspectRatio(4.0f / 3.0f);
             ImGui.endPopup();
         }
 
-        String aspectRatio = MathUtils.decimalToAspectRatio(EngineWindow.get().getDefaultAspectRatio());
+        String aspectRatio = MathUtils.decimalToAspectRatio(EngineWindow.get().getAspectRatio());
 
         if (ImGui.button(aspectRatio)) {
             ImGui.openPopup("aspectRatio");

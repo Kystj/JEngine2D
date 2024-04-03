@@ -119,6 +119,11 @@ public class Scene {
     }
 
 
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
+    }
+
+
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
                 .filter(gameObject -> gameObject.getUID() == gameObjectId)
