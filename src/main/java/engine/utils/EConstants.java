@@ -11,6 +11,7 @@ public interface EConstants {
 
     // Gizmos
     int GIZMO_GAME_OBJECT_UID = -1;
+    int GIZMO_Z_INDEX = 100;
     Vector2f GIZMO_GAME_OBJECT_SIZE = new Vector2f(26, 26);
 
     // Popup Window constants

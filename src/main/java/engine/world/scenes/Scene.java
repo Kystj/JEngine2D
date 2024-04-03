@@ -38,7 +38,7 @@ public class Scene {
     // Flag indicating whether the scene is active
     private boolean bIsSceneActive;
 
-    protected GameObject activeGameObject = new GameObject("Active", new Transform(), 1);
+    protected GameObject activeGameObject = new GameObject("Active", new Transform());
 
 
     public void init() {
