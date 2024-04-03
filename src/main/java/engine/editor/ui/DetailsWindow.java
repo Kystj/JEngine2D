@@ -8,11 +8,13 @@ package engine.editor.ui;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
+import engine.testing.GameEditor;
 import engine.utils.EConstants;
 import engine.utils.ImGuiUtils;
 import engine.world.components.Component;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
+import engine.world.scenes.Scene;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 import org.joml.Vector3f;
@@ -39,6 +41,11 @@ public class DetailsWindow implements EventListener {
     }
 
     @Override
+    public void onEvent(Event event, Scene scene) {
+
+    }
+
+    @Override
     public void onEvent(Event event) {
 
 
@@ -47,13 +54,20 @@ public class DetailsWindow implements EventListener {
 
     public void imgui() {
         if (activeGameObject != null && bIsOpen.get()) {
+            int zIndex = activeGameObject.getZIndex();
+
             ImGui.begin("Details", bIsOpen);
 
             ImGui.spacing();
             ImGuiUtils.renderVec2Sliders("Scale", activeGameObject.getTransform().getScale(), activeGameObject.getTransform().getScale());
             ImGuiUtils.renderVec2Sliders("Position", activeGameObject.getTransform().getPosition(), activeGameObject.getTransform().getPosition());
             activeGameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", activeGameObject.getTransform().getRotation()));
-           activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
+            activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
+
+            if (activeGameObject.getZIndex() != zIndex) {
+                GameEditor.Current_Scene.removeGameObject(activeGameObject.getUID());
+                GameEditor.Current_Scene.addGameObject(activeGameObject);
+            }
 
             for (int i = 0; i < activeGameObject.getComponentsList().size(); i++) {
                 try {

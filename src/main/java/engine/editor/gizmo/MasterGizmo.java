@@ -52,6 +52,11 @@ public class MasterGizmo implements EventListener {
         }
     }
 
+    @Override
+    public void onEvent(Event event, Scene scene) {
+
+    }
+
 
     @Override
     public void onEvent(Event event) {

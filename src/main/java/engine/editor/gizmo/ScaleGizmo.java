@@ -10,8 +10,7 @@ import engine.world.components.Sprite;
 import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 
-import static engine.utils.EConstants.GIZMO_GAME_OBJECT_SIZE;
-import static engine.utils.EConstants.GIZMO_GAME_OBJECT_UID;
+import static engine.utils.EConstants.*;
 
 public class ScaleGizmo extends Gizmo {
 
@@ -25,10 +24,10 @@ public class ScaleGizmo extends Gizmo {
         xPosGizmoSprite.setColor(gizmoColorX);
         yPosGizmoSprite.setColor(gizmoColorY);
 
-        posGizmoX = new GameObject(new Transform(posGizmoXPosition, GIZMO_GAME_OBJECT_SIZE), GIZMO_GAME_OBJECT_UID);
+        posGizmoX = new GameObject(new Transform(posGizmoXPosition, GIZMO_GAME_OBJECT_SIZE, GIZMO_Z_INDEX), GIZMO_GAME_OBJECT_UID);
         posGizmoX.addComponent(xPosGizmoSprite);
 
-        posGizmoY = new GameObject(new Transform(posGizmoYPosition, GIZMO_GAME_OBJECT_SIZE), GIZMO_GAME_OBJECT_UID);
+        posGizmoY = new GameObject(new Transform(posGizmoYPosition, GIZMO_GAME_OBJECT_SIZE, GIZMO_Z_INDEX), GIZMO_GAME_OBJECT_UID);
         posGizmoY.getTransform().setRotation(-90);
         posGizmoY.addComponent(yPosGizmoSprite);
     }

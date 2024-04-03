@@ -12,17 +12,15 @@ public class GameObject {
     private final Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
     protected int objectUID;
-    private int zIndex;
 
-    public GameObject(String name, Transform transform, int zIndex) {
+    public GameObject(String name, Transform transform) {
         this.name = name;
         this.transform = transform;
-        this.zIndex = zIndex;
+
     }
 
     public GameObject(Transform transform, int objectUID) {
         this.transform = transform;
-        this.zIndex = 10; // TODO: Add a constant
         this.objectUID = objectUID;
     }
 
@@ -81,10 +79,6 @@ public class GameObject {
         assert false : "Error: Casting component.";
     }
 
-    public void setZIndex(int zIndex) {
-        this.zIndex = zIndex;
-    }
-
 
     public String getName() {
         return name;
@@ -102,12 +96,16 @@ public class GameObject {
         return transform;
     }
 
-    public int getZIndex() {
-        return zIndex;
-    }
 
     public List<Component> getComponentsList() {
         return componentsList;
     }
 
+    public void setZIndex(int zIndex) {
+        this.transform.setZIndex(zIndex);
+    }
+
+    public int getZIndex() {
+        return this.transform.getzIndex();
+    }
 }

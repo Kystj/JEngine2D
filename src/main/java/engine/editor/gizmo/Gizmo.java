@@ -80,8 +80,8 @@ public class Gizmo {
 
 
     public void addToScene() {
-        EngineWindow.get().getCurrentScene().addGameObject(posGizmoX);
-        EngineWindow.get().getCurrentScene().addGameObject(posGizmoY);
+        EngineWindow.Game_Editor.addToScene(posGizmoX);
+        EngineWindow.Game_Editor.addToScene(posGizmoY);
     }
 
     public boolean isMouseHoveringX(Vector2f mousePosition) {
