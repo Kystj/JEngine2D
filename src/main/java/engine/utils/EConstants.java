@@ -4,21 +4,21 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-/**
- * This class contains all the constants used throughout the engine
- */
 public interface EConstants {
 
     // Gizmos
     int GIZMO_GAME_OBJECT_UID = -1;
     int GIZMO_Z_INDEX = 100;
+    int GIZMO_OFFSET = 16;
+    Vector4f GIZMO_X_HOVER_COLOR = new Vector4f(0, 1, 0, 1);
+    Vector4f GIZMO_Y_HOVER_COLOR = new Vector4f(1, 0, 0, 1);
+    Vector4f GIZMO_X_COLOR = new Vector4f(0,0.7f,0,0.5f);
+    Vector4f GIZMO_Y_COLOR = new Vector4f(0.7f, 0, 0, 1);
     Vector2f GIZMO_GAME_OBJECT_SIZE = new Vector2f(26, 26);
-
-    // Popup Window constants
-    Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
 
     // ImGui
     int X_SPACING = 10;
+    Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
     Vector4f GREEN_BUTTON = new Vector4f(0.0f, 1.0f, 0.0f, 0.5f);
     Vector4f RED_BUTTON = new Vector4f(1.0f, 0.0f, 0.0f, 0.5f);
     Vector4f YELLOW_BUTTON = new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
@@ -42,7 +42,7 @@ public interface EConstants {
     // Window
     float DEFAULT_ASPECT_RATIO = 16.0f / 9.0f;
 
-    // Grid width
+    // Grid
     int DEFAULT_GRID_WIDTH = 32;
     int DEFAULT_GRID_HEIGHT = 32;
     int DEFAULT_CELL_SIZE = 16;

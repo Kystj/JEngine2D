@@ -3,7 +3,7 @@
  Date: 2023-12-28
  Author: Kyle St John
  */
-package engine.testing;
+package engine.world.scenes;
 
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -14,9 +14,8 @@ import engine.graphics.Texture;
 import engine.utils.EConstants;
 import engine.utils.ResourceUtils;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
 
-public class EScene extends Scene implements EventListener {
+public class TestScene extends Scene implements EventListener {
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {

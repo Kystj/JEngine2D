@@ -108,4 +108,8 @@ public class GameObject {
     public int getZIndex() {
         return this.transform.getzIndex();
     }
+
+    public int setUID(int newUID) {
+        return this.objectUID = newUID;
+    }
 }

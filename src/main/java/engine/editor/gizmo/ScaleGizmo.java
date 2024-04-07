@@ -5,9 +5,10 @@
  */
 package engine.editor.gizmo;
 
-import engine.debug.info.DebugLogger;
+import engine.io.MouseInputs;
 import engine.world.components.Sprite;
 import engine.world.components.Transform;
+import engine.world.objects.GameObjFactory;
 import engine.world.objects.GameObject;
 
 import static engine.utils.EConstants.*;
@@ -17,19 +18,16 @@ public class ScaleGizmo extends Gizmo {
     public ScaleGizmo(GameObject gameObject) {
         super(gameObject);
         masterSprite = gizmoSpriteSheet.getSprite(0);
-
         xPosGizmoSprite = new Sprite(masterSprite.getSpriteTexture(), masterSprite.getUvCoordinates());
         yPosGizmoSprite =  new Sprite(masterSprite.getSpriteTexture(), masterSprite.getUvCoordinates());
+        xPosGizmoSprite.setColor(GIZMO_X_COLOR);
+        yPosGizmoSprite.setColor(GIZMO_Y_COLOR);
+        posGizmoX = GameObjFactory.generateGameObject("Gizmo_Scale_X" , xPosGizmoSprite, new Transform(xGizmoPosition, GIZMO_GAME_OBJECT_SIZE,  GIZMO_Z_INDEX));
+        posGizmoY = GameObjFactory.generateGameObject("Gizmo_Scale_Y" , yPosGizmoSprite, new Transform(yGizmoPosition, GIZMO_GAME_OBJECT_SIZE,  GIZMO_Z_INDEX));
+        posGizmoX.setUID(-1);
+        posGizmoY.setUID(-1);
+        posGizmoX.getTransform().setRotation(-90);
 
-        xPosGizmoSprite.setColor(gizmoColorX);
-        yPosGizmoSprite.setColor(gizmoColorY);
-
-        posGizmoX = new GameObject(new Transform(posGizmoXPosition, GIZMO_GAME_OBJECT_SIZE, GIZMO_Z_INDEX), GIZMO_GAME_OBJECT_UID);
-        posGizmoX.addComponent(xPosGizmoSprite);
-
-        posGizmoY = new GameObject(new Transform(posGizmoYPosition, GIZMO_GAME_OBJECT_SIZE, GIZMO_Z_INDEX), GIZMO_GAME_OBJECT_UID);
-        posGizmoY.getTransform().setRotation(-90);
-        posGizmoY.addComponent(yPosGizmoSprite);
     }
 
     @Override
@@ -37,13 +35,11 @@ public class ScaleGizmo extends Gizmo {
         super.tick();
 
         if (xHasChanged) {
-            DebugLogger.warning("PosGizmo X Activated");
-            xHasChanged = false;
+            activeGameObject.getTransform().getScale().x -= MouseInputs.getDx();
         }
 
-        if (yHasChanged) {
-            DebugLogger.warning("PosGizmo Y Activated");
-            yHasChanged = false;
+        else if (yHasChanged) {
+            activeGameObject.getTransform().getScale().y += MouseInputs.getDy();
         }
     }
 }

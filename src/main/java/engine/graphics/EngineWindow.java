@@ -18,7 +18,7 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.testing.EScene;
+import engine.world.scenes.TestScene;
 import engine.testing.GameEditor;
 import engine.utils.EConstants;
 import engine.utils.MathUtils;
@@ -53,7 +53,7 @@ public class EngineWindow implements EventListener {
     private float DELTA_TIME = -1;
 
     private Framebuffer framebuffer;
-    private final boolean isWireFrameEnabled = false;
+    private boolean isWireFrameEnabled = false;
 
     private final ImGuiController ImGui_Controller = new ImGuiController();
     public static GameEditor Game_Editor;
@@ -166,7 +166,7 @@ public class EngineWindow implements EventListener {
         // Load and initialize the editor
         Game_Editor = new GameEditor();
         Game_Editor.init();
-        Game_Editor.loadNewScene(new EScene());
+        Game_Editor.loadNewScene(new TestScene());
     }
 
 
@@ -217,7 +217,6 @@ public class EngineWindow implements EventListener {
         DebugRenderer.tick();
         // Update game logic here with the fixed deltaTime
         Game_Editor.tick(deltaTime);
-
     }
 
 
@@ -365,6 +364,8 @@ public class EngineWindow implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-
+        if (event.getEventType() == EConstants.EventType.Wire_Frame) {
+            isWireFrameEnabled = !isWireFrameEnabled;
+        }
     }
 }

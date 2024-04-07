@@ -113,7 +113,7 @@ public class AssetWindow {
 
                 Sprite temp = new Sprite(sprite.getSpriteTexture(), sprite.getUvCoordinates());
                 GameObject obj = GameObjFactory.generateGameObject(temp, 32, 32);
-                EditorControls.selectAsset(obj);
+                EditorControls.setActiveAsset(obj);
             }
 
             // Pop the unique ID for ImGui elements

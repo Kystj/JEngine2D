@@ -66,8 +66,8 @@ public class EditorControls implements EventListener {
 
     public void tick(float deltaTime) {
         masterGizmo.tick();
-        handleObjectSelection(deltaTime);
-        deleteGameObject();
+        selectAndDispatch(deltaTime);
+        deleteActiveGameObject();
 
         Vector2f spritePos = new Vector2f();
         if (Active_Object != null) {
@@ -95,7 +95,7 @@ public class EditorControls implements EventListener {
     }
 
 
-    public void deleteGameObject() {
+    public void deleteActiveGameObject() {
         if (this.currentScene.getActiveGameObject() != null && KeyInputs.keyPressed(GLFW_KEY_DELETE)) {
             this.currentScene.removeGameObject(this.currentScene.getActiveGameObject().getUID());
             masterGizmo.remove();
@@ -104,14 +104,17 @@ public class EditorControls implements EventListener {
     }
 
 
-    public static void selectAsset(GameObject gameObject) {
+    public static void setActiveAsset(GameObject gameObject) {
         Active_Object = gameObject;
+        Active_Object.getTransform().position.x = MouseInputs.getOrthoX() + 16;
+        Active_Object.getTransform().position.y = MouseInputs.getOrthoY() + 16;
+
         EngineWindow.Game_Editor.addToScene(Active_Object);
         EventDispatcher.dispatchEvent(new Event(EConstants.EventType.New_Asset), gameObject);
     }
 
 
-    public void handleObjectSelection(float dt) {
+    public void selectAndDispatch(float dt) {
         debounce -= dt;
 
         if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {

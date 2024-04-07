@@ -24,6 +24,7 @@ public class MouseInputs {
 
     private static Vector2f viewportPos = new Vector2f();
     private static Vector2f viewportSize = new Vector2f();
+    private static int mouseButtonDown = 0;
 
     private MouseInputs() {
         scrollX = 0.0;
@@ -36,6 +37,10 @@ public class MouseInputs {
 
 
     public static void mousePosCallback(long window, double xpos, double ypos) {
+        if (mouseButtonDown > 0) {
+            isDragging = true;
+        }
+
         lastX = xPos;
         lastY = yPos;
         xPos = xpos;
@@ -45,14 +50,17 @@ public class MouseInputs {
 
     public static void mouseButtonCallback(long window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
+            mouseButtonDown++;
+
             if (button < mouseButtonPressed.length) {
                 mouseButtonPressed[button] = true;
-                isDragging = mouseButtonPressed[0] || mouseButtonPressed[1] || mouseButtonPressed[2];
             }
         } else if (action == GLFW_RELEASE) {
+            mouseButtonDown--;
+
             if (button < mouseButtonPressed.length) {
                 mouseButtonPressed[button] = false;
-                isDragging = mouseButtonPressed[0] || mouseButtonPressed[1] || mouseButtonPressed[2];
+                isDragging = false;
             }
         }
     }

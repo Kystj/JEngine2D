@@ -41,9 +41,6 @@ public class MasterGizmo implements EventListener {
             if (activeGizmo.getClass().isAssignableFrom(ScaleGizmo.class)) {
                 activeGizmo = new ScaleGizmo(gameObject);
             }
-            if (activeGizmo.getClass().isAssignableFrom(RotateGizmo.class)) {
-                activeGizmo = new RotateGizmo(gameObject);
-            }
         } else {
             activeGizmo = new PosGizmo(gameObject);
         }
@@ -73,7 +70,6 @@ public class MasterGizmo implements EventListener {
 
 
     private void switchGizmos() {
-        // TODO: Add an explanation in the shortcuts window
         if (activeGizmo != null) {
             if (KeyInputs.keyPressed(GLFW_KEY_T)) {
                 remove();
@@ -86,13 +82,6 @@ public class MasterGizmo implements EventListener {
                 remove();
                 isGizmoActive = true;
                 activeGizmo = new ScaleGizmo(activeGizmo.activeGameObject);
-                activeGizmo.addToScene();
-            }
-
-            if (KeyInputs.keyPressed(GLFW_KEY_R)) {
-                remove();
-                isGizmoActive = true;
-                activeGizmo = new RotateGizmo(activeGizmo.activeGameObject);
                 activeGizmo.addToScene();
             }
         }
