@@ -8,7 +8,7 @@ package engine.editor.ui;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
-public class MenuPanel {
+public class DefaultMenu {
 
     private ImBoolean open = new ImBoolean(false);
     protected String fileName;
@@ -21,6 +21,7 @@ public class MenuPanel {
     }
 
     protected void readFile() {
+
         // TODO: Implement file reader
     }
 

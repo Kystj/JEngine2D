@@ -10,17 +10,10 @@ import engine.debug.info.BugReport;
 
 import java.lang.reflect.Type;
 
-/** BugAdapter class for custom Gson serialization and deserialization of BugReport objects. */
+
 public class ReportAdapter implements JsonSerializer<BugReport>, JsonDeserializer<BugReport> {
 
-    /**
-     * Serializes a BugReport object to a JSON representation.
-     *
-     * @param bugReport                  The BugReport object to be serialized.
-     * @param type                       The type of the object.
-     * @param jsonSerializationContext  The serialization context.
-     * @return                           The serialized JSON element.
-     */
+
     @Override
     public JsonElement serialize(BugReport bugReport, Type type,
                                  JsonSerializationContext jsonSerializationContext) {
@@ -32,15 +25,7 @@ public class ReportAdapter implements JsonSerializer<BugReport>, JsonDeserialize
         return jsonObject;
     }
 
-    /**
-     * Deserializes a JSON element to a BugReport object.
-     *
-     * @param json          The JSON element to be deserialized.
-     * @param typeOfT       The type of the object.
-     * @param context       The deserialization context.
-     * @return              The deserialized BugReport object.
-     * @throws JsonParseException If an error occurs during deserialization.
-     */
+
     @Override
     public BugReport deserialize(JsonElement json, Type typeOfT,
                                  JsonDeserializationContext context) throws JsonParseException {

@@ -8,13 +8,13 @@ package engine.editor.ui;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
-import engine.testing.GameEditor;
+import engine.editor.GameEditor;
 import engine.utils.EConstants;
 import engine.utils.ImGuiUtils;
 import engine.world.components.Component;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
+import engine.world.levels.Level;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 import org.joml.Vector3f;
@@ -41,7 +41,7 @@ public class DetailsWindow implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
 
     }
 
@@ -65,8 +65,8 @@ public class DetailsWindow implements EventListener {
             activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
 
             if (activeGameObject.getZIndex() != zIndex) {
-                GameEditor.Current_Scene.removeGameObject(activeGameObject.getUID());
-                GameEditor.Current_Scene.addGameObject(activeGameObject);
+                GameEditor.current_Level.removeGameObject(activeGameObject.getUID());
+                GameEditor.current_Level.addGameObject(activeGameObject);
             }
 
             for (int i = 0; i < activeGameObject.getComponentsList().size(); i++) {

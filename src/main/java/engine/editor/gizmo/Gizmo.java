@@ -2,8 +2,8 @@ package engine.editor.gizmo;
 
 import engine.graphics.EngineWindow;
 import engine.graphics.SpriteSheet;
+import engine.graphics.Texture;
 import engine.io.MouseInputs;
-import engine.utils.ResourceUtils;
 import engine.world.components.Sprite;
 import engine.world.components.Transform;
 import engine.world.objects.GameObject;
@@ -14,7 +14,8 @@ import static engine.utils.EConstants.*;
 
 public class Gizmo {
 
-    protected SpriteSheet gizmoSpriteSheet = ResourceUtils.getSpriteSheet("assets/spritesheets/gizmos.png");
+    Texture gizmoSpriteSheetTexture;
+    protected SpriteSheet gizmoSpriteSheet;
     protected Sprite masterSprite;
     protected Sprite xPosGizmoSprite;
     protected Sprite yPosGizmoSprite;
@@ -33,6 +34,8 @@ public class Gizmo {
 
     public Gizmo(GameObject gameObject) {
         this.activeGameObject = gameObject;
+        this.gizmoSpriteSheetTexture = new Texture("assets/spritesheets/gizmos.png");
+        this.gizmoSpriteSheet = new SpriteSheet(gizmoSpriteSheetTexture, 32,32,0, "Gizmos");
         calculateGizmoPositions();
     }
 

@@ -7,20 +7,20 @@ package engine.editor.ui;
 
 import engine.debug.info.DebugLogger;
 import engine.debug.ui.DebugWindow;
+import engine.editor.GameEditor;
+import engine.eventsystem.Event;
+import engine.eventsystem.EventDispatcher;
+import engine.serialization.LevelSerializer;
+import engine.utils.EConstants;
+import engine.world.levels.TestLevel;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 
-/**
- * Main menu bar for the engine
- */
 public class MainMenuBar {
 
-    private final HelpPanel helpPanelMenu = new HelpPanel();
+    private final HelpMenu helpPanelMenu = new HelpMenu();
     private final Preferences preferences = new Preferences();
 
-    /**
-     * The menu bars update method
-     */
     public void imgui() {
         ImGui.beginMainMenuBar();
         projectMenuItem();
@@ -29,68 +29,55 @@ public class MainMenuBar {
         ImGui.endMainMenuBar();
     }
 
-    /**
-     * The current projects' menu. Contains save, load and preference/setting functionality
-     */
     private void projectMenuItem() {
         if (ImGui.beginMenu("Project")) {
             saveMenuItem();
             loadMenuItem();
+            importMenuItem();
             preferencesMenuItem();
             ImGui.endMenu();
         }
         checkWidgetStatus();
     }
 
-    /**
-     * Check the status of the various widgets or windows that may be open
-     */
     private void checkWidgetStatus() {
         updatePreferenceWindow();
         updateHelpWindow();
     }
 
-    /**
-     * Opens the Preferences window if the preferencesMenu.isOpen() is true
-     */
     private void updatePreferenceWindow() {
         if (preferences.isOpen().get()) {
             preferences.tick();
         }
     }
 
-    /**
-     * Opens the Help window if helpMenu.isOpen() is true
-     */
     private void updateHelpWindow() {
         if (helpPanelMenu.isOpen().get()) {
             helpPanelMenu.tick();
         }
     }
 
-    /**
-     * Selectable preferences option in the Project menu items drop window
-     */
     private void preferencesMenuItem() {
         if (ImGui.menuItem("Preferences", "Ctrl+p")) preferences.setOpen(new ImBoolean(true));
         // TODO: Implement preferences
     }
 
-    /**
-     * Selectable save option in the Project menu items drop window
-     */
     private void saveMenuItem() {
         if (ImGui.menuItem("Save", "Ctrl+s")) {
-            // TODO: Implement save
+            LevelSerializer.save(GameEditor.current_Level);
         }
     }
 
-    /**
-     * Selectable load option in the Project menu items drop window
-     */
     private void loadMenuItem() {
         if (ImGui.menuItem("Load", "Ctrl+o")) {
-            //TODO: Implement load and shortcuts
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Load_New_Scene), new TestLevel());
+        }
+    }
+
+
+    private void importMenuItem() {
+        if (ImGui.menuItem("Import", "Ctrl+i")) {
+            ImportWindow.bIsImportOpen.set(true);
         }
     }
 
@@ -101,36 +88,33 @@ public class MainMenuBar {
     }
 
 
-    /**
-     * The debug menu. The drop-down menu contains various debug functions
-     */
     private void toolsMenu() {
         //TODO: Implement debug window and shortcuts
         if (ImGui.beginMenu("Tools")) {
 
-            if (ImGui.menuItem("Debug Console", "Ctrl+d")) {
+            if (ImGui.menuItem(" Debug Console", "Ctrl+d")) {
                 DebugWindow.setIsOpen(true);
 
             }
 
-            if (ImGui.menuItem("Task Manager", "Ctrl+m")) {
+            if (ImGui.menuItem(" Task Manager", "Ctrl+m")) {
                 System.out.println("Opening task manager");
             }
 
-            if (ImGui.menuItem("Log Console", "Ctrl+l")) {
-                DebugLogger.setIsOpen(new ImBoolean(true));
+            if (ImGui.menuItem(" Log Console", "Ctrl+l")) {
+                DebugLogger.setIsOpen(true);
+            }
+
+            if (ImGui.menuItem(" View Assets", "Ctrl+a")) {
+                ImportWindow.setIsOpen(true);
             }
             ImGui.endMenu();
         }
     }
 
-    /**
-     * Help menu item drop window. Contain information about key shortcuts and editor controls
-     */
     private void helpMenu() {
         if (ImGui.beginMenu("Help")) {
             helpMenuItem();
-            System.out.println("Opening help menu...");
             ImGui.endMenu();
         }
     }

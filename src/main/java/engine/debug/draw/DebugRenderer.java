@@ -6,7 +6,7 @@
 package engine.debug.draw;
 
 import engine.graphics.Shader;
-import engine.testing.GameEditor;
+import engine.editor.GameEditor;
 import engine.utils.ResourceUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -130,8 +130,8 @@ public class DebugRenderer {
 
         // Use the debug shader
         Debug_Shader.use();
-        Debug_Shader.uploadMat4f("uProjection", GameEditor.Current_Scene.getOrthoCamera().getProjectionMatrix());
-        Debug_Shader.uploadMat4f("uView", GameEditor.Current_Scene.getOrthoCamera().calculateViewMatrix());
+        Debug_Shader.uploadMat4f("uProjection", GameEditor.current_Level.getOrthoCamera().getProjectionMatrix());
+        Debug_Shader.uploadMat4f("uView", GameEditor.current_Level.getOrthoCamera().calculateViewMatrix());
 
         // Bind the vertex array object (VAO) and enable vertex attributes
         glBindVertexArray(VAO_ID);

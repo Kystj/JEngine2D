@@ -3,28 +3,17 @@
  Date: 2023-11-06
  Author: Kyle St John
  */
-package engine.world.scenes;
+package engine.world.levels;
 
 import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
-import engine.world.components.Transform;
 import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The Scene class represents a scene in the game, containing game objects and managing rendering.
- *
- * Responsibilities:
- * - Initialization of game objects and renderer
- * - Updating game objects in each frame
- * - Adding game objects to the scene
- * - Rendering the scene
- * - Handling cleanup
- */
-public class Scene {
+public class Level {
 
     // Renderer for rendering sprites in the scene
     protected Renderer renderer = new Renderer();
@@ -38,7 +27,9 @@ public class Scene {
     // Flag indicating whether the scene is active
     private boolean bIsSceneActive;
 
-    protected GameObject activeGameObject = new GameObject("Active", new Transform());
+    protected GameObject activeGameObject = new GameObject();
+
+    protected String levelName = "Default_Level";
 
 
     public void init() {
@@ -92,12 +83,6 @@ public class Scene {
     }
 
 
-    public void imgui() {
-        // TODO: Implement ImGui integration for scene editing
-    }
-
-
-
     public void render() {
         // Render the scene using the renderer
         renderer.render();
@@ -119,16 +104,19 @@ public class Scene {
     }
 
 
-    public List<GameObject> getGameObjects() {
-        return gameObjects;
-    }
-
-
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
                 .filter(gameObject -> gameObject.getUID() == gameObjectId)
                 .findFirst();
         return result.orElse(null);
+    }
+
+    public String getName() {
+        return levelName;
+    }
+
+    public List<GameObject> getGameObjects() {
+        return gameObjects;
     }
 }
 /*End of Scene class*/

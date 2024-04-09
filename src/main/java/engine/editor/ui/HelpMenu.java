@@ -7,9 +7,9 @@ package engine.editor.ui;
 
 import imgui.type.ImBoolean;
 
-public class HelpPanel extends MenuPanel {
+public class HelpMenu extends DefaultMenu {
 
-    public HelpPanel() {
+    public HelpMenu() {
         this.fileName = "";
         this.menuName = "Help";
         readFile();

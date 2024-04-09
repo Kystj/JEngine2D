@@ -3,12 +3,14 @@
  Date: 2024-01-11
  Author: Kyle St John
  */
-package engine.utils;
+package engine.editor.ui;
 
 import engine.graphics.SpriteSheet;
 import engine.graphics.Texture;
 import engine.serialization.SpriteSheetSerializer;
+import engine.utils.ResourceUtils;
 import imgui.ImGui;
+import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 
@@ -20,7 +22,7 @@ import java.util.Map;
  * The AssetManager class handles the import and removal of SpriteSheets,
  * storing them in a map along with associated asset types.
  */
-public class AssetUtils {
+public class ImportForms {
 
     // Input fields for the asset properties
     private ImString filePath = new ImString();   // Path to the sprite sheet file
@@ -40,7 +42,7 @@ public class AssetUtils {
     /**
      * Initializes the AssetManager by loading existing SpriteSheets from storage.
      */
-    public AssetUtils() {
+    public ImportForms() {
         // Load existing sprite sheets from storage
         SpriteSheetSerializer.loadSpriteSheets(spriteSheets);
     }
@@ -48,10 +50,11 @@ public class AssetUtils {
     /**
      * Renders the input form for importing SpriteSheets using ImGui.
      */
-    public void renderInputForm() {
+    public void renderInputForm(ImBoolean isOpen) {
+
         int itemSpacing = 10;
 
-        ImGui.begin("Import");
+        ImGui.begin("Import Form", isOpen);
 
         // Display input fields for asset properties
         ImGui.setCursorPosX(itemSpacing);
@@ -135,8 +138,8 @@ public class AssetUtils {
     /**
      * Renders the form for removing existing SpriteSheets using ImGui.
      */
-    public void renderRemoveForm() {
-        ImGui.begin("Remove");
+    public void renderRemoveForm(ImBoolean isOpen) {
+        ImGui.begin("Remove", isOpen);
 
         // Display a combo box with the list of existing SpriteSheets
         ImGui.setCursorPos(ImGui.getWindowSizeX() / 6, 50);
@@ -170,17 +173,6 @@ public class AssetUtils {
     }
 
 
-    /**
-     * Checks for conditions that would prevent adding a sprite sheet and handles error cases.
-     *
-     * @param fileName     The file path of the sprite sheet.
-     * @param type         The name/type of the sprite sheet.
-     * @param spriteWidth  The width of each sprite in the sprite sheet.
-     * @param spriteHeight The height of each sprite in the sprite sheet.
-     * @param amount       The number of sprites in the sprite sheet.
-     * @return {@code true} if conditions are met that prevent adding the sprite sheet,
-     *         {@code false} otherwise.
-     */
     private boolean checkAndHandleErrors(String fileName, String type, int spriteWidth, int spriteHeight, int amount) {
         // Prevents adding duplicate sprite sheets or sprite sheets with the same file path
         if (spriteSheets.get(ResourceUtils.getSpriteSheet(fileName)) != null) {
@@ -208,9 +200,7 @@ public class AssetUtils {
         return false;
     }
 
-    /**
-     * Helper method to refresh input fields after adding a SpriteSheet.
-     */
+
     private void refreshFields() {
         filePath = new ImString();
         assetType = new ImString();
@@ -220,11 +210,7 @@ public class AssetUtils {
         numSprites = new ImInt();
     }
 
-    /**
-     * Retrieves the map of SpriteSheets and their associated asset types.
-     *
-     * @return The map of SpriteSheets and asset types.
-     */
+
     public Map<SpriteSheet, String> getSpriteSheets() {
         return spriteSheets;
     }

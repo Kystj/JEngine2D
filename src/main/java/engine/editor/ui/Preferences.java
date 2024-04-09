@@ -7,7 +7,7 @@ package engine.editor.ui;
 
 import imgui.type.ImBoolean;
 
-public class Preferences extends MenuPanel {
+public class Preferences extends DefaultMenu {
 
     public Preferences() {
         this.fileName = "";

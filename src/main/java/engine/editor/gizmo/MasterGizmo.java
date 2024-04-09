@@ -11,20 +11,19 @@ import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.utils.EConstants;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
+import engine.world.levels.Level;
 
 import static engine.utils.EConstants.GIZMO_GAME_OBJECT_UID;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MasterGizmo implements EventListener {
 
-    private Scene currentScene;
+    private Level currentLevel;
     private Gizmo activeGizmo;
 
     private boolean isGizmoActive = true;
 
-    public MasterGizmo(Scene scene) {
-        this.currentScene = scene;
+    public MasterGizmo() {
         EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
     }
 
@@ -32,8 +31,8 @@ public class MasterGizmo implements EventListener {
     @Override
     public void onEvent(Event event, GameObject gameObject) {
         if (activeGizmo != null) {
-            this.currentScene.removeGameObject(GIZMO_GAME_OBJECT_UID);
-            this.currentScene.removeGameObject(GIZMO_GAME_OBJECT_UID);
+            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
 
             if (activeGizmo.getClass().isAssignableFrom(PosGizmo.class)) {
                 activeGizmo = new PosGizmo(gameObject);
@@ -50,7 +49,7 @@ public class MasterGizmo implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
 
     }
 
@@ -93,18 +92,22 @@ public class MasterGizmo implements EventListener {
 
 
     public void remove() {
-        this.currentScene.removeGameObject(activeGizmo.posGizmoX.getUID());
-        this.currentScene.removeGameObject(activeGizmo.posGizmoY.getUID());
+        this.currentLevel.removeGameObject(activeGizmo.posGizmoX.getUID());
+        this.currentLevel.removeGameObject(activeGizmo.posGizmoY.getUID());
     }
 
 
-    public Scene getCurrentScene() {
-        return currentScene;
+    public Level getCurrentScene() {
+        return currentLevel;
     }
 
 
-    public void setCurrentScene(Scene currentScene) {
-        this.currentScene = currentScene;
+    public void setCurrentScene(Level currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    public void setLevel(Level level) {
+        currentLevel = level;
     }
 }
 /*End of MasterGizmo class*/

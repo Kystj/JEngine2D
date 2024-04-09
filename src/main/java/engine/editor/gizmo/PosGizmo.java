@@ -18,10 +18,17 @@ public class PosGizmo extends Gizmo {
     public PosGizmo(GameObject gameObject) {
         super(gameObject);
         masterSprite = gizmoSpriteSheet.getSprite(1);
-        xPosGizmoSprite = new Sprite(masterSprite.getSpriteTexture(), masterSprite.getUvCoordinates());
-        yPosGizmoSprite =  new Sprite(masterSprite.getSpriteTexture(), masterSprite.getUvCoordinates());
+
+        xPosGizmoSprite = new Sprite();
+        xPosGizmoSprite.setTexture(masterSprite.getSpriteTexture());
+        xPosGizmoSprite.setUvCoordinates(masterSprite.getUvCoordinates());
         xPosGizmoSprite.setColor(GIZMO_X_COLOR);
+
+        yPosGizmoSprite =  new Sprite();
+        yPosGizmoSprite.setTexture(masterSprite.getSpriteTexture());
+        yPosGizmoSprite.setUvCoordinates(masterSprite.getUvCoordinates());
         yPosGizmoSprite.setColor(GIZMO_Y_COLOR);
+
         posGizmoX = GameObjFactory.generateGameObject("Gizmo_Pos_X" , xPosGizmoSprite, new Transform(xGizmoPosition, GIZMO_GAME_OBJECT_SIZE,  GIZMO_Z_INDEX));
         posGizmoY = GameObjFactory.generateGameObject("Gizmo_Pos_Y" , yPosGizmoSprite, new Transform(yGizmoPosition, GIZMO_GAME_OBJECT_SIZE,  GIZMO_Z_INDEX));
         posGizmoX.setUID(-1);

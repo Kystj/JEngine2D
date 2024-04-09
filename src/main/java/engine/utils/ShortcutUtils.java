@@ -6,7 +6,7 @@
 package engine.utils;
 
 import engine.io.KeyInputs;
-import engine.editor.ui.HelpPanel;
+import engine.editor.ui.HelpMenu;
 import engine.editor.ui.Preferences;
 import imgui.type.ImBoolean;
 
@@ -17,7 +17,7 @@ import static org.lwjgl.glfw.GLFW.*;
  */
 public class ShortcutUtils {
 
-    private static final HelpPanel HELP_PANEL_MENU = new HelpPanel();
+    private static final HelpMenu HELP_PANEL_MENU = new HelpMenu();
     private static final Preferences PREFERENCES = new Preferences();
 
     /**

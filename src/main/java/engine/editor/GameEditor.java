@@ -3,9 +3,10 @@
  Date: 2024-04-01
  Author: Kyle St John
  */
-package engine.testing;
+package engine.editor;
 
 import engine.debug.draw.DebugDraw;
+import engine.debug.info.DebugLogger;
 import engine.debug.ui.DebugWindow;
 import engine.editor.controls.EditorControls;
 import engine.editor.controls.ObjectPicker;
@@ -16,9 +17,11 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.graphics.Renderer;
+import engine.serialization.LevelSerializer;
 import engine.utils.EConstants.EventType;
+import engine.editor.ui.ImportWindow;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
+import engine.world.levels.Level;
 import org.joml.Vector2f;
 
 import static engine.utils.EConstants.DEFAULT_CELL_SIZE;
@@ -27,12 +30,13 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GameEditor implements EventListener {
 
-    public static Scene Current_Scene;
+    public static Level current_Level;
+    private static final ImportWindow Import_Utils = new ImportWindow();
     private final AssetWindow defaultAssetWindow = new AssetWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     public  static ObjectPicker Object_Picker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
-    private EditorControls editorControls;
+    private EditorControls editorControls = new EditorControls();
 
 
     @Override
@@ -41,9 +45,10 @@ public class GameEditor implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
         if (event.getEventType() == EventType.Load_New_Scene) {
-            Current_Scene = scene;
+            DebugLogger.info("Loaded '" + level.getName() + "'", true);
+            loadNewScene(level);
         }
     }
 
@@ -56,15 +61,16 @@ public class GameEditor implements EventListener {
         EventDispatcher.addListener(EventType.Load_New_Scene, this);
     }
 
-    public void loadNewScene(Scene scene) {
-        Current_Scene = scene;
-        scene.init();
-        editorControls = new EditorControls(scene);
+    public void loadNewScene(Level level) {
+        LevelSerializer.load(level);
+        current_Level = level;
+        current_Level.init();
+        editorControls.setLevel(level);
     }
 
 
     public void tick(float deltaTime) {
-        Current_Scene.tick(deltaTime);
+        current_Level.tick(deltaTime);
         editorControls.tick(deltaTime);
     }
 
@@ -78,7 +84,7 @@ public class GameEditor implements EventListener {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         Renderer.setPickingShader();
-        Current_Scene.render();
+        current_Level.render();
         Object_Picker.unbind();
         glEnable(GL_BLEND);
 
@@ -87,28 +93,29 @@ public class GameEditor implements EventListener {
 
 
     public void renderScene() {
-        Current_Scene.render();
+        current_Level.render();
     }
 
 
     public void imgui() {
         defaultAssetWindow.imgui();
         defaultDetailsWindow.imgui();
+        Import_Utils.imgui();
         DebugWindow.imgui();
     }
 
 
     public void addToScene(GameObject obj) {
-        Current_Scene.addGameObject(obj);
+        current_Level.addGameObject(obj);
     }
 
 
 
     public void drawGridLines() {
-        Vector2f cameraPos = Current_Scene.getOrthoCamera().position;
+        Vector2f cameraPos = current_Level.getOrthoCamera().position;
 
         // Calculate the size of the grid based on the camera's size
-        Vector2f projectionSize = Current_Scene.getOrthoCamera().size;
+        Vector2f projectionSize = current_Level.getOrthoCamera().size;
 
         // Determine the number of rows and columns in the grid
         int numColumns = (int) (projectionSize.x / DEFAULT_CELL_SIZE);

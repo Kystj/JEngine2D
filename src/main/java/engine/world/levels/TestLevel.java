@@ -3,19 +3,16 @@
  Date: 2023-12-28
  Author: Kyle St John
  */
-package engine.world.scenes;
+package engine.world.levels;
 
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.OrthoCamera;
-import engine.graphics.SpriteSheet;
-import engine.graphics.Texture;
 import engine.utils.EConstants;
-import engine.utils.ResourceUtils;
 import engine.world.objects.GameObject;
 
-public class TestScene extends Scene implements EventListener {
+public class TestLevel extends Level implements EventListener {
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
@@ -25,7 +22,7 @@ public class TestScene extends Scene implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
 
     }
 
@@ -42,8 +39,6 @@ public class TestScene extends Scene implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
 
         loadResources();
-        addGameObjToEditor();
-
         this.orthoCamera = new OrthoCamera();
     }
 
@@ -62,9 +57,7 @@ public class TestScene extends Scene implements EventListener {
 
 
     private void loadResources() {
-        Texture gizmoSpriteSheetTexture = new Texture("assets/spritesheets/gizmos.png");
-        ResourceUtils.addSpriteSheet("assets/spritesheets/gizmos.png",
-                new SpriteSheet(gizmoSpriteSheetTexture, 32,32,0, "Gizmos"));
+
     }
 
 

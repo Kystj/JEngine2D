@@ -15,17 +15,16 @@ public class Sprite extends Component {
     private final Vector4f color = new Vector4f(1, 1, 1, 1);
 
     // Texture used for the sprite
-    private final Texture spriteTexture;
+    private Texture spriteTexture;
 
     // UV coordinates for texture mapping
-    private final Vector2f[] uvCoordinates;
+    private Vector2f[] uvCoordinates;
 
     // Transform of the sprite
-    private transient Transform transform;
+    private Transform transform;
     private transient boolean bisModified = false;
 
-    public Sprite(Texture texture) {
-        this.spriteTexture = texture;
+    public Sprite() {
         this.uvCoordinates  = new Vector2f[]{
                 new Vector2f(1, 1),
                 new Vector2f(1, 0),
@@ -34,11 +33,6 @@ public class Sprite extends Component {
         };
     }
 
-
-    public Sprite(Texture texture, Vector2f[] textureCoordinate) {
-        this.spriteTexture = texture;
-        this.uvCoordinates = textureCoordinate;
-    }
 
     @Override
     public void init() {
@@ -98,6 +92,14 @@ public class Sprite extends Component {
 
     public Transform getTransform() {
         return transform;
+    }
+
+    public void setTexture(Texture texture) {
+        spriteTexture = texture;
+    }
+
+    public void setUvCoordinates(Vector2f[] uvCoordinates) {
+        this.uvCoordinates = uvCoordinates;
     }
 
 

@@ -80,8 +80,8 @@ public class DebugLogger {
         }
     }
 
-    public static void setIsOpen(ImBoolean isOpen) {
-        DebugLogger.Is_Open = isOpen;
+    public static void setIsOpen(boolean isOpen) {
+        Is_Open.set(isOpen);
     }
 
     private static class LogEntry {

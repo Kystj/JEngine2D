@@ -7,27 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject {
-    private String name;
+    private String name = "GameObject_";
     private final List<Component> componentsList = new ArrayList<>();
-    private final Transform transform;
+    private transient Transform transform;
     private static int GLOBAL_OBJECT_ID_COUNTER = -1;
     protected int objectUID;
-
-    public GameObject(String name, Transform transform) {
-        this.name = name;
-        this.transform = transform;
-
-    }
-
-    public GameObject(Transform transform, int objectUID) {
-        this.transform = transform;
-        this.objectUID = objectUID;
-    }
 
 
     public void init() {
         if (objectUID != -1) {
             generateUniqueId();
+            name = name + objectUID;
         }
         for (Component component : componentsList) {
             component.init();
@@ -80,16 +70,20 @@ public class GameObject {
     }
 
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String objName) {
         this.name = objName;
     }
 
+    public void setTransform(Transform transform) {
+        this.transform = transform;
+    }
+
     public int getUID() {
         return objectUID;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Transform getTransform() {

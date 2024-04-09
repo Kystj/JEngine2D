@@ -18,12 +18,12 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.world.scenes.TestScene;
-import engine.testing.GameEditor;
+import engine.world.levels.TestLevel;
+import engine.editor.GameEditor;
 import engine.utils.EConstants;
 import engine.utils.MathUtils;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
+import engine.world.levels.Level;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -166,7 +166,7 @@ public class EngineWindow implements EventListener {
         // Load and initialize the editor
         Game_Editor = new GameEditor();
         Game_Editor.init();
-        Game_Editor.loadNewScene(new TestScene());
+        Game_Editor.loadNewScene(new TestLevel());
     }
 
 
@@ -176,7 +176,7 @@ public class EngineWindow implements EventListener {
         float timePerFrame = 0.0f;
         int frames = 0;
         final int NUM_FRAMES_TO_AVERAGE = 100; // Number of frames to average for FPS calculation
-        DELTA_TIME = 1.0f / 60.0f; // Fixed logical time step
+        DELTA_TIME = 1.0f / 120.0f; // Fixed logical time step
 
         while (!glfwWindowShouldClose(glfwWindow)) {
             float currentTime = (float) glfwGetTime();
@@ -357,7 +357,7 @@ public class EngineWindow implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
 
     }
 

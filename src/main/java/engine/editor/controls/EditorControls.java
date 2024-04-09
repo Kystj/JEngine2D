@@ -13,14 +13,14 @@ import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.testing.GameEditor;
+import engine.editor.GameEditor;
 import engine.utils.EConstants;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
-import engine.world.scenes.Scene;
+import engine.world.levels.Level;
 import org.joml.Vector2f;
 
-import static engine.testing.GameEditor.Object_Picker;
+import static engine.editor.GameEditor.Object_Picker;
 import static engine.utils.EConstants.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
@@ -30,12 +30,11 @@ public class EditorControls implements EventListener {
     private static GameObject Active_Object = null;
     private boolean enableGridSnap = true;
     private float debounce = 0.5f;
-    private final Scene currentScene;
+    private Level currentLevel;
     private final MasterGizmo masterGizmo;
 
-    public EditorControls(Scene scene) {
-        this.currentScene = scene;
-        this.masterGizmo = new MasterGizmo(scene);
+    public EditorControls() {
+        this.masterGizmo = new MasterGizmo();
         EventDispatcher.addListener(EConstants.EventType.Grid_Lock, this);
     }
 
@@ -46,7 +45,7 @@ public class EditorControls implements EventListener {
     }
 
     @Override
-    public void onEvent(Event event, Scene scene) {
+    public void onEvent(Event event, Level level) {
 
     }
 
@@ -90,14 +89,14 @@ public class EditorControls implements EventListener {
 
 
     public void place() {
-        DebugLogger.warning("Game Object with UID: " + Active_Object.getUID() +" has been added to the scene", true);
+        DebugLogger.info("Game Object with UID: " + Active_Object.getUID() +" has been added to the scene", true);
         Active_Object = null;
     }
 
 
     public void deleteActiveGameObject() {
-        if (this.currentScene.getActiveGameObject() != null && KeyInputs.keyPressed(GLFW_KEY_DELETE)) {
-            this.currentScene.removeGameObject(this.currentScene.getActiveGameObject().getUID());
+        if (this.currentLevel.getActiveGameObject() != null && KeyInputs.keyPressed(GLFW_KEY_DELETE)) {
+            this.currentLevel.removeGameObject(this.currentLevel.getActiveGameObject().getUID());
             masterGizmo.remove();
             Active_Object = null;
         }
@@ -114,21 +113,26 @@ public class EditorControls implements EventListener {
     }
 
 
-    public void selectAndDispatch(float dt) {
-        debounce -= dt;
+    public void selectAndDispatch(float deltaTime) {
+        debounce -= deltaTime;
 
         if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_LEFT) && debounce < 0) {
             int x = (int) MouseInputs.getScreenX();
             int y = (int) MouseInputs.getScreenY();
 
             int gameObjectId = Object_Picker.readObjectIDByPixel(x, y);
-            GameObject pickedObj = GameEditor.Current_Scene.getGameObject(gameObjectId);
+            GameObject pickedObj = GameEditor.current_Level.getGameObject(gameObjectId);
 
             if (pickedObj != null && gameObjectId != GIZMO_GAME_OBJECT_UID) {
                 EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Active_Object), pickedObj);
             }
             this.debounce = 0.5f;
         }
+    }
+
+    public void setLevel(Level level) {
+        currentLevel = level;
+        masterGizmo.setLevel(level);
     }
 }
 /*End of EditorMouseController class*/

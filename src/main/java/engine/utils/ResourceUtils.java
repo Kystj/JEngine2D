@@ -58,6 +58,11 @@ public class ResourceUtils {
         return spriteSheetMap.get(file.getAbsolutePath());
     }
 
+
+    public static Map<String, SpriteSheet> getSpriteSheets() {
+        return spriteSheetMap;
+    }
+
     public static void deleteFile(String path) {
         File fileToDelete = new File(path);
 
