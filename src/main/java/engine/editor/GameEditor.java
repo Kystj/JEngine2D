@@ -10,7 +10,7 @@ import engine.debug.info.DebugLogger;
 import engine.debug.ui.DebugWindow;
 import engine.editor.controls.EditorControls;
 import engine.editor.controls.ObjectPicker;
-import engine.editor.ui.AssetWindow;
+import engine.editor.ui.ContentWindow;
 import engine.editor.ui.DetailsWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -32,7 +32,7 @@ public class GameEditor implements EventListener {
 
     public static Level current_Level;
     private static final ImportWindow Import_Utils = new ImportWindow();
-    private final AssetWindow defaultAssetWindow = new AssetWindow();
+    private final ContentWindow defaultContentWindow = new ContentWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     public  static ObjectPicker Object_Picker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
@@ -98,7 +98,7 @@ public class GameEditor implements EventListener {
 
 
     public void imgui() {
-        defaultAssetWindow.imgui();
+        defaultContentWindow.imgui();
         defaultDetailsWindow.imgui();
         Import_Utils.imgui();
         DebugWindow.imgui();

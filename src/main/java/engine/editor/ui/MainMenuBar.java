@@ -83,13 +83,11 @@ public class MainMenuBar {
 
     private void helpMenuItem() {
         if (ImGui.menuItem("Help", "Ctrl+h")) helpPanelMenu.setOpen(new ImBoolean(true));
-        //TODO: Implement load and shortcuts
-
+        //TODO: Implement help and shortcuts
     }
 
 
     private void toolsMenu() {
-        //TODO: Implement debug window and shortcuts
         if (ImGui.beginMenu("Tools")) {
 
             if (ImGui.menuItem(" Debug Console", "Ctrl+d")) {
@@ -108,6 +106,11 @@ public class MainMenuBar {
             if (ImGui.menuItem(" View Assets", "Ctrl+a")) {
                 ImportWindow.setIsOpen(true);
             }
+
+            if (ImGui.menuItem(" Content Window", "Ctrl+c")) {
+                ContentWindow.setIsOpen(true);
+            }
+
             ImGui.endMenu();
         }
     }

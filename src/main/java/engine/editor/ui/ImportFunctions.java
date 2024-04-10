@@ -14,7 +14,6 @@ import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -22,7 +21,7 @@ import java.util.Map;
  * The AssetManager class handles the import and removal of SpriteSheets,
  * storing them in a map along with associated asset types.
  */
-public class ImportForms {
+public class ImportFunctions {
 
     // Input fields for the asset properties
     private ImString filePath = new ImString();   // Path to the sprite sheet file
@@ -36,16 +35,6 @@ public class ImportForms {
     public boolean bTypeErrorPopup = false;           // Flag that is used to generate an error alert related to the type name
     public boolean bValErrorPopup = false;
 
-    // Map to store SpriteSheet objects and their associated asset types
-    private final Map<SpriteSheet, String> spriteSheets = new HashMap<>();
-
-    /**
-     * Initializes the AssetManager by loading existing SpriteSheets from storage.
-     */
-    public ImportForms() {
-        // Load existing sprite sheets from storage
-        SpriteSheetSerializer.loadSpriteSheets(spriteSheets);
-    }
 
     /**
      * Renders the input form for importing SpriteSheets using ImGui.
@@ -126,7 +115,7 @@ public class ImportForms {
         SpriteSheetSerializer.saveSpriteSheet(ResourceUtils.getSpriteSheet(filePath));
 
         // Update the map with the new SpriteSheet and its asset type
-        spriteSheets.put(
+        ImportWindow.getSprite_Sheets().put(
                 ResourceUtils.getSpriteSheet(filePath),
                 type
         );
@@ -145,7 +134,7 @@ public class ImportForms {
         ImGui.setCursorPos(ImGui.getWindowSizeX() / 6, 50);
         if (ImGui.beginCombo("##MapKeysCombo", "Select SpriteSheet")) {
             // Iterate over existing SpriteSheets
-            Iterator<Map.Entry<SpriteSheet, String>> iterator = spriteSheets.entrySet().iterator();
+            Iterator<Map.Entry<SpriteSheet, String>> iterator = ImportWindow.getSprite_Sheets().entrySet().iterator();
 
             while (iterator.hasNext()) {
                 Map.Entry<SpriteSheet, String> entry = iterator.next();
@@ -162,7 +151,6 @@ public class ImportForms {
                 if (ImGui.selectable(option)) {
                     // Remove the selected SpriteSheet from the map
                     iterator.remove();
-                    // TODO: Change. Should be optional to full delete or hide
                     ResourceUtils.deleteFile(filePath);
                     ResourceUtils.removeGSONReferenceFile(filePath, directory, fileType);
                 }
@@ -175,14 +163,14 @@ public class ImportForms {
 
     private boolean checkAndHandleErrors(String fileName, String type, int spriteWidth, int spriteHeight, int amount) {
         // Prevents adding duplicate sprite sheets or sprite sheets with the same file path
-        if (spriteSheets.get(ResourceUtils.getSpriteSheet(fileName)) != null) {
+        if (ImportWindow.getSprite_Sheets().get(ResourceUtils.getSpriteSheet(fileName)) != null) {
             bFileErrorPopup = true;
             refreshFields();
             return true;
         }
 
         // Prevents adding duplicate sprite sheets or sprite sheets with the same name
-        for (String val : spriteSheets.values()) {
+        for (String val : ImportWindow.getSprite_Sheets().values()) {
             if (val.equals(type)) {
                 refreshFields();
                 bTypeErrorPopup = true;
@@ -208,11 +196,6 @@ public class ImportForms {
         height = new ImInt();
         spacing = new ImInt();
         numSprites = new ImInt();
-    }
-
-
-    public Map<SpriteSheet, String> getSpriteSheets() {
-        return spriteSheets;
     }
 }
 /*End of AssetManager class*/

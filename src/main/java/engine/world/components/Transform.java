@@ -110,7 +110,7 @@ public class Transform {
 
     public void copy(Transform newTransform) {
         this.position.set(newTransform.position);
-        this.position.set(newTransform.scale);
+        this.scale.set(newTransform.scale);
         this.rotation = newTransform.getRotation();
         this.zIndex = newTransform.zIndex;
     }

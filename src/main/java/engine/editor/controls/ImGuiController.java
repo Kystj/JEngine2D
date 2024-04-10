@@ -66,7 +66,7 @@ public class ImGuiController {
         updateViewport();
         updateWidgets();
         EngineWindow.Game_Editor.imgui();
-        ImGui.showDemoWindow();
+        // ImGui.showDemoWindow();
         DebugLogger.imgui();
         endFrame();
     }

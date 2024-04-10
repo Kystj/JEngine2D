@@ -22,6 +22,7 @@ public class SpriteSheet {
 
     private final String assetType;
 
+
     public SpriteSheet(Texture spriteSheet, int spriteWidth, int spriteHeight,
                        int spriteSpacing, String assetType) {
         this.spriteSheetTexture = spriteSheet;
