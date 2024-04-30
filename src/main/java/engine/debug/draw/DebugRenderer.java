@@ -31,7 +31,7 @@ public class DebugRenderer {
     private static int VAO_ID;
     private static int VBO_ID;
     private static final float[] Vertices = new float[MAX_DEBUG_LINES * 6 * 2];
-    private static final Shader Debug_Shader = ResourceUtils.getOrCreateShader("shaders/Debug.glsl");
+    private static final Shader Debug_Shader = ResourceUtils.getOrCreateShader("C:\\Dev\\StellarSprite2D\\JEngine2D\\shaders\\Debug.glsl");
 
     // Debug Lines
     private static final ArrayList<DebugLine> Debug_Lines = new ArrayList<>();

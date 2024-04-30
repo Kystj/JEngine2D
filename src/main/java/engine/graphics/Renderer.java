@@ -18,8 +18,8 @@ public class Renderer {
     private final List<BatchRenderer> batchList = new ArrayList<>();
 
     private static Shader activeShader;
-    private static final Shader defaultShader = ResourceUtils.getOrCreateShader("shaders/Default.glsl");
-    private static final Shader pickingShader =  ResourceUtils.getOrCreateShader("shaders/ObjPicker.glsl");
+    private static final Shader defaultShader = ResourceUtils.getOrCreateShader("C:\\Dev\\StellarSprite2D\\JEngine2D\\shaders\\Default.glsl");
+    private static final Shader pickingShader =  ResourceUtils.getOrCreateShader("C:\\Dev\\StellarSprite2D\\JEngine2D\\shaders\\ObjPicker.glsl");
 
 
     public void render() {

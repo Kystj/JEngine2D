@@ -57,7 +57,7 @@ public class LevelSerializer {
 
         String inFile = "";
         try {
-            inFile = new String(Files.readAllBytes(Paths.get("levels/level.txt")));
+            inFile = new String(Files.readAllBytes(Paths.get("C:\\Dev\\StellarSprite2D\\JEngine2D\\levels\\level.txt")));
         } catch (IOException e) {
             e.printStackTrace();
         }

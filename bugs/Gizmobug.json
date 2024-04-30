@@ -1,0 +1,5 @@
+{
+  "Name: ": "Gizmo bug",
+  "Description: ": "The gizmos are not snapping to the grid as the objects move. The gizmos are also moving to quickly.",
+  "Resolved: ": false
+}

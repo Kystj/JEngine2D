@@ -37,7 +37,7 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
     private final float[] vertices = new float[MAX_BATCH_SIZE * 4 * vertexSize];
     private int vaoID, vboID;
 
-    private Shader shader = ResourceUtils.getOrCreateShader("shaders/Default.glsl");
+    private Shader shader = ResourceUtils.getOrCreateShader("C:\\Dev\\StellarSprite2D\\JEngine2D\\shaders\\Default.glsl");
 
     private final List<Texture> textures = new ArrayList<>();
     private final int NUM_TEXTURE_SLOTS = 16; // Define the number of texture slots
