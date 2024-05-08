@@ -18,6 +18,7 @@ import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
+import engine.physics.PhysicsMain;
 import engine.world.levels.TestLevel;
 import engine.editor.GameEditor;
 import engine.utils.EConstants;
@@ -166,7 +167,7 @@ public class EngineWindow implements EventListener {
         // Load and initialize the editor
         Game_Editor = new GameEditor();
         Game_Editor.init();
-        Game_Editor.loadNewScene(new TestLevel());
+        Game_Editor.loadNewScene(new TestLevel(new Renderer(), new PhysicsMain()));
     }
 
 

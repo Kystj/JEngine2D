@@ -9,10 +9,16 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.OrthoCamera;
+import engine.graphics.Renderer;
+import engine.physics.PhysicsMain;
 import engine.utils.EConstants;
 import engine.world.objects.GameObject;
 
 public class TestLevel extends Level implements EventListener {
+
+    public TestLevel(Renderer renderer, PhysicsMain physics) {
+        super(renderer, physics);
+    }
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {

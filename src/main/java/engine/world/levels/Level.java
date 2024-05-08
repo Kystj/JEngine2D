@@ -1,52 +1,48 @@
-/*
- Title: Scene
- Date: 2023-11-06
- Author: Kyle St John
- */
 package engine.world.levels;
 
 import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
+import engine.physics.PhysicsMain;
+import engine.physics.components.RigidBody;
 import engine.world.objects.GameObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 public class Level {
 
-    // Renderer for rendering sprites in the scene
-    protected Renderer renderer = new Renderer();
-
-    // List to store game objects in the scene
+    protected Renderer renderer;
     protected List<GameObject> gameObjects = new ArrayList<>();
-
-    // Orthographic camera for the scene
     protected OrthoCamera orthoCamera;
-
-    // Flag indicating whether the scene is active
     private boolean bIsSceneActive;
-
     protected GameObject activeGameObject = new GameObject();
-
     protected String levelName = "Default_Level";
+    private PhysicsMain physics;
 
+    // Constructor to inject dependencies
+    public Level(Renderer renderer, PhysicsMain physics) {
+        this.renderer = renderer;
+        this.physics = physics;
+    }
 
     public void init() {
+        physics.init();
         // Initialize each game object and add it to the renderer
         for (GameObject gameObject : gameObjects) {
             gameObject.init();
-            this.renderer.addGameObject(gameObject);
+            renderer.addGameObject(gameObject);
+            physics.add(gameObject);
         }
         // Set the scene as active
         bIsSceneActive = true;
     }
 
-
     public void tick(float deltaTime) {
         updateGameObjects(deltaTime);
+        physics.tick(deltaTime);
     }
-
 
     public void addGameObject(GameObject gameObject) {
         // Check if the scene is active
@@ -58,23 +54,31 @@ public class Level {
             gameObjects.add(gameObject);
             gameObject.init();
             this.renderer.addGameObject(gameObject);
+            this.physics.add(gameObject);
         }
     }
 
-
     public void removeGameObject(int gameObjectUID) {
-        // Iterate through the gameObjects list
-        for (int i = 0; i < gameObjects.size(); i++) {
-            GameObject gameObject = gameObjects.get(i);
-            // If the UID of the current gameObject matches the given UID, remove it from the scene
+        // Use an Iterator for safe removal while iterating
+        Iterator<GameObject> iterator = gameObjects.iterator();
+
+        while (iterator.hasNext()) {
+            GameObject gameObject = iterator.next();
             if (gameObject.getUID() == gameObjectUID) {
+                // Remove the sprite from the renderer
                 renderer.removeSpriteFromRenderer(gameObjectUID);
-                gameObjects.remove(i);
-                break;
+
+                // If the GameObject has a RigidBody component, destroy its physics body
+                if (gameObject.getComponent(RigidBody.class) != null) {
+                    physics.destroyPhysicsBody(gameObject);
+                }
+
+                // Remove the GameObject from the list
+                iterator.remove();
+                return; // Exit the method after removal
             }
         }
     }
-
 
     private void updateGameObjects(float deltaTime) {
         for (GameObject go : this.gameObjects) {
@@ -82,27 +86,22 @@ public class Level {
         }
     }
 
-
     public void render() {
         // Render the scene using the renderer
         renderer.render();
     }
 
-
     public void cleanup() {
         // TODO: Implement scene cleanup
     }
-
 
     public OrthoCamera getOrthoCamera() {
         return orthoCamera;
     }
 
-
     public GameObject getActiveGameObject() {
         return activeGameObject;
     }
-
 
     public GameObject getGameObject(int gameObjectId) {
         Optional<GameObject> result = this.gameObjects.stream()
@@ -119,5 +118,3 @@ public class Level {
         return gameObjects;
     }
 }
-/*End of Scene class*/
-

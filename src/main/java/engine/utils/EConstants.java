@@ -6,10 +6,15 @@ import org.joml.Vector4f;
 
 public interface EConstants {
 
+    // Colors
+    Vector3f V3_RED = new Vector3f(1,0,0);
+
+
     // Gizmos
     int GIZMO_GAME_OBJECT_UID = -1;
     int GIZMO_Z_INDEX = 100;
     int GIZMO_OFFSET = 16;
+
     Vector4f GIZMO_X_HOVER_COLOR = new Vector4f(0, 1, 0, 1);
     Vector4f GIZMO_Y_HOVER_COLOR = new Vector4f(1, 0, 0, 1);
     Vector4f GIZMO_X_COLOR = new Vector4f(0,0.7f,0,0.5f);
@@ -63,11 +68,4 @@ public interface EConstants {
     String PURPLE = "\u001B[35m";
     String CYAN = "\u001B[36m";
     String WHITE = "\u001B[37m";
-
-    // Physics constants
-    enum BodyType {
-        staticBody,
-        dynamicBody,
-        kineticBody
-    }
 }/*End of EConstants Interface*/

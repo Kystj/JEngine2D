@@ -10,6 +10,8 @@ import engine.debug.ui.DebugWindow;
 import engine.editor.GameEditor;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
+import engine.graphics.Renderer;
+import engine.physics.PhysicsMain;
 import engine.serialization.LevelSerializer;
 import engine.utils.EConstants;
 import engine.world.levels.TestLevel;
@@ -70,7 +72,8 @@ public class MainMenuBar {
 
     private void loadMenuItem() {
         if (ImGui.menuItem("Load", "Ctrl+o")) {
-            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Load_New_Scene), new TestLevel());
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Load_New_Scene),
+                    new TestLevel(new Renderer(), new PhysicsMain()));
         }
     }
 

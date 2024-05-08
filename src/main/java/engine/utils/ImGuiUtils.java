@@ -151,7 +151,7 @@ public class ImGuiUtils {
         ImGui.pushID(sliderID);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 80); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -171,7 +171,7 @@ public class ImGuiUtils {
         ImGui.pushID(sliderID);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 80); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -190,7 +190,7 @@ public class ImGuiUtils {
         ImGui.pushID(sliderID);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 80); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -244,7 +244,7 @@ public class ImGuiUtils {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 80); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -261,7 +261,7 @@ public class ImGuiUtils {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 80); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text(label);
         ImGui.nextColumn();
 
@@ -311,6 +311,25 @@ public class ImGuiUtils {
             return false;
         }
         return true;
+    }
+
+    // TODO: Review this well
+    public static String camelCaseToWords(String camelCaseString) {
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < camelCaseString.length(); i++) {
+            char c = camelCaseString.charAt(i);
+            if (Character.isUpperCase(c)) {
+                result.append(" ").append(c);
+            } else {
+                result.append(c);
+            }
+        }
+
+        // Capitalize the first letter of the first word
+        result.setCharAt(0, Character.toUpperCase(result.charAt(0)));
+
+        return result.toString();
     }
 }
 /*End of ImGuiCustom class*/
