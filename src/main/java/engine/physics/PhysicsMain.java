@@ -37,6 +37,7 @@ public class PhysicsMain {
         physicsTimeStep = 1.0f / 60.f;
         velocityIterations = 10;
         positionIterations = 8;
+        b2World.setDebugDraw(null);
         b2World.setAllowSleep(true);
     }
 
@@ -81,7 +82,7 @@ public class PhysicsMain {
 
             Collider collider = go.getComponent(Collider.class);
             if (collider != null) {
-                Shape shape = null;
+                Shape shape;
 
                 if (collider instanceof CircleCollider) {
                     CircleCollider circleCollider = (CircleCollider) collider;

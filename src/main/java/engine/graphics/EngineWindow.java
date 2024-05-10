@@ -12,6 +12,7 @@ package engine.graphics;/*
 
 import engine.debug.draw.DebugRenderer;
 import engine.debug.info.DebugLogger;
+import engine.editor.GameEditor;
 import engine.editor.controls.ImGuiController;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -19,12 +20,11 @@ import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
 import engine.physics.PhysicsMain;
-import engine.world.levels.TestLevel;
-import engine.editor.GameEditor;
 import engine.utils.EConstants;
 import engine.utils.MathUtils;
-import engine.world.objects.GameObject;
 import engine.world.levels.Level;
+import engine.world.levels.TestLevel;
+import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -35,6 +35,10 @@ import org.lwjgl.opengl.GL11;
 import java.util.Objects;
 
 import static engine.utils.EConstants.DEFAULT_ASPECT_RATIO;
+import static engine.utils.EConstants.EngineMode;
+import static engine.utils.EConstants.EngineMode.EditorMode;
+import static engine.utils.EConstants.EngineMode.GameMode;
+import static engine.utils.EConstants.EventType.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -52,6 +56,8 @@ public class EngineWindow implements EventListener {
     public static float FPS;
     public static float FRAME_TIME;
     private float DELTA_TIME = -1;
+
+    private static EngineMode Enabled_Engine_Mode = EditorMode;
 
     private Framebuffer framebuffer;
     private boolean isWireFrameEnabled = false;
@@ -159,7 +165,7 @@ public class EngineWindow implements EventListener {
         EventDispatcher.addListener(EConstants.EventType.Play, this);
         EventDispatcher.addListener(EConstants.EventType.Stop, this);
         EventDispatcher.addListener(EConstants.EventType.Launch, this);
-        EventDispatcher.addListener(EConstants.EventType.Wire_Frame, this);
+        EventDispatcher.addListener(Wire_Frame, this);
 
         // Initialize ImGui functionality
         ImGui_Controller.initImGui(glfwWindow);
@@ -192,6 +198,9 @@ public class EngineWindow implements EventListener {
             // Update logic at fixed rate
             while (accumulatedTime >= DELTA_TIME) {
                 tick(DELTA_TIME);
+                if (Enabled_Engine_Mode == GameMode) {
+                    Game_Editor.physicsTick(getDeltaTime());
+                }
                 accumulatedTime -= DELTA_TIME;
             }
 
@@ -365,8 +374,14 @@ public class EngineWindow implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event.getEventType() == EConstants.EventType.Wire_Frame) {
+        if (event.getEventType() == Wire_Frame) {
             isWireFrameEnabled = !isWireFrameEnabled;
+        }
+        if (event.getEventType() == Play) {
+            Enabled_Engine_Mode = GameMode;
+        }
+        if (event.getEventType() == Stop) {
+            Enabled_Engine_Mode = EditorMode;
         }
     }
 }

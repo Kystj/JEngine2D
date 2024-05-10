@@ -19,6 +19,7 @@ public class Level {
     private boolean bIsSceneActive;
     protected GameObject activeGameObject = new GameObject();
     protected String levelName = "Default_Level";
+
     private PhysicsMain physics;
 
     // Constructor to inject dependencies
@@ -33,7 +34,7 @@ public class Level {
         for (GameObject gameObject : gameObjects) {
             gameObject.init();
             renderer.addGameObject(gameObject);
-            physics.add(gameObject);
+            if (gameObject.getComponent(RigidBody.class) != null) physics.add(gameObject);
         }
         // Set the scene as active
         bIsSceneActive = true;
@@ -41,8 +42,8 @@ public class Level {
 
     public void tick(float deltaTime) {
         updateGameObjects(deltaTime);
-        physics.tick(deltaTime);
     }
+
 
     public void addGameObject(GameObject gameObject) {
         // Check if the scene is active
@@ -52,9 +53,8 @@ public class Level {
         } else {
             // If active, add the game object, initialize it, and add it to the renderer
             gameObjects.add(gameObject);
-            gameObject.init();
             this.renderer.addGameObject(gameObject);
-            this.physics.add(gameObject);
+            gameObject.init();
         }
     }
 
@@ -69,9 +69,7 @@ public class Level {
                 renderer.removeSpriteFromRenderer(gameObjectUID);
 
                 // If the GameObject has a RigidBody component, destroy its physics body
-                if (gameObject.getComponent(RigidBody.class) != null) {
-                    physics.destroyPhysicsBody(gameObject);
-                }
+                if (gameObject.getComponent(RigidBody.class) != null)  physics.destroyPhysicsBody(gameObject);
 
                 // Remove the GameObject from the list
                 iterator.remove();
@@ -116,5 +114,9 @@ public class Level {
 
     public List<GameObject> getGameObjects() {
         return gameObjects;
+    }
+
+    public PhysicsMain getPhysics() {
+        return physics;
     }
 }

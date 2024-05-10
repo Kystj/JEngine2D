@@ -10,6 +10,8 @@ import engine.editor.GameEditor;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
+import engine.physics.components.BoxCollider;
+import engine.physics.components.Collider;
 import engine.physics.components.RigidBody;
 import engine.utils.EConstants;
 import engine.utils.ImGuiUtils;
@@ -60,60 +62,82 @@ public class DetailsWindow implements EventListener {
 
             ImGui.begin("Details", bIsOpen);
             ImGui.spacing();
-
-            renderTransformControls(activeGameObject);
-            renderSpriteProperties(activeGameObject);
-
-            updateZIndex(activeGameObject, zIndex);
-
-            renderRigidBodyControls(activeGameObject);
-
-            renderComponentProperties(activeGameObject);
-
+            renderTransformControls();
+            renderSpriteProperties();
+            updateZIndex(zIndex);
+            renderRigidBodyControls();
+            renderComponentProperties();
             ImGui.end();
         }
     }
 
-    private void renderTransformControls(GameObject gameObject) {
-        ImGuiUtils.renderVec2Sliders("Scale", gameObject.getTransform().getScale(), gameObject.getTransform().getScale());
-        ImGuiUtils.renderVec2Sliders("Position", gameObject.getTransform().getPosition(), gameObject.getTransform().getPosition());
-        gameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", gameObject.getTransform().getRotation()));
+    private void renderTransformControls() {
+        ImGuiUtils.renderVec2Sliders("Scale", activeGameObject.getTransform().getScale(), activeGameObject.getTransform().getScale());
+        ImGuiUtils.renderVec2Sliders("Position", activeGameObject.getTransform().getPosition(), activeGameObject.getTransform().getPosition());
+        activeGameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", activeGameObject.getTransform().getRotation()));
         activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
     }
 
-    private void renderSpriteProperties(GameObject gameObject) {
-        gameObject.getComponent(Sprite.class).setColor(ImGuiUtils.renderColorPicker4f("Color", gameObject.getComponent(Sprite.class).getColor()));
+    private void renderSpriteProperties() {
+        activeGameObject.getComponent(Sprite.class).setColor(ImGuiUtils.renderColorPicker4f("Color", activeGameObject.getComponent(Sprite.class).getColor()));
     }
 
-    private void updateZIndex(GameObject gameObject, int oldZIndex) {
-        if (gameObject.getZIndex() != oldZIndex) {
-            GameEditor.current_Level.removeGameObject(gameObject.getUID());
-            GameEditor.current_Level.addGameObject(gameObject);
+    private void updateZIndex( int oldZIndex) {
+        if (activeGameObject.getZIndex() != oldZIndex) {
+            GameEditor.current_Level.removeGameObject(activeGameObject.getUID());
+            GameEditor.current_Level.addGameObject(activeGameObject);
         }
     }
 
-    private void renderRigidBodyControls(GameObject gameObject) {
+    private void renderRigidBodyControls() {
         ImGui.columns(2);
         ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text("RigidBody");
         ImGui.nextColumn();
 
-        RigidBody rigidBodyComponent = gameObject.getComponent(RigidBody.class);
-        if (rigidBodyComponent == null) {
-            if (ImGui.button("Attach")) {
-                gameObject.addComponent(new RigidBody());
+        RigidBody rigidBodyComponent = activeGameObject.getComponent(RigidBody.class);
+        Collider colliderComponent = activeGameObject.getComponent(Collider.class);
+
+        boolean hasRigidBody = rigidBodyComponent == null;
+
+        String[] colliders = {"Box Collider", "Circle Collider"};
+        int index = 0;
+
+
+        boolean attachRigidBody = ImGui.checkbox("##RigidBody", !hasRigidBody);
+
+        ImGui.columns(1);
+
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.text("Colliders");
+        ImGui.nextColumn();
+
+        if (ImGui.beginCombo(" ", colliders[index])) {
+            for (int i = 0; i < colliders.length; i++) {
+                boolean isSelected = (index == i);
+                if (ImGui.selectable(colliders[i], isSelected)) {
+                    index = i;
+                }
+                if (isSelected) {
+                    ImGui.setItemDefaultFocus();
+                }
             }
-        } else {
-            if (ImGui.button("Detach")) {
-                DebugLogger.error("Deleted");
-                gameObject.removeComponent(RigidBody.class);
-            }
+            ImGui.endCombo();
+        }
+        DebugLogger.info(String.valueOf(index));
+        if (attachRigidBody) {
+            activeGameObject.addComponent(new RigidBody());
+            activeGameObject.addComponent(new BoxCollider());
+            GameEditor.current_Level.getPhysics().add(activeGameObject);
+
+
         }
         ImGui.columns(1);
     }
 
-    private void renderComponentProperties(GameObject gameObject) {
-        for (Component component : gameObject.getComponentsList()) {
+    private void renderComponentProperties() {
+        for (Component component : activeGameObject.getComponentsList()) {
             Field[] fields = component.getClass().getDeclaredFields();
             for (Field field : fields) {
                 renderComponentField(component, field);

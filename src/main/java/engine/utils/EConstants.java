@@ -9,7 +9,6 @@ public interface EConstants {
     // Colors
     Vector3f V3_RED = new Vector3f(1,0,0);
 
-
     // Gizmos
     int GIZMO_GAME_OBJECT_UID = -1;
     int GIZMO_Z_INDEX = 100;
@@ -42,6 +41,12 @@ public interface EConstants {
         New_Asset,
         Active_Object,
         Load_New_Scene
+    }
+
+    // Engine mode
+    enum EngineMode {
+        GameMode,
+        EditorMode
     }
 
     // Window

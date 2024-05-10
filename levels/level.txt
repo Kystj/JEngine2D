@@ -1,6 +1,6 @@
 [
   {
-    "name": "GameObject_00",
+    "name": "GameObject_0",
     "componentsList": [
       {
         "Class": "engine.world.components.Sprite",
@@ -12,33 +12,33 @@
             "w": 1.0
           },
           "spriteTexture": {
-            "textureID": 3,
-            "filePath": "assets/spritesheets/groundTiles.png",
+            "textureID": 4,
+            "filePath": "assets/spritesheets/groundTiles1.png",
             "textureWidth": 576,
             "textureHeight": 192
           },
           "uvCoordinates": [
             {
-              "x": 0.055555556,
+              "x": 0.11111111,
               "y": 1.0
             },
             {
+              "x": 0.11111111,
+              "y": 0.8333334
+            },
+            {
               "x": 0.055555556,
               "y": 0.8333334
             },
             {
-              "x": 0.0,
-              "y": 0.8333334
-            },
-            {
-              "x": 0.0,
+              "x": 0.055555556,
               "y": 1.0
             }
           ],
           "transform": {
             "position": {
-              "x": 928.0,
-              "y": 384.0
+              "x": 1248.0,
+              "y": 448.0
             },
             "scale": {
               "x": 32.0,
@@ -47,26 +47,6 @@
             "rotation": 0.0,
             "zIndex": 0
           },
-          "componentID": 0
-        }
-      },
-      {
-        "Class": "engine.physics.components.RigidBody",
-        "Class properties": {
-          "b2BodyType": "DYNAMIC",
-          "linearVelocity": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "angularVelocity": 0.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.0,
-          "allowSleep": true,
-          "isAwake": true,
-          "fixedRotation": false,
-          "continuousCollision": true,
-          "gravityScale": 1.0,
-          "mass": 0.0,
           "componentID": 0
         }
       }

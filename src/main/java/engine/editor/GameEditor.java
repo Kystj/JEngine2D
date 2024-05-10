@@ -74,6 +74,10 @@ public class GameEditor implements EventListener {
         editorControls.tick(deltaTime);
     }
 
+    public void physicsTick(float deltaTime) {
+        GameEditor.current_Level.getPhysics().tick(deltaTime);
+    }
+
 
     public void renderEditor() {
         glDisable(GL_BLEND);
