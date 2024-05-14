@@ -10,8 +10,8 @@ package engine.graphics;/*
  */
 
 
-import engine.debug.draw.DebugRenderer;
-import engine.debug.info.DebugLogger;
+import engine.debugging.draw.DebugRenderer;
+import engine.debugging.info.Logger;
 import engine.editor.GameEditor;
 import engine.editor.controls.ImGuiController;
 import engine.eventsystem.Event;
@@ -36,8 +36,7 @@ import java.util.Objects;
 
 import static engine.utils.EConstants.DEFAULT_ASPECT_RATIO;
 import static engine.utils.EConstants.EngineMode;
-import static engine.utils.EConstants.EngineMode.EditorMode;
-import static engine.utils.EConstants.EngineMode.GameMode;
+import static engine.utils.EConstants.EngineMode.*;
 import static engine.utils.EConstants.EventType.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -57,7 +56,7 @@ public class EngineWindow implements EventListener {
     public static float FRAME_TIME;
     private float DELTA_TIME = -1;
 
-    private static EngineMode Enabled_Engine_Mode = EditorMode;
+    public static EngineMode Enabled_Engine_Mode = EditorMode;
 
     private Framebuffer framebuffer;
     private boolean isWireFrameEnabled = false;
@@ -173,7 +172,7 @@ public class EngineWindow implements EventListener {
         // Load and initialize the editor
         Game_Editor = new GameEditor();
         Game_Editor.init();
-        Game_Editor.loadNewScene(new TestLevel(new Renderer(), new PhysicsMain()));
+        Game_Editor.loadNewLevel(new TestLevel(new Renderer(), new PhysicsMain()));
     }
 
 
@@ -195,17 +194,19 @@ public class EngineWindow implements EventListener {
 
             pollUserEvents();
 
+            // Render
+            render();
+
             // Update logic at fixed rate
             while (accumulatedTime >= DELTA_TIME) {
-                tick(DELTA_TIME);
+                Game_Editor.tick(DELTA_TIME);
+
                 if (Enabled_Engine_Mode == GameMode) {
                     Game_Editor.physicsTick(getDeltaTime());
                 }
                 accumulatedTime -= DELTA_TIME;
             }
 
-            // Render
-            render();
             glfwSwapBuffers(glfwWindow);
 
             frames++;
@@ -223,25 +224,25 @@ public class EngineWindow implements EventListener {
     }
 
 
-    private void tick(float deltaTime) {
-        DebugRenderer.tick();
-        // Update game logic here with the fixed deltaTime
-        Game_Editor.tick(deltaTime);
-    }
-
-
     private void render() {
-        Game_Editor.renderEditor();
+        if (Enabled_Engine_Mode == EditorMode) {
+            Game_Editor.renderEditor();
+        }
         // Render the editor scene to the framebuffer
         this.framebuffer.use(windowWidth, windowHeight);
+
         clear();
         if (isWireFrameEnabled) {
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         }
 
-        DebugRenderer.render();
+        if (Enabled_Engine_Mode == EditorMode) {
+            DebugRenderer.render();
+        }
+
+
         Renderer.setDefaultShader();
-        Game_Editor.renderScene();//currentScene.render();
+        Game_Editor.renderLevel();//currentScene.render();
         this.framebuffer.detatch();
 
         if (isWireFrameEnabled) {
@@ -302,7 +303,7 @@ public class EngineWindow implements EventListener {
 
 
     private void logLaunchInfo() {
-        DebugLogger.info("Launching StellarSprite2D....\n"
+        Logger.info("Launching StellarSprite2D....\n"
                 + "\t...Screen Dimensions: " + this.windowWidth + " x " + this.windowHeight +
                 "\n\t...Aspect Ratio: " + MathUtils.decimalToAspectRatio((float) windowWidth / windowHeight)
                 + "\n\t...Ready!", true);
@@ -379,9 +380,15 @@ public class EngineWindow implements EventListener {
         }
         if (event.getEventType() == Play) {
             Enabled_Engine_Mode = GameMode;
+            Game_Editor.loadNewLevel(new TestLevel(new Renderer(), new PhysicsMain()));
         }
         if (event.getEventType() == Stop) {
             Enabled_Engine_Mode = EditorMode;
+            Game_Editor.loadNewLevel(new TestLevel(new Renderer(), new PhysicsMain()));
+        }
+        if (event.getEventType() == Launch) {
+            Enabled_Engine_Mode = LaunchMode;
+            Game_Editor.loadNewLevel(new TestLevel(new Renderer(), new PhysicsMain()));
         }
     }
 }

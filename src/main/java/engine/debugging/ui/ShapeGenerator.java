@@ -4,9 +4,9 @@
  Author: Kyle St John
  */
 
-package engine.debug.ui;
+package engine.debugging.ui;
 
-import engine.debug.draw.DebugDraw;
+import engine.debugging.draw.DebugDraw;
 import engine.utils.ImGuiUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -212,9 +212,9 @@ class LineGenerator extends ShapeGenerator {
         ImGuiUtils.renderVec2Sliders("To", to, to);
 
         if (bIsPersistent) {
-            drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color, true));
+            drawButtonAndDrawShape(() -> DebugDraw.addDebugLine(from, to, color, true));
         } else {
-            drawButtonAndDrawShape(() -> DebugDraw.addLine(from, to, color, lifeTime));
+            drawButtonAndDrawShape(() -> DebugDraw.addDebugLine(from, to, color, lifeTime));
         }
     }
 

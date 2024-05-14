@@ -5,13 +5,15 @@
  */
 package engine.editor;
 
-import engine.debug.draw.DebugDraw;
-import engine.debug.info.DebugLogger;
-import engine.debug.ui.DebugWindow;
+import engine.debugging.draw.DebugDraw;
+import engine.debugging.draw.DebugRenderer;
+import engine.debugging.info.Logger;
+import engine.debugging.ui.DebugPanel;
 import engine.editor.controls.EditorControls;
 import engine.editor.controls.ObjectPicker;
 import engine.editor.ui.ContentWindow;
 import engine.editor.ui.DetailsWindow;
+import engine.editor.ui.ImportWindow;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
@@ -19,9 +21,8 @@ import engine.graphics.EngineWindow;
 import engine.graphics.Renderer;
 import engine.serialization.LevelSerializer;
 import engine.utils.EConstants.EventType;
-import engine.editor.ui.ImportWindow;
-import engine.world.objects.GameObject;
 import engine.world.levels.Level;
+import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
 import static engine.utils.EConstants.DEFAULT_CELL_SIZE;
@@ -47,8 +48,8 @@ public class GameEditor implements EventListener {
     @Override
     public void onEvent(Event event, Level level) {
         if (event.getEventType() == EventType.Load_New_Scene) {
-            DebugLogger.info("Loaded '" + level.getName() + "'", true);
-            loadNewScene(level);
+            Logger.info("Loaded '" + level.getName() + "'", true);
+            loadNewLevel(level);
         }
     }
 
@@ -59,9 +60,10 @@ public class GameEditor implements EventListener {
 
     public void init() {
         EventDispatcher.addListener(EventType.Load_New_Scene, this);
+        DebugRenderer.init();
     }
 
-    public void loadNewScene(Level level) {
+    public void loadNewLevel(Level level) {
         LevelSerializer.load(level);
         current_Level = level;
         current_Level.init();
@@ -75,28 +77,25 @@ public class GameEditor implements EventListener {
     }
 
     public void physicsTick(float deltaTime) {
-        GameEditor.current_Level.getPhysics().tick(deltaTime);
+        current_Level.getPhysics().tick(deltaTime);
     }
 
 
     public void renderEditor() {
         glDisable(GL_BLEND);
+
         Object_Picker.bind();
-
-        glViewport(0, 0, EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         Renderer.setPickingShader();
         current_Level.render();
         Object_Picker.unbind();
+
         glEnable(GL_BLEND);
 
         drawGridLines();
     }
 
 
-    public void renderScene() {
+    public void renderLevel() {
         current_Level.render();
     }
 
@@ -105,7 +104,7 @@ public class GameEditor implements EventListener {
         defaultContentWindow.imgui();
         defaultDetailsWindow.imgui();
         Import_Utils.imgui();
-        DebugWindow.imgui();
+        DebugPanel.imgui();
     }
 
 
@@ -128,13 +127,13 @@ public class GameEditor implements EventListener {
         // Draw vertical grid lines
         for (int i = 0; i <= numColumns; i++) {
             float x = cameraPos.x + i * DEFAULT_CELL_SIZE;
-            DebugDraw.addLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), GRID_COLOR);
+            DebugDraw.addDebugLine(new Vector2f(x, cameraPos.y), new Vector2f(x, cameraPos.y + projectionSize.y), GRID_COLOR);
         }
 
         // Draw horizontal grid lines
         for (int i = 0; i <= numRows; i++) {
             float y = cameraPos.y + i * DEFAULT_CELL_SIZE;
-            DebugDraw.addLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), GRID_COLOR);
+            DebugDraw.addDebugLine(new Vector2f(cameraPos.x, y), new Vector2f(cameraPos.x + projectionSize.x, y), GRID_COLOR);
         }
     }
 }

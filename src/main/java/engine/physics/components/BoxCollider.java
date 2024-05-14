@@ -5,7 +5,7 @@
  */
 package engine.physics.components;
 
-import engine.debug.draw.DebugDraw;
+import engine.debugging.draw.DebugDraw;
 import org.joml.Vector2f;
 
 public class BoxCollider extends Collider {

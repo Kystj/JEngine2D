@@ -114,14 +114,16 @@ public class Gizmo {
     }
 
     private void calculateGizmoPositions() {
-        Transform transform = activeGameObject.getTransform();
-        Vector2f gameObjectPosition = transform.getPosition();
-        Vector2f gameObjectSize = transform.getScale();
+        if (activeGameObject != null) {
+            Transform transform = activeGameObject.getTransform();
+            Vector2f gameObjectPosition = transform.getPosition();
+            Vector2f gameObjectSize = transform.getScale();
 
-        xGizmoPosition = new Vector2f(gameObjectPosition.x - gameObjectSize.x / 2.0f + GIZMO_OFFSET,
-                gameObjectPosition.y - gameObjectSize.y / 2.0f);
+            xGizmoPosition = new Vector2f(gameObjectPosition.x - gameObjectSize.x / 2.0f + GIZMO_OFFSET,
+                    gameObjectPosition.y - gameObjectSize.y / 2.0f);
 
-        yGizmoPosition = new Vector2f(gameObjectPosition.x - gameObjectSize.x / 2.0f,
-                gameObjectPosition.y - gameObjectSize.y / 2.0f + GIZMO_OFFSET);
+            yGizmoPosition = new Vector2f(gameObjectPosition.x - gameObjectSize.x / 2.0f,
+                    gameObjectPosition.y - gameObjectSize.y / 2.0f + GIZMO_OFFSET);
+        }
     }
 }

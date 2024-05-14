@@ -3,7 +3,7 @@
  Date: 2024-01-24
  Author: Kyle St John
  */
-package engine.debug.draw;
+package engine.debugging.draw;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -16,6 +16,7 @@ public class DebugLine {
     private Vector3f lineColor;   // Color of the debug line
     private int lineLife;         // Remaining life of the debug line
     boolean isPersistent;
+    boolean debugLine = true;
 
     public DebugLine(Vector2f lineStart, Vector2f lineEnd, Vector3f lineColor, int lineLife, boolean bIsPersistent) {
         this.lineStart = lineStart;

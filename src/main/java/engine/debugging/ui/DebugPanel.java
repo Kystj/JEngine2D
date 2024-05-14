@@ -1,6 +1,6 @@
-package engine.debug.ui;
+package engine.debugging.ui;
 
-import engine.debug.draw.DebugRenderer;
+import engine.debugging.draw.DebugRenderer;
 import engine.graphics.Texture;
 import engine.utils.ReportUtils;
 import engine.utils.ResourceUtils;
@@ -14,22 +14,22 @@ import java.util.ArrayList;
 import static engine.utils.EConstants.GREEN_BUTTON;
 import static engine.utils.EConstants.X_SPACING;
 
-public class DebugWindow {
+public class DebugPanel {
 
     private static final ImBoolean bIsOpen = new ImBoolean(true);
-    private static final ReportWindow reportWindow = new ReportWindow();
-    private static ShapeGenerator shapeGenerator = new LineGenerator();
+    private static final ErrorPanel ERROR_PANEL = new ErrorPanel();
+    private static ShapeGenerator SHAPE_GENERATOR = new ShapeGenerator();
 
-    private static final Texture squareButton = loadTexture("assets/buttons/Square.png");
-    private static final Texture circleButton = loadTexture("assets/buttons/Circle.png");
-    private static final Texture triangleButton = loadTexture("assets/buttons/Triangle.png");
-    private static final Texture lineButton = loadTexture("assets/buttons/Line.png");
-    private static final Texture refreshButton = loadTexture("assets/buttons/Refresh.png");
+    private static final Texture SQUARE_BUTTON = loadTexture("assets/buttons/Square.png");
+    private static final Texture CIRCLE_BUTTON = loadTexture("assets/buttons/Circle.png");
+    private static final Texture TRIANGLE_BUTTON = loadTexture("assets/buttons/Triangle.png");
+    private static final Texture LINE_BUTTON = loadTexture("assets/buttons/Line.png");
+    private static final Texture REFRESH_BUTTON = loadTexture("assets/buttons/Refresh.png");
 
     public static void imgui() {
         if (bIsOpen.get()) {
             ImGui.begin("Debug", bIsOpen);
-            reportWindow.imgui();
+            ERROR_PANEL.imgui();
             ImGui.spacing();
             drawShapes();
             drawReports();
@@ -40,7 +40,7 @@ public class DebugWindow {
     private static void drawShapes() {
         if (ImGui.collapsingHeader("Draw")) {
             generateShapeButtons();
-            shapeGenerator.drawUI();
+            SHAPE_GENERATOR.drawUI();
         }
     }
 
@@ -52,7 +52,7 @@ public class DebugWindow {
 
             ImGui.pushStyleColor(ImGuiCol.Button, GREEN_BUTTON.x, GREEN_BUTTON.y, GREEN_BUTTON.z, GREEN_BUTTON.w);
             if (ImGui.button("+")) {
-                reportWindow.setGenerateNewReport(new ImBoolean(true));
+                ERROR_PANEL.setGenerateNewReport(new ImBoolean(true));
             }
             ImGui.popStyleColor();
 
@@ -71,10 +71,10 @@ public class DebugWindow {
 
     private static void generateShapeButtons() {
         ArrayList<Texture> buttons = new ArrayList<>();
-        buttons.add(lineButton);
-        buttons.add(squareButton);
-        buttons.add(circleButton);
-        buttons.add(triangleButton);
+        buttons.add(LINE_BUTTON);
+        buttons.add(SQUARE_BUTTON);
+        buttons.add(CIRCLE_BUTTON);
+        buttons.add(TRIANGLE_BUTTON);
 
         Vector2f[] texCoords = new Vector2f[]{
                 new Vector2f(1, 1),
@@ -84,7 +84,7 @@ public class DebugWindow {
         };
 
         ImGui.setCursorPosX(X_SPACING);
-        if (ImGui.imageButton(refreshButton.getTextureID(), 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
+        if (ImGui.imageButton(REFRESH_BUTTON.getTextureID(), 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
             DebugRenderer.clearPersistentLines();
         }
         if (ImGui.isItemHovered()) {
@@ -102,16 +102,16 @@ public class DebugWindow {
             if (ImGui.imageButton(id, 16, 16, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y)) {
                 switch (i) {
                     case 0:
-                        shapeGenerator = new LineGenerator();
+                        SHAPE_GENERATOR = new LineGenerator();
                         break;
                     case 1:
-                        shapeGenerator = new BoxGenerator();
+                        SHAPE_GENERATOR = new BoxGenerator();
                         break;
                     case 2:
-                        shapeGenerator =  new CircleGenerator();
+                        SHAPE_GENERATOR =  new CircleGenerator();
                         break;
                     case 3:
-                        shapeGenerator = new TriangleGenerator();
+                        SHAPE_GENERATOR = new TriangleGenerator();
                         break;
                 }
             }
@@ -131,6 +131,6 @@ public class DebugWindow {
     }
 
     public static void setIsOpen(boolean bIsOpen) {
-        DebugWindow.bIsOpen.set(bIsOpen);
+        DebugPanel.bIsOpen.set(bIsOpen);
     }
 }

@@ -7,7 +7,7 @@ package engine.serialization;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.debug.info.DebugLogger;
+import engine.debugging.info.Logger;
 import engine.world.components.Component;
 import engine.world.levels.Level;
 import engine.world.objects.GameObject;
@@ -40,7 +40,7 @@ public class LevelSerializer {
             }
             writer.write(gson.toJson(objToSerialize));
             writer.close();
-            DebugLogger.info("Saved level '" + level.getName() + "'", true);
+            Logger.info("Saved level '" + level.getName() + "'", true);
         } catch(IOException e) {
             e.printStackTrace();
         }

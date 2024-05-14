@@ -5,7 +5,7 @@
  */
 package engine.editor.controls;
 
-import engine.debug.info.DebugLogger;
+import engine.debugging.info.Logger;
 import engine.editor.ui.MainMenuBar;
 import engine.editor.ui.Viewport;
 import engine.graphics.EngineWindow;
@@ -67,7 +67,7 @@ public class ImGuiController {
         updateWidgets();
         EngineWindow.Game_Editor.imgui();
         // ImGui.showDemoWindow();
-        DebugLogger.imgui();
+        Logger.imgui();
         endFrame();
     }
 

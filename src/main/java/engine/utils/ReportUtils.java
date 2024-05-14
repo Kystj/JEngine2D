@@ -2,7 +2,7 @@ package engine.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import engine.debug.info.BugReport;
+import engine.debugging.info.ErrorForm;
 import engine.serialization.ReportAdapter;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
@@ -21,9 +21,9 @@ import static engine.utils.EConstants.RED_BUTTON;
 
 public class ReportUtils {
 
-    private static final List<BugReport> bugReports = new ArrayList<>();
+    private static final List<ErrorForm> ERROR_FORMS = new ArrayList<>();
     private static final String BUG_DIRECTORY_PATH = "bugs/";
-    private static final BugReport selectedReport = new BugReport("Error", "No file found");
+    private static final ErrorForm selectedReport = new ErrorForm("Error", "No file found");
 
     private static boolean showReport = false;
 
@@ -47,10 +47,10 @@ public class ReportUtils {
             fileName = fileName.replace(" ", "") + ".json";
             ResourceUtils.deleteFile(fileName);
             // Remove the selected report
-            bugReports.remove(selectedReport);
+            ERROR_FORMS.remove(selectedReport);
 
             // Refresh the report list
-            bugReports.clear();
+            ERROR_FORMS.clear();
             loadReports();
 
             // Reset the selected report
@@ -63,26 +63,26 @@ public class ReportUtils {
     }
 
     public static void saveReport(String bugName, String bugDescription) {
-        BugReport newBugReport = createReport(bugName, bugDescription);
+        ErrorForm newErrorForm = createReport(bugName, bugDescription);
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(BugReport.class, new ReportAdapter())
+                .registerTypeAdapter(ErrorForm.class, new ReportAdapter())
                 .create();
 
         String fileName = bugName.replace(" ", "") + ".json";
         String pathName = BUG_DIRECTORY_PATH + fileName;
 
         try (FileWriter writer = new FileWriter(pathName)) {
-            writer.write(gson.toJson(newBugReport));
+            writer.write(gson.toJson(newErrorForm));
         } catch (IOException e) {
             handleIOException(e);
         }
     }
 
-    private static BugReport createReport(String bugName, String bugDescription) {
-        BugReport newBugReport = new BugReport(bugName, bugDescription);
-        bugReports.add(newBugReport); // Add the new report to the list
-        return newBugReport;
+    private static ErrorForm createReport(String bugName, String bugDescription) {
+        ErrorForm newErrorForm = new ErrorForm(bugName, bugDescription);
+        ERROR_FORMS.add(newErrorForm); // Add the new report to the list
+        return newErrorForm;
     }
 
     public static void loadReports() {
@@ -98,16 +98,16 @@ public class ReportUtils {
     private static void processReportFile(Path filePath) throws IOException {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
-                .registerTypeAdapter(BugReport.class, new ReportAdapter())
+                .registerTypeAdapter(ErrorForm.class, new ReportAdapter())
                 .create();
         String data = new String(Files.readAllBytes(filePath));
-        BugReport bugReport = gson.fromJson(data, BugReport.class);
-        bugReports.add(bugReport); // Add the loaded report to the list
+        ErrorForm errorForm = gson.fromJson(data, ErrorForm.class);
+        ERROR_FORMS.add(errorForm); // Add the loaded report to the list
     }
 
     public static void displayReportList() {
         if (ImGui.beginCombo("##MapKeysCombo", "View reports")) {
-            for (BugReport report : bugReports) {
+            for (ErrorForm report : ERROR_FORMS) {
                 if (ImGui.selectable(report.getBugID())) {
                     showReport = true;
                     selectedReport.setBugDescription(report.getBugDescription());
@@ -128,8 +128,8 @@ public class ReportUtils {
         e.printStackTrace();
     }
 
-    public static List<BugReport> getReports() {
-        return bugReports;
+    public static List<ErrorForm> getReports() {
+        return ERROR_FORMS;
     }
 
     public static boolean isShowReport() {

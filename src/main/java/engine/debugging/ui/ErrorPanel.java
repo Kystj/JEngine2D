@@ -1,4 +1,4 @@
-package engine.debug.ui;
+package engine.debugging.ui;
 
 import engine.utils.ImGuiUtils;
 import engine.utils.ReportUtils;
@@ -9,7 +9,7 @@ import imgui.type.ImString;
 
 import static engine.utils.EConstants.X_SPACING;
 
-public class ReportWindow {
+public class ErrorPanel {
 
     private boolean bRefreshFields = false;
     private ImBoolean generateNewReport = new ImBoolean(false);
@@ -17,7 +17,7 @@ public class ReportWindow {
     private final ImString imGuiBugName = new ImString();
     private final ImString imGuiBugDescription = new ImString();
 
-    public ReportWindow() {
+    public ErrorPanel() {
         ReportUtils.loadReports();
         imGuiBugDescription.resize(512);
     }

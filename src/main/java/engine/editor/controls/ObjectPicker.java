@@ -5,7 +5,7 @@
  */
 package engine.editor.controls;
 
-import engine.debug.info.DebugLogger;
+import engine.debugging.info.Logger;
 
 import static org.lwjgl.opengl.GL30.*;
 
@@ -42,7 +42,7 @@ public class ObjectPicker {
                 assert false : "Error: Framebuffer is not complete";
             } catch (AssertionError e) {
                 System.err.println("Framebuffer is not complete");
-                DebugLogger.error("Framebuffer is not complete");
+                Logger.error("Framebuffer is not complete");
             }
         }
 

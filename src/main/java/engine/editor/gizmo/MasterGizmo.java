@@ -30,21 +30,23 @@ public class MasterGizmo implements EventListener {
 
     @Override
     public void onEvent(Event event, GameObject gameObject) {
-        if (activeGizmo != null) {
-            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
-            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+        if (gameObject != null) {
+            if (activeGizmo != null) {
+                this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+                this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
 
-            if (activeGizmo.getClass().isAssignableFrom(PosGizmo.class)) {
+                if (activeGizmo.getClass().isAssignableFrom(PosGizmo.class)) {
+                    activeGizmo = new PosGizmo(gameObject);
+                }
+                if (activeGizmo.getClass().isAssignableFrom(ScaleGizmo.class)) {
+                    activeGizmo = new ScaleGizmo(gameObject);
+                }
+            } else {
                 activeGizmo = new PosGizmo(gameObject);
             }
-            if (activeGizmo.getClass().isAssignableFrom(ScaleGizmo.class)) {
-                activeGizmo = new ScaleGizmo(gameObject);
+            if (isGizmoActive) {
+                activeGizmo.addToScene();
             }
-        } else {
-            activeGizmo = new PosGizmo(gameObject);
-        }
-        if (isGizmoActive) {
-            activeGizmo.addToScene();
         }
     }
 

@@ -5,7 +5,7 @@
  */
 package engine.editor.controls;
 
-import engine.debug.info.DebugLogger;
+import engine.debugging.info.Logger;
 import engine.editor.gizmo.MasterGizmo;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -89,7 +89,7 @@ public class EditorControls implements EventListener {
 
 
     public void place() {
-        DebugLogger.info("Game Object with UID: " + Active_Object.getUID() +" has been added to the scene", true);
+        Logger.info("Game Object with UID: " + Active_Object.getUID() +" has been added to the scene", true);
         Active_Object = null;
     }
 
@@ -98,7 +98,7 @@ public class EditorControls implements EventListener {
         if (this.currentLevel.getActiveGameObject() != null && KeyInputs.keyPressed(GLFW_KEY_DELETE)) {
             this.currentLevel.removeGameObject(this.currentLevel.getActiveGameObject().getUID());
             masterGizmo.remove();
-            Active_Object = null;
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Active_Object), (GameObject) null);
         }
     }
 

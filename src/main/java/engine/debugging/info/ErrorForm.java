@@ -3,9 +3,9 @@
  * Date: 2023-11-09
  * Author: Kyle St John
  */
-package engine.debug.info;
+package engine.debugging.info;
 
-public class BugReport {
+public class ErrorForm {
 
     // Unique identifier for the bug
     private String bugID;
@@ -16,12 +16,12 @@ public class BugReport {
     // Flag indicating whether the bug is resolved
     private boolean resolved = false;
 
-    public BugReport(String bugID, String bugDescription) {
+    public ErrorForm(String bugID, String bugDescription) {
         this.bugID = bugID;
         this.bugDescription = bugDescription;
     }
 
-    public BugReport(String bugID, String bugDescription, Boolean resolved) {
+    public ErrorForm(String bugID, String bugDescription, Boolean resolved) {
         this.bugID = bugID;
         this.bugDescription = bugDescription;
         this.resolved = resolved;

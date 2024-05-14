@@ -5,8 +5,8 @@
  */
 package engine.editor.ui;
 
-import engine.debug.info.DebugLogger;
-import engine.debug.ui.DebugWindow;
+import engine.debugging.info.Logger;
+import engine.debugging.ui.DebugPanel;
 import engine.editor.GameEditor;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -94,7 +94,7 @@ public class MainMenuBar {
         if (ImGui.beginMenu("Tools")) {
 
             if (ImGui.menuItem(" Debug Console", "Ctrl+d")) {
-                DebugWindow.setIsOpen(true);
+                DebugPanel.setIsOpen(true);
 
             }
 
@@ -103,7 +103,7 @@ public class MainMenuBar {
             }
 
             if (ImGui.menuItem(" Log Console", "Ctrl+l")) {
-                DebugLogger.setIsOpen(true);
+                Logger.setIsOpen(true);
             }
 
             if (ImGui.menuItem(" View Assets", "Ctrl+a")) {

@@ -3,7 +3,7 @@
  Date: 2024-01-24
  Author: Kyle St John
  */
-package engine.debug.draw;
+package engine.debugging.draw;
 
 import engine.graphics.Shader;
 import engine.editor.GameEditor;
@@ -34,7 +34,7 @@ public class DebugRenderer {
     private static final Shader Debug_Shader = ResourceUtils.getOrCreateShader("C:\\Dev\\StellarSprite2D\\JEngine2D\\shaders\\Debug.glsl");
 
     // Debug Lines
-    private static final ArrayList<DebugLine> Debug_Lines = new ArrayList<>();
+    private static final ArrayList<DebugLine> DEBUG_LINES = new ArrayList<>();
     private static boolean Is_Running = false;
 
     /**
@@ -64,29 +64,6 @@ public class DebugRenderer {
         glLineWidth(DEBUG_LINE_WIDTH);
     }
 
-    /**
-     * Updates the DebugDraw class, initializing it if not already running, and
-     * removes lines that are no longer live from the list.
-     */
-    public static void tick() {
-        // Initialize the Draw class
-        if (!Is_Running) {
-            init();
-            Is_Running = true;
-        }
-
-        // Check and remove lines that are not live
-        for (int i = 0; i < Debug_Lines.size(); i++) {
-            if (Debug_Lines.get(i).isPersistent) {
-                continue;
-            }
-
-            if (Debug_Lines.get(i).isLineLive() < 0) {
-                Debug_Lines.remove(i);
-                i--;
-            }
-        }
-    }
 
     /**
      * Renders the debug lines by preparing the vertex data, updating the buffer,
@@ -94,7 +71,7 @@ public class DebugRenderer {
      */
     public static void render() {
         // Check if there are any lines to render
-        if (Debug_Lines.isEmpty()) {
+        if (DEBUG_LINES.isEmpty()) {
             return;
         }
 
@@ -102,7 +79,7 @@ public class DebugRenderer {
         int index = 0;
 
         // Iterate through each line in the list
-        for (DebugLine debugLine : Debug_Lines) {
+        for (DebugLine debugLine : DEBUG_LINES) {
             // Iterate twice for the start and end points of the line
             for (int i = 0; i < 2; i++) {
                 // Determine whether to get the start or end point of the line
@@ -126,7 +103,7 @@ public class DebugRenderer {
 
         // Update the buffer data with the new vertices
         glBindBuffer(GL_ARRAY_BUFFER, VBO_ID);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(Vertices, 0, Debug_Lines.size() * 6 * 2));
+        glBufferSubData(GL_ARRAY_BUFFER, 0, Arrays.copyOfRange(Vertices, 0, DEBUG_LINES.size() * 6 * 2));
 
         // Use the debug shader
         Debug_Shader.use();
@@ -138,7 +115,7 @@ public class DebugRenderer {
         enableVertexAttributes();
 
         // Draw the lines
-        glDrawArrays(GL_LINES, 0, Debug_Lines.size() * 6 * 2);
+        glDrawArrays(GL_LINES, 0, DEBUG_LINES.size() * 6 * 2);
 
         // Disable vertex attributes and unbind the VAO
         disableVertexAttributes();
@@ -146,6 +123,15 @@ public class DebugRenderer {
 
         // Detach the shader
         Debug_Shader.detach();
+
+        // TODO: Fix the error that is being caused by the conflict with box2D in the following lines of code
+     /*        // Check and remove lines that are not live
+        for (int i = 0; i < DEBUG_LINES.size(); i++) {
+            if (DEBUG_LINES.get(i).isLineLive() < 0) {
+                DEBUG_LINES.remove(i);
+                i--;
+            }
+        }*/
     }
 
     /**
@@ -169,8 +155,8 @@ public class DebugRenderer {
      *
      * @return ArrayList of DebugLine objects.
      */
-    public static ArrayList<DebugLine> getDebug_Lines() {
-        return Debug_Lines;
+    public static ArrayList<DebugLine> getLines() {
+        return DEBUG_LINES;
     }
 
     /**
@@ -178,7 +164,7 @@ public class DebugRenderer {
      *
      * @return Shader object.
      */
-    public static Shader getDebug_Shader() {
+    public static Shader getDebugShader() {
         return Debug_Shader;
     }
 
@@ -186,7 +172,7 @@ public class DebugRenderer {
      * Clears all persistent lines
      */
     public static void clearPersistentLines() {
-        Debug_Lines.clear();
+        DEBUG_LINES.clear();
     }
 }
 /*End of Draw class*/

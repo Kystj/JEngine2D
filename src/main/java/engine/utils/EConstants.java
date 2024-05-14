@@ -46,7 +46,8 @@ public interface EConstants {
     // Engine mode
     enum EngineMode {
         GameMode,
-        EditorMode
+        EditorMode,
+        LaunchMode
     }
 
     // Window

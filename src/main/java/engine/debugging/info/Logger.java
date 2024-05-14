@@ -3,7 +3,7 @@
  Date: 2024-03-07
  Author: Kyle St John
  */
-package engine.debug.info;
+package engine.debugging.info;
 
 import imgui.ImGui;
 import imgui.type.ImBoolean;
@@ -14,24 +14,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.utils.EConstants.X_SPACING;
+import static engine.utils.EConstants.*;
 
-public class DebugLogger {
+public class Logger {
 
-    private static final List<LogEntry> Logs = new ArrayList<>();
+    private static final List<LogEntry> LOG_ENTRIES = new ArrayList<>();
     private static final int MAX_LOGS = 100; // Change this value according to your needs
-    private static ImBoolean Is_Open = new ImBoolean(true);
+    private static final ImBoolean isOpen = new ImBoolean(true);
 
     public static void imgui() {
 
-
-        if (Is_Open.get()) {
-            ImGui.begin("Log", Is_Open);
+        if (isOpen.get()) {
+            ImGui.begin("Log", isOpen);
 
 
             // Iterate through the logs in reverse order and display them
-            for (int i = Logs.size() - 1; i >= 0; i--) {
-                LogEntry entry = Logs.get(i);
+            for (int i = LOG_ENTRIES.size() - 1; i >= 0; i--) {
+                LogEntry entry = LOG_ENTRIES.get(i);
                 float r = entry.getColor().x;
                 float g = entry.getColor().y;
                 float b = entry.getColor().z;
@@ -45,16 +44,31 @@ public class DebugLogger {
         }
     }
 
+    private static void info(String message) {
+        System.out.println(GREEN + message + RESET);
+    }
+
+    private static void warning(String message) {
+        System.out.println(YELLOW + message + RESET);
+    }
+
+    private static void error(String message) {
+        System.out.println(RED + message + RESET);
+    }
+
     public static void info(String message, boolean... logTime) {
         log(message, new Vector3f(0.0f, 1.0f, 0.0f), logTime);
+        warning(message);
     }
 
     public static void warning(String message, boolean... logTime) {
         log(message, new Vector3f(1.0f, 1.0f, 0.0f), logTime);
+        warning(message);
     }
 
     public static void error(String message, boolean... logTime) {
         log(message, new Vector3f(1.0f, 0.0f, 0.0f), logTime);
+        error(message);
     }
 
     private static void log(String message, Vector3f color, boolean... logTime) {
@@ -74,14 +88,14 @@ public class DebugLogger {
     }
 
     private static void addLog(LogEntry log) {
-        Logs.add(log);
-        if (Logs.size() > MAX_LOGS) {
-            Logs.remove(0);
+        LOG_ENTRIES.add(log);
+        if (LOG_ENTRIES.size() > MAX_LOGS) {
+            LOG_ENTRIES.remove(0);
         }
     }
 
     public static void setIsOpen(boolean isOpen) {
-        Is_Open.set(isOpen);
+        Logger.isOpen.set(isOpen);
     }
 
     private static class LogEntry {

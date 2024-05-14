@@ -3,7 +3,7 @@
  Date: 2024-02-01
  Author: Kyle St John
  */
-package engine.debug.draw;
+package engine.debugging.draw;
 
 import engine.utils.MathUtils;
 import org.joml.Vector2f;
@@ -14,22 +14,22 @@ import static engine.utils.EConstants.MAX_DEBUG_LINES;
 public class DebugDraw {
 
     // ============================ Add Debug Line ============================
-    public static void addLine(Vector2f from, Vector2f to) {
-        addLine(from, to, new Vector3f(0, 1, 0), 1);
+    public static void addDebugLine(Vector2f from, Vector2f to) {
+        addDebugLine(from, to, new Vector3f(0, 1, 0), 1);
     }
 
-    public static void addLine(Vector2f from, Vector2f to, Vector3f color) {
-        addLine(from, to, color, 1);
+    public static void addDebugLine(Vector2f from, Vector2f to, Vector3f color) {
+        addDebugLine(from, to, color, 1);
     }
 
-    public static void addLine(Vector2f from, Vector2f to, Vector3f color, boolean bIsPersistent) {
-        if (DebugRenderer.getDebug_Lines().size() >= MAX_DEBUG_LINES) return;
-        DebugRenderer.getDebug_Lines().add(new DebugLine(from, to, color, -1, bIsPersistent));
+    public static void addDebugLine(Vector2f from, Vector2f to, Vector3f color, boolean bIsPersistent) {
+        if (DebugRenderer.getLines().size() >= MAX_DEBUG_LINES) return;
+        DebugRenderer.getLines().add(new DebugLine(from, to, color, -1, bIsPersistent));
     }
 
-    public static void addLine(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
-        if (DebugRenderer.getDebug_Lines().size() >= MAX_DEBUG_LINES) return;
-        DebugRenderer.getDebug_Lines().add(new DebugLine(from, to, color, lifetime, false));
+    public static void addDebugLine(Vector2f from, Vector2f to, Vector3f color, int lifetime) {
+        if (DebugRenderer.getLines().size() >= MAX_DEBUG_LINES) return;
+        DebugRenderer.getLines().add(new DebugLine(from, to, color, lifetime, false));
     }
 
     // ============================ Add Debug Box ============================
@@ -57,9 +57,9 @@ public class DebugDraw {
         for (int i = 0; i < 4; i++) {
             int nextIndex = (i + 1) % 4;
             if (!bIsPersistent) {
-                addLine(vertices[i], vertices[nextIndex], color, lifetime);
+                addDebugLine(vertices[i], vertices[nextIndex], color, lifetime);
             } else {
-                addLine(vertices[i], vertices[nextIndex], color, true);
+                addDebugLine(vertices[i], vertices[nextIndex], color, true);
             }
         }
     }
@@ -87,9 +87,9 @@ public class DebugDraw {
         for (int i = 0; i < segments; i++) {
             int nextIndex = (i + 1) % segments;
             if (!bIsPersistent) {
-                addLine(vertices[i], vertices[nextIndex], color, lifetime);
+                addDebugLine(vertices[i], vertices[nextIndex], color, lifetime);
             } else {
-                addLine(vertices[i], vertices[nextIndex], color, true);
+                addDebugLine(vertices[i], vertices[nextIndex], color, true);
             }
         }
     }
@@ -112,13 +112,13 @@ public class DebugDraw {
         MathUtils.rotate(vertex3, rotationAngle, centroid);
 
         if (!bIsPersistent) {
-            addLine(vertex1, vertex2, color, lifetime);
-            addLine(vertex2, vertex3, color, lifetime);
-            addLine(vertex3, vertex1, color, lifetime);
+            addDebugLine(vertex1, vertex2, color, lifetime);
+            addDebugLine(vertex2, vertex3, color, lifetime);
+            addDebugLine(vertex3, vertex1, color, lifetime);
         } else {
-            addLine(vertex1, vertex2, color, true);
-            addLine(vertex2, vertex3, color, true);
-            addLine(vertex3, vertex1, color, true);
+            addDebugLine(vertex1, vertex2, color, true);
+            addDebugLine(vertex2, vertex3, color, true);
+            addDebugLine(vertex3, vertex1, color, true);
         }
     }
 }

@@ -5,10 +5,13 @@
  */
 package engine.physics.components;
 
+import engine.graphics.EngineWindow;
 import engine.world.components.Component;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
+
+import static engine.utils.EConstants.EngineMode.GameMode;
 
 public class RigidBody extends Component {
 
@@ -27,7 +30,7 @@ public class RigidBody extends Component {
 
 
     public void tick(float deltaTime) {
-        if (b2Body != null) {
+        if (b2Body != null && EngineWindow.Enabled_Engine_Mode == GameMode ) {
             this.owningGameObject.getTransform().getPosition().set(
                     b2Body.getPosition().x, b2Body.getPosition().y);
             this.owningGameObject.getTransform().setRotation((float) Math.toDegrees(b2Body.getAngle()));

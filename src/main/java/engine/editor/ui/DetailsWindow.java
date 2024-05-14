@@ -5,12 +5,13 @@
  */
 package engine.editor.ui;
 
-import engine.debug.info.DebugLogger;
+import engine.debugging.info.Logger;
 import engine.editor.GameEditor;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.physics.components.BoxCollider;
+import engine.physics.components.CircleCollider;
 import engine.physics.components.Collider;
 import engine.physics.components.RigidBody;
 import engine.utils.EConstants;
@@ -27,13 +28,30 @@ import org.joml.Vector3f;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import static org.jbox2d.dynamics.BodyType.*;
+
 public class DetailsWindow implements EventListener {
 
     private final ImBoolean bIsOpen = new ImBoolean(true);
+    
     private GameObject activeGameObject;
+    
+    private int colliderValueIndex = 0;
+    private int b2BodyTypeIndex = 0;
+    
+    boolean hasRigidBody;
+    boolean hasCollider;
+    boolean attachRigidBody;
+    
+    private final String[] colliders = {"None", "Box Collider", "Circle Collider"};
+    private final String[] b2BodyTypes = {"Dynamic Body","Static Body", "Kinematic Body"};
 
+    
     public DetailsWindow() {
         EventDispatcher.addListener(EConstants.EventType.Active_Object, this);
+        EventDispatcher.addListener(EConstants.EventType.Stop, this);
+        EventDispatcher.addListener(EConstants.EventType.Play, this);
+
     }
 
     @Override
@@ -41,6 +59,7 @@ public class DetailsWindow implements EventListener {
         if (event.getEventType() == EConstants.EventType.Active_Object) {
             bIsOpen.set(true);
             activeGameObject = gameObject;
+            colliderValueIndex = 0;
         }
     }
 
@@ -51,73 +70,93 @@ public class DetailsWindow implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-
-
+        if (event.getEventType() == EConstants.EventType.Play) {
+            bIsOpen.set(false);
+        }
+        if (event.getEventType() == EConstants.EventType.Stop) {
+            bIsOpen.set(true);
+        }
     }
 
 
     public void imgui() {
         if (activeGameObject != null && bIsOpen.get()) {
             int zIndex = activeGameObject.getZIndex();
-
             ImGui.begin("Details", bIsOpen);
-            ImGui.spacing();
-            renderTransformControls();
-            renderSpriteProperties();
+            setTransformControlUI();
+            setRigidBodyUI();
             updateZIndex(zIndex);
-            renderRigidBodyControls();
-            renderComponentProperties();
+            setComponents();
             ImGui.end();
         }
     }
 
-    private void renderTransformControls() {
+    private void setTransformControlUI() {
+        setSectionName("Transform");
         ImGuiUtils.renderVec2Sliders("Scale", activeGameObject.getTransform().getScale(), activeGameObject.getTransform().getScale());
         ImGuiUtils.renderVec2Sliders("Position", activeGameObject.getTransform().getPosition(), activeGameObject.getTransform().getPosition());
         activeGameObject.getTransform().setRotation(ImGuiUtils.renderFloatSlider("Rotation", activeGameObject.getTransform().getRotation()));
         activeGameObject.setZIndex(ImGuiUtils.renderIntSlider("Z-Index", activeGameObject.getZIndex()));
-    }
-
-    private void renderSpriteProperties() {
         activeGameObject.getComponent(Sprite.class).setColor(ImGuiUtils.renderColorPicker4f("Color", activeGameObject.getComponent(Sprite.class).getColor()));
     }
 
-    private void updateZIndex( int oldZIndex) {
-        if (activeGameObject.getZIndex() != oldZIndex) {
-            GameEditor.current_Level.removeGameObject(activeGameObject.getUID());
-            GameEditor.current_Level.addGameObject(activeGameObject);
-        }
+
+    private void setSectionName(String name) {
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGui.text(name);
+        ImGui.spacing();
     }
 
-    private void renderRigidBodyControls() {
+    private void setRigidBodyUI() {
+        setSectionName("Box2D");
+        // Set up ImGui columns
         ImGui.columns(2);
         ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+
+        // Display RigidBody label
         ImGui.text("RigidBody");
         ImGui.nextColumn();
 
+        // Get RigidBody and Collider components
         RigidBody rigidBodyComponent = activeGameObject.getComponent(RigidBody.class);
         Collider colliderComponent = activeGameObject.getComponent(Collider.class);
 
-        boolean hasRigidBody = rigidBodyComponent == null;
+        // Check if the GameObject has RigidBody and Collider components
+        hasRigidBody = rigidBodyComponent != null;
+        hasCollider = colliderComponent != null;
 
-        String[] colliders = {"Box Collider", "Circle Collider"};
-        int index = 0;
+        // Checkbox to attach RigidBody
+        if (colliders[colliderValueIndex].equals("None")) {
+            ImGui.beginDisabled();
+        }
+
+        attachRigidBody = ImGui.checkbox("##RigidBody", hasRigidBody);
+
+        ImGui.columns();
+
+        setBodyTypeUI();
+        updateRigidBodyComponent();
+        setColliderUI();
+
+    }
 
 
-        boolean attachRigidBody = ImGui.checkbox("##RigidBody", !hasRigidBody);
-
-        ImGui.columns(1);
-
+    private void setColliderUI() {
+        // Display Colliders label
         ImGui.columns(2);
         ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
         ImGui.text("Colliders");
         ImGui.nextColumn();
 
-        if (ImGui.beginCombo(" ", colliders[index])) {
+
+        // Render combo box for selecting collider type
+        if (ImGui.beginCombo("##Colliders ", colliders[colliderValueIndex])) {
             for (int i = 0; i < colliders.length; i++) {
-                boolean isSelected = (index == i);
+                boolean isSelected = (colliderValueIndex == i);
                 if (ImGui.selectable(colliders[i], isSelected)) {
-                    index = i;
+                    colliderValueIndex = i;
                 }
                 if (isSelected) {
                     ImGui.setItemDefaultFocus();
@@ -125,27 +164,104 @@ public class DetailsWindow implements EventListener {
             }
             ImGui.endCombo();
         }
-        DebugLogger.info(String.valueOf(index));
-        if (attachRigidBody) {
-            activeGameObject.addComponent(new RigidBody());
-            activeGameObject.addComponent(new BoxCollider());
+
+
+        // If RigidBody should be attached and there's no Collider, add selected collider
+        if (attachRigidBody && !hasCollider) {
+            switch (colliders[colliderValueIndex]) {
+                case "Box Collider":
+                    activeGameObject.addComponent(new BoxCollider());
+                    Logger.info("Added a box collider to game object with UID:  " + activeGameObject.getUID());
+                    break;
+                case "Circle Collider":
+                    activeGameObject.addComponent(new CircleCollider());
+                    Logger.info("Added a circle collider to game object with UID: " + activeGameObject.getUID());
+                    break;
+                default:
+                    Logger.info("No collider added");
+            }
             GameEditor.current_Level.getPhysics().add(activeGameObject);
-
-
         }
+
+        // End ImGui columns
         ImGui.columns(1);
     }
+    
 
-    private void renderComponentProperties() {
-        for (Component component : activeGameObject.getComponentsList()) {
-            Field[] fields = component.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                renderComponentField(component, field);
+    private void updateRigidBodyComponent() {
+        // If RigidBody should be attached, add it
+        if (attachRigidBody && !hasRigidBody) {
+            activeGameObject.addComponent(new RigidBody());
+        }
+
+        if (activeGameObject.getComponent(RigidBody.class) != null) {
+            switch (b2BodyTypes[b2BodyTypeIndex]) {
+                case "Dynamic Body":
+                    activeGameObject.getComponent(RigidBody.class).setBodyType(DYNAMIC);
+                    break;
+                case "Static Body":
+                    activeGameObject.getComponent(RigidBody.class).setBodyType(STATIC);
+                    break;
+                case "Kinematic Body":
+                    activeGameObject.getComponent(RigidBody.class).setBodyType(KINEMATIC);
+                    break;
+            }
+        }
+
+
+        if (attachRigidBody && hasRigidBody) {
+            activeGameObject.removeComponent(RigidBody.class);
+
+            if (activeGameObject.getComponent(BoxCollider.class) != null) {
+                activeGameObject.removeComponent(BoxCollider.class);
+            }
+            else if (activeGameObject.getComponent(CircleCollider.class) != null) {
+                activeGameObject.removeComponent(CircleCollider.class);
             }
         }
     }
 
-    private void renderComponentField(Component component, Field field) {
+
+    private void setBodyTypeUI() {
+        // Set up ImGui columns
+        ImGui.columns(2);
+        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+
+        // Display RigidBody label
+        ImGui.text("Body Type");
+        ImGui.nextColumn();
+
+        if (ImGui.beginCombo("##BodyTypes", b2BodyTypes[b2BodyTypeIndex])) {
+            for (int i = 0; i < b2BodyTypes.length; i++) {
+                boolean isSelected = (b2BodyTypeIndex == i);
+                if (ImGui.selectable(b2BodyTypes[i], isSelected)) {
+                    b2BodyTypeIndex = i;
+                }
+                if (isSelected) {
+                    ImGui.setItemDefaultFocus();
+                }
+            }
+            ImGui.endCombo();
+        }
+
+
+        if (colliders[colliderValueIndex].equals("None")) {
+            ImGui.endDisabled();
+        }
+
+        ImGui.sameLine();
+        ImGui.text("?");
+        if (ImGui.isItemHovered()) {
+            ImGui.beginTooltip();
+            ImGui.setTooltip("Dynamic by default");
+            ImGui.endTooltip();
+        }
+
+        // End ImGui columns
+        ImGui.columns(1);
+    }
+
+    private void setComponentFieldUI(Component component, Field field) {
         try {
             boolean isTransient = Modifier.isTransient(field.getModifiers());
             if (isTransient) {
@@ -164,7 +280,7 @@ public class DetailsWindow implements EventListener {
             if (type == int.class) {
                 int val = (int) value;
                 int[] imInt = {val};
-                if (ImGui.dragInt(name + ": ", imInt)) {
+                if (ImGui.dragInt("##" + name, imInt)) {
                     field.set(component, imInt[0]);
                 }
             } else if (type == float.class) {
@@ -173,7 +289,7 @@ public class DetailsWindow implements EventListener {
                 ImGui.nextColumn();
                 float val = (float) value;
                 float[] imFloat = {val};
-                if (ImGui.dragFloat("##name", imFloat)) {
+                if (ImGui.dragFloat("##" + name, imFloat)) {
                     field.set(component, imFloat[0]);
                 }
                 ImGui.columns(1);
@@ -182,7 +298,7 @@ public class DetailsWindow implements EventListener {
                 ImGui.text(name);
                 ImGui.nextColumn();
                 boolean val = (boolean) value;
-                if (ImGui.checkbox("##name", val)) {
+                if (ImGui.checkbox("##" + name, val)) {
                     field.set(component, !val);
                 }
                 ImGui.columns(1);
@@ -192,14 +308,14 @@ public class DetailsWindow implements EventListener {
                 ImGui.nextColumn();
                 Vector2f val = (Vector2f) value;
                 float[] imVec = {val.x, val.y};
-                if (ImGui.dragFloat2("##name", imVec)) {
+                if (ImGui.dragFloat2("##" + name, imVec)) {
                     val.set(imVec[0], imVec[1]);
                 }
                 ImGui.columns(1);
             } else if (type == Vector3f.class) {
                 Vector3f val = (Vector3f) value;
                 float[] imVec = {val.x, val.y, val.z};
-                if (ImGui.dragFloat3("##name", imVec)) {
+                if (ImGui.dragFloat3("##" + name, imVec)) {
                     val.set(imVec[0], imVec[1], imVec[2]);
                 }
             }
@@ -209,6 +325,24 @@ public class DetailsWindow implements EventListener {
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    private void updateZIndex( int oldZIndex) {
+        if (activeGameObject.getZIndex() != oldZIndex) {
+            GameEditor.current_Level.removeGameObject(activeGameObject.getUID());
+            GameEditor.current_Level.addGameObject(activeGameObject);
+        }
+    }
+    
+
+    private void setComponents() {
+        for (Component component : activeGameObject.getComponentsList()) {
+            Field[] fields = component.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                setComponentFieldUI(component, field);
+            }
         }
     }
 }
