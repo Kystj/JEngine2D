@@ -67,6 +67,7 @@ public class MainMenuBar {
     private void saveMenuItem() {
         if (ImGui.menuItem("Save", "Ctrl+s")) {
             LevelSerializer.save(GameEditor.current_Level);
+            EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Save));
         }
     }
 

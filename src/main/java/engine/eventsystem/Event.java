@@ -8,17 +8,21 @@ package engine.eventsystem;
 import engine.utils.EConstants.EventType;
 
 /**
- * This class represents a generic event with an associated event type, stored as a public field "eventType."
- * It provides a constructor to initialize the event with a specified type and includes a default constructor
- * that sets the event type to a default value, "UserEvent" of the enumerated type "EventType."
+ * Represents a generic event with an associated event type.
  */
 public class Event {
 
-    // The type of the event
-    private final EventType eventType;
+    // Fields
 
     /**
-     * Constructs an event with the designated event type.
+     * The type of the event.
+     */
+    private final EventType eventType;
+
+    // Constructors
+
+    /**
+     * Constructs an event with the specified event type.
      *
      * @param eventType The type of the event.
      */
@@ -33,6 +37,8 @@ public class Event {
         // Default to EventType.User if no type is specified
         this.eventType = EventType.User;
     }
+
+    // Public methods
 
     /**
      * Gets the type of the event.

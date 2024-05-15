@@ -5,6 +5,7 @@
  */
 package engine.utils;
 
+import engine.debugging.info.Logger;
 import engine.io.Audio;
 import engine.graphics.Shader;
 import engine.graphics.SpriteSheet;
@@ -68,12 +69,12 @@ public class ResourceUtils {
 
         if (fileToDelete.exists()) {
             if (fileToDelete.delete()) {
-                System.out.println(path + " deleted successfully.");
+                Logger.info(path + " deleted successfully.");
             } else {
-                System.out.println("Failed to delete the file: " + path);
+                Logger.warning("Failed to delete the file: " + path);
             }
         } else {
-            System.out.println("File does not exist: " + path);
+            Logger.error("File does not exist: " + path);
         }
     }
 

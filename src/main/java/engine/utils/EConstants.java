@@ -22,7 +22,9 @@ public interface EConstants {
 
     // ImGui
     int X_SPACING = 10;
-    Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
+    int COLUMN_WIDTH_LARGE = 160;
+
+
     Vector4f GREEN_BUTTON = new Vector4f(0.0f, 1.0f, 0.0f, 0.5f);
     Vector4f RED_BUTTON = new Vector4f(1.0f, 0.0f, 0.0f, 0.5f);
     Vector4f YELLOW_BUTTON = new Vector4f(1.0f, 1.0f, 0.0f, 0.5f);
@@ -57,11 +59,13 @@ public interface EConstants {
     int DEFAULT_GRID_WIDTH = 32;
     int DEFAULT_GRID_HEIGHT = 32;
     int DEFAULT_CELL_SIZE = 16;
+
     Vector3f GRID_COLOR = new Vector3f(0.08f, 0.08f, 0.08f);
 
     // Rendering
     int MAX_BATCH_SIZE = 1000;
     int MAX_DEBUG_LINES = 10000;
+
     float DEBUG_LINE_WIDTH = 3.0f;
 
     // ANSI escape codes for colors

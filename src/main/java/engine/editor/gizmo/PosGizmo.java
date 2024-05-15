@@ -39,13 +39,12 @@ public class PosGizmo extends Gizmo {
     @Override
     protected void tick() {
         super.tick();
-
-        if (xHasChanged) {
-            activeGameObject.getTransform().getPosition().x -= MouseInputs.getDx();
-        }
-
-        else if (yHasChanged) {
-            activeGameObject.getTransform().getPosition().y += MouseInputs.getDy();
+        if (activeGameObject != null) {
+            if (xHasChanged) {
+                activeGameObject.getTransform().getPosition().x -= MouseInputs.getDx();
+            } else if (yHasChanged) {
+                activeGameObject.getTransform().getPosition().y += MouseInputs.getDy();
+            }
         }
     }
 }

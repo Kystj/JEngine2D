@@ -37,7 +37,8 @@ public class GameEditor implements EventListener {
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     public  static ObjectPicker Object_Picker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
-    private EditorControls editorControls = new EditorControls();
+    private final EditorControls editorControls = new EditorControls();
+    private boolean showPopup = false;
 
 
     @Override
@@ -55,11 +56,14 @@ public class GameEditor implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-
+        if (event.getEventType() == EventType.Save) {
+            showPopup = true;
+        }
     }
 
     public void init() {
         EventDispatcher.addListener(EventType.Load_New_Scene, this);
+        EventDispatcher.addListener(EventType.Save, this);
         DebugRenderer.init();
     }
 

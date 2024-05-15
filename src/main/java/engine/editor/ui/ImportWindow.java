@@ -7,7 +7,6 @@ package engine.editor.ui;
 
 import engine.graphics.SpriteSheet;
 import engine.serialization.SpriteSheetSerializer;
-import engine.utils.ImGuiUtils;
 import engine.utils.ResourceUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
@@ -93,8 +92,8 @@ public class ImportWindow {
         }
     }
 
-    private void checkForErrors() {
-        // Perform a safety check for file error popup
+    private void checkForErrors() { // TODO: Fix this
+/*        // Perform a safety check for file error popup
         if (Import_Functions.bFileErrorPopup) {
             Import_Functions.bFileErrorPopup = ImGuiUtils.activatePopup("File Path Already In Use.\nPlease choose a different file path.");
         }
@@ -107,7 +106,7 @@ public class ImportWindow {
         // Perform a safety check for type error popup
         if (Import_Functions.bValErrorPopup) {
             Import_Functions.bValErrorPopup = ImGuiUtils.activatePopup("Sprite extraction values cannot be 0.\n");
-        }
+        }*/
     }
 
 

@@ -9,31 +9,30 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.EngineWindow;
 import engine.graphics.Texture;
-import engine.io.MouseInputs;
 import imgui.ImGui;
-import imgui.ImVec2;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import static engine.utils.EConstants.POPUP_WIN_SIZE;
 import static engine.utils.EConstants.X_SPACING;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 
 public class ImGuiUtils {
 
-    public static final Texture lockTexture = ResourceUtils.getOrCreateTexture("assets/buttons/locked.png");
-    public static final Texture unlock = ResourceUtils.getOrCreateTexture("assets/buttons/unlocked.png");
-    public static final Texture grid = ResourceUtils.getOrCreateTexture("assets/buttons/grid.png");
-    public static final Texture launch = ResourceUtils.getOrCreateTexture("assets/buttons/launch.png");
-    public static final Texture play = ResourceUtils.getOrCreateTexture("assets/buttons/play.png");
-    public static final Texture stop = ResourceUtils.getOrCreateTexture("assets/buttons/stop.png");
-    public static final Texture wireframe = ResourceUtils.getOrCreateTexture("assets/buttons/frame.png");
+    public static final Texture LOCK_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/locked.png");
+    public static final Texture UNLOCK_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/unlocked.png");
+    public static final Texture GRID_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/grid.png");
+    public static final Texture LAUNCH_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/launch.png");
+    public static final Texture PLAY_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/play.png");
+    public static final Texture STOP_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/stop.png");
+    public static final Texture WIREFRAME_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/frame.png");
 
-    private static final Vector2f[] texCords = new Vector2f[]{
+    public static final Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
+    public static final int COLUMN_WIDTH_MEDIUM = 100;
+    public static final float SLIDER_SPEED = 0.3f;
+
+    private static final Vector2f[] BUTTON_TEXTURE_COORDINATES = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),
             new Vector2f(0, 0),
@@ -50,7 +49,7 @@ public class ImGuiUtils {
     }
 
     public static void renderWireFrameModeButton(boolean isOn) {
-        if (ImGui.imageButton(wireframe.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
+        if (ImGui.imageButton(WIREFRAME_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Wire_Frame));
         }
         if (ImGui.isItemHovered()) {
@@ -65,19 +64,19 @@ public class ImGuiUtils {
     }
 
     public static void renderLaunchButton() {
-        if (ImGui.imageButton(launch.getTextureID(), 16, 16, texCords[2].x, texCords[0].y, texCords[0].x, texCords[2].y)) {
+        if (ImGui.imageButton(LAUNCH_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Launch));
         }
     }
 
     public static void renderPlayButton() {
-        if (ImGui.imageButton(play.getTextureID(), 16, 16, texCords[2].x, texCords[2].y, texCords[0].x, texCords[0].y)) {
+        if (ImGui.imageButton(PLAY_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Play));
         }
     }
 
     public static void renderStopButton() {
-        if (ImGui.imageButton(stop.getTextureID(), 16, 16, texCords[2].x, texCords[2].y, texCords[0].x, texCords[0].y)) {
+        if (ImGui.imageButton(STOP_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Stop));
         }
     }
@@ -92,7 +91,7 @@ public class ImGuiUtils {
             ImGui.endPopup();
         }
 
-        if (ImGui.imageButton(grid.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
+        if (ImGui.imageButton(GRID_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
             ImGui.openPopup("cellSize");
         }
 
@@ -107,7 +106,7 @@ public class ImGuiUtils {
         String lockedStr = "Lock";
         String unlockedStr = "Unlock";
 
-        if (ImGui.imageButton(texture.getTextureID(), 16, 16, texCords[0].x, texCords[0].y, texCords[2].x, texCords[2].y)) {
+        if (ImGui.imageButton(texture.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
         }
@@ -151,7 +150,7 @@ public class ImGuiUtils {
         ImGui.pushID(sliderID);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, COLUMN_WIDTH_MEDIUM);
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -171,7 +170,7 @@ public class ImGuiUtils {
         ImGui.pushID(sliderID);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, COLUMN_WIDTH_MEDIUM);
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -188,9 +187,8 @@ public class ImGuiUtils {
 
     public static void renderVec2Sliders(String sliderID, Vector2f val, Vector2f resetVal) {
         ImGui.pushID(sliderID);
-
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, COLUMN_WIDTH_MEDIUM);
         ImGui.text(sliderID);
         ImGui.nextColumn();
 
@@ -200,18 +198,21 @@ public class ImGuiUtils {
         Vector2f buttonSize = new Vector2f(lineHeight + 3.0f, lineHeight);
         float widthEach = (ImGui.calcItemWidth() - buttonSize.x * 2.0f) / 2.0f;
 
+        float[] vecValuesX = {val.x};
+        float[] vecValuesY = {val.y};
+
         ImGui.pushItemWidth(widthEach);
         ImGui.pushStyleColor(ImGuiCol.Button, 0.8f, 0.1f, 0.15f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.9f, 0.2f, 0.2f, 1.0f); // TODO: Customize
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.8f, 0.1f, 0.15f, 1.0f);
+
         if (ImGui.button("X", buttonSize.x, buttonSize.y)) {
-            val.x = resetVal.x;
+            vecValuesX[0] = resetVal.x;
         }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
-        float[] vecValuesX = {val.x};
-        ImGui.dragFloat("##x", vecValuesX, 0.1f); // TODO: Make a constant
+        ImGui.dragFloat("##x", vecValuesX, SLIDER_SPEED);
         ImGui.popItemWidth();
         ImGui.sameLine();
 
@@ -219,13 +220,13 @@ public class ImGuiUtils {
         ImGui.pushStyleColor(ImGuiCol.Button, 0.2f, 0.7f, 0.2f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonHovered, 0.3f, 0.8f, 0.3f, 1.0f);
         ImGui.pushStyleColor(ImGuiCol.ButtonActive, 0.2f, 0.7f, 0.2f, 1.0f);
+
         if (ImGui.button("Y", buttonSize.x, buttonSize.y)) {
-            val.y = resetVal.y;
+            vecValuesY[0] = resetVal.y;
         }
         ImGui.popStyleColor(3);
 
         ImGui.sameLine();
-        float[] vecValuesY = {val.y};
         ImGui.dragFloat("##y", vecValuesY, 0.1f);
         ImGui.popItemWidth();
         ImGui.sameLine();
@@ -238,18 +239,19 @@ public class ImGuiUtils {
         ImGui.popStyleVar();
         ImGui.columns(1);
         ImGui.popID();
+
     }
 
     public static float renderFloatSlider(String label, float val) {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, COLUMN_WIDTH_MEDIUM);
         ImGui.text(label);
         ImGui.nextColumn();
 
         float[] valArr = {val};
-        ImGui.dragFloat("##dragFloat", valArr, 0.3f); // TODO: Make a constant
+        ImGui.dragFloat("##dragFloat", valArr, SLIDER_SPEED);
 
         ImGui.columns(1);
         ImGui.popID();
@@ -261,12 +263,12 @@ public class ImGuiUtils {
         ImGui.pushID(label);
 
         ImGui.columns(2);
-        ImGui.setColumnWidth(0, 160); // TODO: Should be dynamic
+        ImGui.setColumnWidth(0, COLUMN_WIDTH_MEDIUM);
         ImGui.text(label);
         ImGui.nextColumn();
 
         int[] valArr = {val};
-        ImGui.dragInt("##dragInt", valArr, 0.3f); // TODO: Make a constant
+        ImGui.dragInt("##dragInt", valArr, SLIDER_SPEED);
 
         ImGui.columns(1);
         ImGui.popID();
@@ -274,44 +276,6 @@ public class ImGuiUtils {
         return valArr[0];
     }
 
-
-    public static boolean activatePopup(String description) {
-        ImGui.openPopup(description);
-        centrePopup();
-        // AlwaysAutoResize ensures the window resizes itself based on its content
-        if (ImGui.beginPopup(description, ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar)) {
-            centrePopupText(description);
-        }
-        ImGui.endPopup();
-        return closePopup();
-    }
-
-
-    private static void centrePopupText(String description) {
-        ImVec2 textSize = ImGui.calcTextSize(description);
-        ImVec2 centerPos = new ImVec2(new ImVec2((POPUP_WIN_SIZE.x - textSize.x) * 0.5f,
-                (POPUP_WIN_SIZE.y - textSize.y) * 0.5f));
-        // Allows me to manually set where the next UI element will be drawn
-        ImGui.setCursorPos(centerPos.x, centerPos.y);
-        ImGui.text(description);
-    }
-
-
-    private static void centrePopup() {
-        ImVec2 popupPos = new ImVec2((EngineWindow.get().getWindowWidth() * 0.5f),
-                (EngineWindow.get().getWindowHeight() * 0.5f));
-        ImGui.setNextWindowSize(POPUP_WIN_SIZE.x, POPUP_WIN_SIZE.y);
-        ImGui.setNextWindowPos(popupPos.x, popupPos.y);
-    }
-
-
-    private static boolean closePopup() {
-        if (MouseInputs.mouseButtonDown(GLFW_MOUSE_BUTTON_1)) {
-            ImGui.closeCurrentPopup();
-            return false;
-        }
-        return true;
-    }
 
     // TODO: Review this well
     public static String camelCaseToWords(String camelCaseString) {
@@ -330,6 +294,14 @@ public class ImGuiUtils {
         result.setCharAt(0, Character.toUpperCase(result.charAt(0)));
 
         return result.toString();
+    }
+
+    public static void setSectionName(String name) {
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGui.text(name);
+
     }
 }
 /*End of ImGuiCustom class*/

@@ -1,7 +1,12 @@
+/*
+ Title: ErrorForm
+ Date: 2024-03-07
+ Author: Kyle St John
+ */
 package engine.debugging.ui;
 
-import engine.utils.ImGuiUtils;
-import engine.utils.ReportUtils;
+import engine.debugging.info.Logger;
+import engine.debugging.info.ErrorManager;
 import imgui.ImGui;
 import imgui.flag.ImGuiInputTextFlags;
 import imgui.type.ImBoolean;
@@ -9,43 +14,73 @@ import imgui.type.ImString;
 
 import static engine.utils.EConstants.X_SPACING;
 
+/**
+ * Represents a panel for managing error reports and generating new bug reports.
+ */
 public class ErrorPanel {
 
-    private boolean bRefreshFields = false;
+    // Variables
+
+    private boolean shouldRefresh = false;
     private ImBoolean generateNewReport = new ImBoolean(false);
+    private final ImString errorID = new ImString();
+    private final ImString errorDescription = new ImString();
 
-    private final ImString imGuiBugName = new ImString();
-    private final ImString imGuiBugDescription = new ImString();
+    // Constructor
 
+    /**
+     * Constructs an ErrorPanel and loads existing error reports.
+     */
     public ErrorPanel() {
-        ReportUtils.loadReports();
-        imGuiBugDescription.resize(512);
+        ErrorManager.loadReports();
+        errorDescription.resize(512);
     }
 
-    public void imgui() {
-        generateReport();
+    // Public methods
 
+    /**
+     * Renders the error panel user interface.
+     */
+    public void imGui() {
+        renderErrorUI();
     }
 
-    private void generateReport() {
+    /**
+     * Sets the state of generating a new bug report.
+     *
+     * @param generateNewReport The state of generating a new bug report.
+     */
+    public void setGenerateNewReport(ImBoolean generateNewReport) {
+        this.generateNewReport = generateNewReport;
+    }
+
+    // Private methods
+
+    /**
+     * Renders the error panel UI elements.
+     */
+    private void renderErrorUI() {
         if (generateNewReport.get()) {
-            ImGui.begin("Bug Report", generateNewReport);
+            ImGui.begin("Error", generateNewReport);
             generateFields();
             ImGui.end();
         }
-        if (bRefreshFields) {
+        if (shouldRefresh) {
             resetFields();
-            bRefreshFields = ImGuiUtils.activatePopup("Saving!");
         }
+        ImGui.spacing();
     }
 
+    /**
+     * Generates UI fields for entering bug report details.
+     */
     private void generateFields() {
         ImGui.setCursorPosX(X_SPACING);
         ImGui.text("ID:   ");
         ImGui.setCursorPosX(X_SPACING);
 
         // Input text field for bug name
-        ImGui.inputText("##name", imGuiBugName);
+        ImGui.inputText("##name", errorID);
 
         ImGui.spacing();
         ImGui.setCursorPosX(X_SPACING);
@@ -54,35 +89,33 @@ public class ErrorPanel {
         ImGui.setCursorPosX(X_SPACING);
 
         // Multiline input text field for bug description
-        if (imGuiBugDescription.getBufferSize() < 512) {
-            imGuiBugDescription.resize(512);
+        if (errorDescription.getBufferSize() < 512) {
+            errorDescription.resize(512);
         }
-        ImGui.inputTextMultiline("##description", imGuiBugDescription, ImGuiInputTextFlags.CallbackResize);
+        ImGui.inputTextMultiline("##description", errorDescription, ImGuiInputTextFlags.CallbackResize);
 
         ImGui.setCursorPosX(X_SPACING);
         if (ImGui.button("Generate Report")) {
-            ImGuiUtils.activatePopup("Saving!");
-            String bugName = imGuiBugName.get();
-            String bugDescription = imGuiBugDescription.get();
+            String bugName = errorID.get();
+            String bugDescription = errorDescription.get();
 
             if (!bugName.isEmpty() && !bugDescription.isEmpty()) {
-                ReportUtils.saveReport(bugName, bugDescription);
-                this.bRefreshFields = true;
+                ErrorManager.saveReport(bugName, bugDescription);
+                Logger.info("Successfully saved error report: " + errorID);
+                this.shouldRefresh = true;
                 generateNewReport.set(false);
             } else {
                 // Handle empty fields
-                ImGuiUtils.activatePopup("Error: Please fill in all fields!");
+                Logger.error("Error: Please fill in all fields!");
             }
         }
     }
 
+    /**
+     * Resets the error panel fields.
+     */
     private void resetFields() {
-        imGuiBugName.set("");
-        imGuiBugDescription.set("");
+        errorID.set("");
+        errorDescription.set("");
     }
-
-    public void setGenerateNewReport(ImBoolean generateNewReport) {
-        this.generateNewReport = generateNewReport;
-    }
-
-}
+}/* End of ErrorPanel class */

@@ -1,9 +1,8 @@
 /*
- Title: DrawShapes
- Date: 2024-02-14
+ Title: ErrorForm
+ Date: 2024-03-07
  Author: Kyle St John
  */
-
 package engine.debugging.ui;
 
 import engine.debugging.draw.DebugDraw;
@@ -13,28 +12,43 @@ import imgui.flag.ImGuiCol;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+/**
+ * Generates shapes for debugging and rendering purposes.
+ */
 public class ShapeGenerator {
 
+    // Variables
+
     protected enum ShapeType {BOX, TRIANGLE, CIRCLE, LINE};
-
     protected ShapeType currentShape;
-
     protected Vector3f color;
     protected int lifeTime;
     protected float rotation;
-
     protected boolean bIsPersistent = false;
 
+    // Constructor
+
+    /**
+     * Constructs a ShapeGenerator with default values.
+     */
     public ShapeGenerator() {
         color = new Vector3f();
         lifeTime = 0;
         rotation = 0;
     }
 
-    protected void drawUI() {
+    // Protected methods
+
+    /**
+     * Renders the user interface for shape generation.
+     */
+    protected void renderUI() {
 
     }
 
+    /**
+     * Draws common UI elements for shape generation.
+     */
     protected void drawCommonUI() {
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
         ImGui.text("?");
@@ -58,6 +72,11 @@ public class ShapeGenerator {
         rotation = ImGuiUtils.renderFloatSlider("Rotation", rotation);
     }
 
+    /**
+     * Draws a button and the associated shape.
+     *
+     * @param drawShape The action to draw the shape.
+     */
     protected void drawButtonAndDrawShape(Runnable drawShape) {
         ImGui.spacing();
         ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
@@ -69,27 +88,42 @@ public class ShapeGenerator {
         ImGui.popStyleColor();
     }
 
+    /**
+     * Refreshes the fields of the shape generator.
+     */
     protected void refreshFields() {
         color = new Vector3f();
         lifeTime = 0;
         rotation = 0;
         bIsPersistent = false;
     }
-}
+}/* End of ShapeGenerator class */
 
+/**
+ * Generates boxes for debugging and rendering purposes.
+ */
 class BoxGenerator extends ShapeGenerator {
+
+    // Variables
 
     private Vector2f size;
     private Vector2f position;
 
+    // Constructor
+
+    /**
+     * Constructs a BoxGenerator with default values.
+     */
     public BoxGenerator() {
         size = new Vector2f();
         position = new Vector2f();
         currentShape = ShapeType.BOX;
     }
 
+    // Public methods
+
     @Override
-    public void drawUI() {
+    public void renderUI() {
         drawCommonUI();
         ImGuiUtils.renderVec2Sliders("Position", position, position);
         ImGuiUtils.renderVec2Sliders("Size", size, size);
@@ -101,6 +135,8 @@ class BoxGenerator extends ShapeGenerator {
         }
     }
 
+    // Protected methods
+
     @Override
     protected void refreshFields() {
         super.refreshFields();
@@ -108,14 +144,24 @@ class BoxGenerator extends ShapeGenerator {
         rotation = 0;
         position = new Vector2f();
     }
-}
+}/* End of BoxGenerator class */
 
+/**
+ * Generates triangles for debugging and rendering purposes.
+ */
 class TriangleGenerator extends ShapeGenerator {
+
+    // Variables
 
     private Vector2f v1;
     private Vector2f v2;
     private Vector2f v3;
 
+    // Constructor
+
+    /**
+     * Constructs a TriangleGenerator with default values.
+     */
     public TriangleGenerator() {
         v1 = new Vector2f();
         v2 = new Vector2f();
@@ -123,8 +169,10 @@ class TriangleGenerator extends ShapeGenerator {
         currentShape = ShapeType.TRIANGLE;
     }
 
+    // Public methods
+
     @Override
-    public void drawUI() {
+    public void renderUI() {
         drawCommonUI();
         ImGuiUtils.renderVec2Sliders("V1", v1, v1);
         ImGuiUtils.renderVec2Sliders("V2", v2, v2);
@@ -139,6 +187,8 @@ class TriangleGenerator extends ShapeGenerator {
         }
     }
 
+    // Protected methods
+
     @Override
     protected void refreshFields() {
         super.refreshFields();
@@ -146,14 +196,24 @@ class TriangleGenerator extends ShapeGenerator {
         v2 = new Vector2f();
         v3 = new Vector2f();
     }
-}
+}/* End of TriangleGenerator class */
 
+/**
+ * Generates circles for debugging and rendering purposes.
+ */
 class CircleGenerator extends ShapeGenerator {
+
+    // Variables
 
     private Vector2f centre;
     private float radius;
     private int segments;
 
+    // Constructor
+
+    /**
+     * Constructs a CircleGenerator with default values.
+     */
     public CircleGenerator() {
         centre = new Vector2f();
         radius = 0;
@@ -161,8 +221,10 @@ class CircleGenerator extends ShapeGenerator {
         currentShape = ShapeType.CIRCLE;
     }
 
+    // Public methods
+
     @Override
-    public void drawUI() {
+    public void renderUI() {
         drawCommonUI();
         ImGuiUtils.renderVec2Sliders("Centre", centre, centre);
         radius = ImGuiUtils.renderFloatSlider("Radius", radius);
@@ -185,6 +247,8 @@ class CircleGenerator extends ShapeGenerator {
         }
     }
 
+    // Protected methods
+
     @Override
     protected void refreshFields() {
         super.refreshFields();
@@ -192,21 +256,33 @@ class CircleGenerator extends ShapeGenerator {
         radius = 0;
         segments = 36;
     }
-}
+}/* End of CircleGenerator class */
 
+/**
+ * Generates lines for debugging and rendering purposes.
+ */
 class LineGenerator extends ShapeGenerator {
+
+    // Variables
 
     private Vector2f from;
     private Vector2f to;
 
+    // Constructor
+
+    /**
+     * Constructs a LineGenerator with default values.
+     */
     public LineGenerator() {
         from = new Vector2f();
         to = new Vector2f();
         currentShape = ShapeType.LINE;
     }
 
+    // Public methods
+
     @Override
-    public void drawUI() {
+    public void renderUI() {
         drawCommonUI();
         ImGuiUtils.renderVec2Sliders("From", from, from);
         ImGuiUtils.renderVec2Sliders("To", to, to);
@@ -218,11 +294,12 @@ class LineGenerator extends ShapeGenerator {
         }
     }
 
+    // Protected methods
+
     @Override
     protected void refreshFields() {
         super.refreshFields();
         from = new Vector2f();
         to = new Vector2f();
     }
-}
-/*End of ShapeGenerator class*/
+}/* End of LineGenerator class */

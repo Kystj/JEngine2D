@@ -102,9 +102,9 @@ public class Viewport {
 
         ImGui.sameLine();
         if (isGridLocked) {
-            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.lockTexture, true);
+            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.LOCK_BUTTON_TEXTURE, true);
         } else {
-            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.unlock, false);
+            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.UNLOCK_BUTTON_TEXTURE, false);
         }
 
         ImGui.sameLine();

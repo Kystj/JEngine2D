@@ -19,9 +19,8 @@ public class ReportAdapter implements JsonSerializer<ErrorForm>, JsonDeserialize
                                  JsonSerializationContext jsonSerializationContext) {
         JsonObject jsonObject = new JsonObject();
         // Adding BugReport properties to the JSON object
-        jsonObject.add("Name: ", new JsonPrimitive(String.valueOf(errorForm.getBugID())));
-        jsonObject.add("Description: ", new JsonPrimitive(String.valueOf(errorForm.getBugDescription())));
-        jsonObject.add("Resolved: ", new JsonPrimitive(errorForm.isResolved()));
+        jsonObject.add("Name: ", new JsonPrimitive(String.valueOf(errorForm.getErrorID())));
+        jsonObject.add("Description: ", new JsonPrimitive(String.valueOf(errorForm.getErrorDescription())));
         return jsonObject;
     }
 
@@ -36,7 +35,7 @@ public class ReportAdapter implements JsonSerializer<ErrorForm>, JsonDeserialize
         Boolean resolved = jsonObject.get("Resolved: ").getAsBoolean();
 
         // Creating a new BugReport object with the retrieved properties
-        return new ErrorForm(name, description, resolved);
+        return new ErrorForm(name, description);
     }
 }
 /* End of BugTypeAdapter class */

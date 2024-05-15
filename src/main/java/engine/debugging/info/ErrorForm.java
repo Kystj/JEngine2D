@@ -1,54 +1,68 @@
 /*
- * Title: BugReport
- * Date: 2023-11-09
- * Author: Kyle St John
+ Title: ErrorForm
+ Date: 2024-03-07
+ Author: Kyle St John
  */
 package engine.debugging.info;
 
+/**
+ * Represents a bug report containing a unique identifier, description, and resolution status.
+ */
 public class ErrorForm {
 
-    // Unique identifier for the bug
-    private String bugID;
+    // Variables
 
-    // Description of the bug
-    private String bugDescription;
+    private String errorID;
+    private String errorDescription;
 
-    // Flag indicating whether the bug is resolved
-    private boolean resolved = false;
+    // Constructors
 
-    public ErrorForm(String bugID, String bugDescription) {
-        this.bugID = bugID;
-        this.bugDescription = bugDescription;
+    /**
+     * Constructs an ErrorForm object with an error ID and description.
+     *
+     * @param errorID          The unique identifier for the error.
+     * @param errorDescription The description of the error.
+     */
+    public ErrorForm(String errorID, String errorDescription) {
+        this.errorID = errorID;
+        this.errorDescription = errorDescription;
     }
 
-    public ErrorForm(String bugID, String bugDescription, Boolean resolved) {
-        this.bugID = bugID;
-        this.bugDescription = bugDescription;
-        this.resolved = resolved;
+    // Public methods
+
+    /**
+     * Gets the unique identifier for the error.
+     *
+     * @return The error ID.
+     */
+    public String getErrorID() {
+        return errorID;
     }
 
-    public String getBugID() {
-        return bugID;
+    /**
+     * Gets the description of the error.
+     *
+     * @return The error description.
+     */
+    public String getErrorDescription() {
+        return errorDescription;
     }
 
-    public String getBugDescription() {
-        return bugDescription;
+    /**
+     * Sets the unique identifier for the error.
+     *
+     * @param errorID The error ID to set.
+     */
+    public void setErrorID(String errorID) {
+        this.errorID = errorID;
     }
 
-    public void setBugID(String bugID) {
-        this.bugID = bugID;
+    /**
+     * Sets the description of the error.
+     *
+     * @param errorDescription The error description to set.
+     */
+    public void setErrorDescription(String errorDescription) {
+        this.errorDescription = errorDescription;
     }
-
-    public void setBugDescription(String bugDescription) {
-        this.bugDescription = bugDescription;
-    }
-
-    public boolean isResolved() {
-        return resolved;
-    }
-
-    public void setResolved(boolean resolved) {
-        this.resolved = resolved;
-    }
-}
-/* End of BugReport class */
+}/* End of ErrorForm class */
