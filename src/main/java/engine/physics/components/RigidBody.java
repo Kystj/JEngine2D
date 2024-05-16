@@ -12,6 +12,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 
 import static engine.utils.EConstants.EngineMode.GameMode;
+import static engine.utils.EConstants.EngineMode.LaunchMode;
 
 public class RigidBody extends Component {
 
@@ -30,7 +31,8 @@ public class RigidBody extends Component {
 
 
     public void tick(float deltaTime) {
-        if (b2Body != null && EngineWindow.Enabled_Engine_Mode == GameMode ) {
+        if (b2Body != null &&
+                (EngineWindow.Enabled_Engine_Mode == GameMode  || EngineWindow.Enabled_Engine_Mode == LaunchMode)) {
             this.owningGameObject.getTransform().getPosition().set(
                     b2Body.getPosition().x, b2Body.getPosition().y);
             this.owningGameObject.getTransform().setRotation((float) Math.toDegrees(b2Body.getAngle()));

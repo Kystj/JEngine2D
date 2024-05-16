@@ -201,7 +201,7 @@ public class EngineWindow implements EventListener {
             while (accumulatedTime >= DELTA_TIME) {
                 Game_Editor.tick(DELTA_TIME);
 
-                if (Enabled_Engine_Mode == GameMode) {
+                if (Enabled_Engine_Mode == GameMode || Enabled_Engine_Mode == LaunchMode) {
                     Game_Editor.physicsTick(getDeltaTime());
                 }
                 accumulatedTime -= DELTA_TIME;
@@ -225,31 +225,35 @@ public class EngineWindow implements EventListener {
 
 
     private void render() {
-        if (Enabled_Engine_Mode == EditorMode) {
+        if (Enabled_Engine_Mode == LaunchMode) {
+            clear();
+            Game_Editor.renderLevel();
+        } else if (Enabled_Engine_Mode == EditorMode) {
             Game_Editor.renderEditor();
+
+            // Render the editor scene to the framebuffer
+            this.framebuffer.use(windowWidth, windowHeight);
+
+            clear();
+            if (isWireFrameEnabled) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            }
+
+            if (Enabled_Engine_Mode == EditorMode) {
+                DebugRenderer.render();
+            }
+
+
+            Renderer.setDefaultShader();
+            Game_Editor.renderLevel();//currentScene.render();
+            this.framebuffer.detatch();
+
+            if (isWireFrameEnabled) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            }
+            // Render/Update the ImGui components
+            ImGui_Controller.render();
         }
-        // Render the editor scene to the framebuffer
-        this.framebuffer.use(windowWidth, windowHeight);
-
-        clear();
-        if (isWireFrameEnabled) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        }
-
-        if (Enabled_Engine_Mode == EditorMode) {
-            DebugRenderer.render();
-        }
-
-
-        Renderer.setDefaultShader();
-        Game_Editor.renderLevel();//currentScene.render();
-        this.framebuffer.detatch();
-
-        if (isWireFrameEnabled) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
-        // Render/Update the ImGui components
-        ImGui_Controller.render();
     }
 
 
