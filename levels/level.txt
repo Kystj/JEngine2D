@@ -1,6 +1,6 @@
 [
   {
-    "name": "GameObject_0001000000000000000000",
+    "name": "GameObject_00010000000000000000000",
     "componentsList": [
       {
         "Class": "engine.world.components.Sprite",
@@ -54,8 +54,8 @@
         "Class": "engine.physics.components.BoxCollider",
         "Class properties": {
           "dimensions": {
-            "x": 4.7683716E-7,
-            "y": 4.7683716E-7
+            "x": 2.3841858E-7,
+            "y": 2.3841858E-7
           },
           "colliderOrigin": {
             "x": 0.0,
@@ -98,7 +98,7 @@
     "objectUID": 0
   },
   {
-    "name": "GameObject_1",
+    "name": "GameObject_11",
     "componentsList": [
       {
         "Class": "engine.world.components.Sprite",
@@ -135,7 +135,7 @@
           ],
           "transform": {
             "position": {
-              "x": 928.0,
+              "x": 987.0,
               "y": 416.0
             },
             "scale": {
@@ -145,15 +145,15 @@
             "rotation": 0.0,
             "zIndex": 0
           },
-          "componentID": 15
+          "componentID": 3
         }
       },
       {
         "Class": "engine.physics.components.BoxCollider",
         "Class properties": {
           "dimensions": {
-            "x": 1.0,
-            "y": 1.0
+            "x": 0.5,
+            "y": 0.5
           },
           "colliderOrigin": {
             "x": 0.0,
@@ -169,7 +169,7 @@
             "z": 0.0
           },
           "colliderRotation": 0.0,
-          "componentID": 0
+          "componentID": 4
         }
       },
       {
@@ -189,7 +189,7 @@
           "continuousCollision": true,
           "gravityScale": 1.0,
           "mass": 0.0,
-          "componentID": 0
+          "componentID": 5
         }
       }
     ],

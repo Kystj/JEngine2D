@@ -5,7 +5,7 @@
  */
 package engine.eventsystem;
 
-import engine.utils.EConstants.EventType;
+import engine.utils.engine.EConstants;
 
 /**
  * Represents a generic event with an associated event type.
@@ -17,7 +17,7 @@ public class Event {
     /**
      * The type of the event.
      */
-    private final EventType eventType;
+    private final EConstants.EventType eventType;
 
     // Constructors
 
@@ -26,7 +26,7 @@ public class Event {
      *
      * @param eventType The type of the event.
      */
-    public Event(EventType eventType) {
+    public Event(EConstants.EventType eventType) {
         this.eventType = eventType;
     }
 
@@ -35,7 +35,7 @@ public class Event {
      */
     public Event() {
         // Default to EventType.User if no type is specified
-        this.eventType = EventType.User;
+        this.eventType = EConstants.EventType.User;
     }
 
     // Public methods
@@ -45,7 +45,7 @@ public class Event {
      *
      * @return The event type.
      */
-    public EventType getEventType() {
+    public EConstants.EventType getEventType() {
         return eventType;
     }
 }

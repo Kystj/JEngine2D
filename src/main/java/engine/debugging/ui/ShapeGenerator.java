@@ -6,7 +6,7 @@
 package engine.debugging.ui;
 
 import engine.debugging.draw.DebugDraw;
-import engine.utils.ImGuiUtils;
+import engine.utils.imgui.ImGuiUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import org.joml.Vector2f;

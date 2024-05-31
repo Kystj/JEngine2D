@@ -11,7 +11,7 @@ import engine.eventsystem.EventListener;
 import engine.graphics.OrthoCamera;
 import engine.graphics.Renderer;
 import engine.physics.PhysicsMain;
-import engine.utils.EConstants;
+import engine.utils.engine.EConstants;
 import engine.world.objects.GameObject;
 
 public class TestLevel extends Level implements EventListener {

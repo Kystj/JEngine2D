@@ -9,7 +9,7 @@ import engine.debugging.info.Logger;
 import engine.editor.ui.MainMenuBar;
 import engine.editor.ui.Viewport;
 import engine.graphics.EngineWindow;
-import engine.utils.ShortcutUtils;
+import engine.utils.engine.ShortcutUtils;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.flag.*;

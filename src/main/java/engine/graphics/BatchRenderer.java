@@ -6,8 +6,8 @@
 package engine.graphics;
 
 import engine.editor.GameEditor;
-import engine.utils.MathUtils;
-import engine.utils.ResourceUtils;
+import engine.utils.math.MathUtils;
+import engine.utils.engine.ResourceUtils;
 import engine.world.components.Sprite;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
@@ -15,7 +15,7 @@ import org.joml.Vector4f;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.utils.EConstants.MAX_BATCH_SIZE;
+import static engine.utils.engine.EConstants.MAX_BATCH_SIZE;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glDisableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;

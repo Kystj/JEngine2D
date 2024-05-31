@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;

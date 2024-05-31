@@ -4,7 +4,7 @@ import engine.debugging.draw.DebugRenderer;
 import engine.debugging.info.Logger;
 import engine.graphics.Texture;
 import engine.debugging.info.ErrorManager;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.type.ImBoolean;
@@ -12,9 +12,9 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 
-import static engine.utils.EConstants.GREEN_BUTTON;
-import static engine.utils.EConstants.X_SPACING;
-import static engine.utils.ImGuiUtils.setSectionName;
+import static engine.utils.engine.EConstants.GREEN_BUTTON;
+import static engine.utils.engine.EConstants.X_SPACING;
+import static engine.utils.imgui.ImGuiUtils.setSectionName;
 
 /**
  * Represents a debug panel containing various debugging tools and information for user interface rendering.

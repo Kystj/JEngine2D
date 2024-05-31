@@ -11,8 +11,8 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 import org.joml.Vector2f;
 
-import static engine.utils.EConstants.EngineMode.GameMode;
-import static engine.utils.EConstants.EngineMode.LaunchMode;
+import static engine.utils.engine.EConstants.EngineMode.GameMode;
+import static engine.utils.engine.EConstants.EngineMode.LaunchMode;
 
 public class RigidBody extends Component {
 

@@ -14,8 +14,8 @@ import engine.physics.components.BoxCollider;
 import engine.physics.components.CircleCollider;
 import engine.physics.components.Collider;
 import engine.physics.components.RigidBody;
-import engine.utils.EConstants;
-import engine.utils.ImGuiUtils;
+import engine.utils.engine.EConstants;
+import engine.utils.imgui.ImGuiUtils;
 import engine.world.components.Component;
 import engine.world.components.Sprite;
 import engine.world.levels.Level;
@@ -28,8 +28,8 @@ import org.joml.Vector3f;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import static engine.utils.EConstants.COLUMN_WIDTH_LARGE;
-import static engine.utils.ImGuiUtils.setSectionName;
+import static engine.utils.engine.EConstants.COLUMN_WIDTH_LARGE;
+import static engine.utils.imgui.ImGuiUtils.setSectionName;
 import static org.jbox2d.dynamics.BodyType.*;
 
 public class DetailsWindow implements EventListener {

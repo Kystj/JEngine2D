@@ -12,7 +12,7 @@ import imgui.flag.ImGuiInputTextFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
-import static engine.utils.EConstants.X_SPACING;
+import static engine.utils.engine.EConstants.X_SPACING;
 
 /**
  * Represents a panel for managing error reports and generating new bug reports.

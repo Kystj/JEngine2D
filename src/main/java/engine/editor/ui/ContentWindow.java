@@ -20,8 +20,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static engine.utils.EConstants.RED_BUTTON;
-import static engine.utils.EConstants.X_SPACING;
+import static engine.utils.engine.EConstants.RED_BUTTON;
+import static engine.utils.engine.EConstants.X_SPACING;
 
 public class ContentWindow {
 

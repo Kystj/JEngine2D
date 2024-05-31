@@ -7,7 +7,7 @@ package engine.editor.ui;
 
 import engine.graphics.SpriteSheet;
 import engine.serialization.SpriteSheetSerializer;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
@@ -16,7 +16,7 @@ import org.joml.Vector2f;
 import java.util.HashMap;
 import java.util.Map;
 
-import static engine.utils.EConstants.X_SPACING;
+import static engine.utils.engine.EConstants.X_SPACING;
 
 public class ImportWindow {
 

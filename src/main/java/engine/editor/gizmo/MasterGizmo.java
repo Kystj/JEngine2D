@@ -9,11 +9,11 @@ import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
-import engine.utils.EConstants;
-import engine.world.objects.GameObject;
+import engine.utils.engine.EConstants;
 import engine.world.levels.Level;
+import engine.world.objects.GameObject;
 
-import static engine.utils.EConstants.GIZMO_GAME_OBJECT_UID;
+import static engine.utils.engine.EConstants.GIZMO_GAME_OBJECT_UID;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class MasterGizmo implements EventListener {

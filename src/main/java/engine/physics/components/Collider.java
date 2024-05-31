@@ -5,7 +5,7 @@
  */
 package engine.physics.components;
 
-import engine.utils.EConstants;
+import engine.utils.engine.EConstants;
 import engine.world.components.Component;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

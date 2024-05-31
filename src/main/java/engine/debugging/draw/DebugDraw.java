@@ -5,11 +5,11 @@
  */
 package engine.debugging.draw;
 
-import engine.utils.MathUtils;
+import engine.utils.math.MathUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import static engine.utils.EConstants.MAX_DEBUG_LINES;
+import static engine.utils.engine.EConstants.MAX_DEBUG_LINES;
 
 public class DebugDraw {
 

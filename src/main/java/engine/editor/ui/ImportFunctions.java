@@ -8,7 +8,7 @@ package engine.editor.ui;
 import engine.graphics.SpriteSheet;
 import engine.graphics.Texture;
 import engine.serialization.SpriteSheetSerializer;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import imgui.ImGui;
 import imgui.type.ImBoolean;
 import imgui.type.ImInt;

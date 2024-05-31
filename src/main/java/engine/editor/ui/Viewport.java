@@ -5,9 +5,10 @@
  */
 package engine.editor.ui;
 
-import engine.io.MouseInputs;
 import engine.graphics.EngineWindow;
-import engine.utils.ImGuiUtils;
+import engine.io.MouseInputs;
+import engine.utils.imgui.GConstants;
+import engine.utils.imgui.ImGuiUtils;
 import imgui.ImGui;
 import imgui.ImVec2;
 import imgui.flag.ImGuiViewportFlags;
@@ -102,9 +103,9 @@ public class Viewport {
 
         ImGui.sameLine();
         if (isGridLocked) {
-            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.LOCK_BUTTON_TEXTURE, true);
+            isGridLocked = ImGuiUtils.renderLockButton(GConstants.LOCK_BUTTON_TEXTURE, true);
         } else {
-            isGridLocked = ImGuiUtils.renderLockButton(ImGuiUtils.UNLOCK_BUTTON_TEXTURE, false);
+            isGridLocked = ImGuiUtils.renderLockButton(GConstants.UNLOCK_BUTTON_TEXTURE, false);
         }
 
         ImGui.sameLine();

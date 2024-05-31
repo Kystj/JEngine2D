@@ -3,7 +3,7 @@
  Date: 2023-12-06
  Author: Kyle St John
  */
-package engine.utils;
+package engine.utils.engine;
 
 import engine.debugging.info.Logger;
 import engine.io.Audio;

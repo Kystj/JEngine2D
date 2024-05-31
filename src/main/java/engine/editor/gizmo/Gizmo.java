@@ -10,7 +10,7 @@ import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
-import static engine.utils.EConstants.*;
+import static engine.utils.engine.EConstants.*;
 
 public class Gizmo {
 

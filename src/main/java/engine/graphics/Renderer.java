@@ -5,7 +5,7 @@
  */
 package engine.graphics;
 
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import engine.world.components.Sprite;
 import engine.world.objects.GameObject;
 

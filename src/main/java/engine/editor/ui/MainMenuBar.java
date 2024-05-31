@@ -13,7 +13,7 @@ import engine.eventsystem.EventDispatcher;
 import engine.graphics.Renderer;
 import engine.physics.PhysicsMain;
 import engine.serialization.LevelSerializer;
-import engine.utils.EConstants;
+import engine.utils.engine.EConstants;
 import engine.world.levels.TestLevel;
 import imgui.ImGui;
 import imgui.type.ImBoolean;

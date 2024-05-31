@@ -8,7 +8,7 @@ package engine.debugging.info;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.serialization.ReportAdapter;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 
@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static engine.utils.EConstants.*;
+import static engine.utils.engine.EConstants.*;
 
 /**
  * Manages error reports including saving, loading, and displaying them.

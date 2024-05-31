@@ -7,15 +7,15 @@ package engine.debugging.draw;
 
 import engine.graphics.Shader;
 import engine.editor.GameEditor;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static engine.utils.EConstants.DEBUG_LINE_WIDTH;
-import static engine.utils.EConstants.MAX_DEBUG_LINES;
+import static engine.utils.engine.EConstants.DEBUG_LINE_WIDTH;
+import static engine.utils.engine.EConstants.MAX_DEBUG_LINES;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;

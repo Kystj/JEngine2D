@@ -3,7 +3,7 @@
  Date: 2024-02-22
  Author: Kyle St John
  */
-package engine.utils;
+package engine.utils.math;
 
 import org.joml.Vector2f;
 

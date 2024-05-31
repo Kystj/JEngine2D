@@ -6,6 +6,7 @@
 package engine.editor.controls;
 
 import engine.debugging.info.Logger;
+import engine.editor.GameEditor;
 import engine.editor.gizmo.MasterGizmo;
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
@@ -13,15 +14,14 @@ import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
-import engine.editor.GameEditor;
-import engine.utils.EConstants;
+import engine.utils.engine.EConstants;
 import engine.world.components.Sprite;
-import engine.world.objects.GameObject;
 import engine.world.levels.Level;
+import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
 import static engine.editor.GameEditor.Object_Picker;
-import static engine.utils.EConstants.*;
+import static engine.utils.engine.EConstants.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 

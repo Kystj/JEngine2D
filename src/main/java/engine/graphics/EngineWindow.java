@@ -20,8 +20,8 @@ import engine.eventsystem.EventListener;
 import engine.io.KeyInputs;
 import engine.io.MouseInputs;
 import engine.physics.PhysicsMain;
-import engine.utils.EConstants;
-import engine.utils.MathUtils;
+import engine.utils.engine.EConstants;
+import engine.utils.math.MathUtils;
 import engine.world.levels.Level;
 import engine.world.levels.TestLevel;
 import engine.world.objects.GameObject;
@@ -34,10 +34,10 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.Objects;
 
-import static engine.utils.EConstants.DEFAULT_ASPECT_RATIO;
-import static engine.utils.EConstants.EngineMode;
-import static engine.utils.EConstants.EngineMode.*;
-import static engine.utils.EConstants.EventType.*;
+import static engine.utils.engine.EConstants.DEFAULT_ASPECT_RATIO;
+import static engine.utils.engine.EConstants.EngineMode;
+import static engine.utils.engine.EConstants.EngineMode.*;
+import static engine.utils.engine.EConstants.EventType.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

@@ -3,41 +3,28 @@
  Date: 2023-11-09
  Author: Kyle St John
  */
-package engine.utils;
+package engine.utils.imgui;
 
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.graphics.EngineWindow;
 import engine.graphics.Texture;
+import engine.utils.engine.EConstants;
+import engine.utils.math.MathUtils;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiPopupFlags;
 import imgui.flag.ImGuiStyleVar;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import static engine.utils.EConstants.X_SPACING;
+import static engine.utils.engine.EConstants.X_SPACING;
+import static engine.utils.engine.EConstants.TEXTURE_COORDINATES;
+import static engine.utils.imgui.GConstants.*;
 
 public class ImGuiUtils {
-
-    public static final Texture LOCK_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/locked.png");
-    public static final Texture UNLOCK_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/unlocked.png");
-    public static final Texture GRID_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/grid.png");
-    public static final Texture LAUNCH_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/launch.png");
-    public static final Texture PLAY_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/play.png");
-    public static final Texture STOP_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/stop.png");
-    public static final Texture WIREFRAME_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/frame.png");
-
-    public static final Vector2f POPUP_WIN_SIZE = new Vector2f(300, 50);
-    public static final int COLUMN_WIDTH_MEDIUM = 100;
-    public static final float SLIDER_SPEED = 0.3f;
-
-    private static final Vector2f[] BUTTON_TEXTURE_COORDINATES = new Vector2f[]{
-            new Vector2f(1, 1),
-            new Vector2f(1, 0),
-            new Vector2f(0, 0),
-            new Vector2f(0, 1)
-    };
 
     public static void renderMetricsInfo() {
         ImGui.setCursorPosX(X_SPACING);
@@ -49,7 +36,7 @@ public class ImGuiUtils {
     }
 
     public static void renderWireFrameModeButton(boolean isOn) {
-        if (ImGui.imageButton(WIREFRAME_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
+        if (ImGui.imageButton(WIREFRAME_BUTTON_TEXTURE.getTextureID(), 16, 16, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[0].y, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Wire_Frame));
         }
         if (ImGui.isItemHovered()) {
@@ -64,19 +51,19 @@ public class ImGuiUtils {
     }
 
     public static void renderLaunchButton() {
-        if (ImGui.imageButton(LAUNCH_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
+        if (ImGui.imageButton(LAUNCH_BUTTON_TEXTURE.getTextureID(), 16, 16, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[0].y, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Launch));
         }
     }
 
     public static void renderPlayButton() {
-        if (ImGui.imageButton(PLAY_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y)) {
+        if (ImGui.imageButton(PLAY_BUTTON_TEXTURE.getTextureID(), 16, 16, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[2].y, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[0].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Play));
         }
     }
 
     public static void renderStopButton() {
-        if (ImGui.imageButton(STOP_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y)) {
+        if (ImGui.imageButton(STOP_BUTTON_TEXTURE.getTextureID(), 16, 16, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[2].y, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[0].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Stop));
         }
     }
@@ -91,7 +78,7 @@ public class ImGuiUtils {
             ImGui.endPopup();
         }
 
-        if (ImGui.imageButton(GRID_BUTTON_TEXTURE.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
+        if (ImGui.imageButton(GRID_BUTTON_TEXTURE.getTextureID(), 16, 16, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[0].y, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[2].y)) {
             ImGui.openPopup("cellSize");
         }
 
@@ -106,7 +93,7 @@ public class ImGuiUtils {
         String lockedStr = "Lock";
         String unlockedStr = "Unlock";
 
-        if (ImGui.imageButton(texture.getTextureID(), 16, 16, BUTTON_TEXTURE_COORDINATES[0].x, BUTTON_TEXTURE_COORDINATES[0].y, BUTTON_TEXTURE_COORDINATES[2].x, BUTTON_TEXTURE_COORDINATES[2].y)) {
+        if (ImGui.imageButton(texture.getTextureID(), 16, 16, TEXTURE_COORDINATES[0].x, TEXTURE_COORDINATES[0].y, TEXTURE_COORDINATES[2].x, TEXTURE_COORDINATES[2].y)) {
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Grid_Lock)); // Turn off snap to grid
             isLocked = !isLocked;
         }
@@ -277,7 +264,32 @@ public class ImGuiUtils {
     }
 
 
-    // TODO: Review this well
+    public static void renderRightClickContext(String contextString) {
+
+        boolean showTabContextMenu = ImGui.isItemClicked(ImGuiMouseButton.Right);
+
+        if (showTabContextMenu) {
+            ImGui.openPopup("TabContextMenu");
+        }
+        ImGui.sameLine();
+
+
+        if (ImGui.beginPopup("TabContextMenu", ImGuiPopupFlags.MouseButtonRight)) {
+            if (ImGui.menuItem(contextString)) {
+
+            }
+            ImGui.endPopup();
+        }
+    }
+
+
+    public static void setSectionName(String name) {
+        ImGui.spacing();
+        ImGui.separator();
+        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
+        ImGui.text(name);
+    }
+
     public static String camelCaseToWords(String camelCaseString) {
         StringBuilder result = new StringBuilder();
 
@@ -294,14 +306,6 @@ public class ImGuiUtils {
         result.setCharAt(0, Character.toUpperCase(result.charAt(0)));
 
         return result.toString();
-    }
-
-    public static void setSectionName(String name) {
-        ImGui.spacing();
-        ImGui.separator();
-        ImGui.setCursorPosX(ImGui.getWindowSizeX() / 2);
-        ImGui.text(name);
-
     }
 }
 /*End of ImGuiCustom class*/

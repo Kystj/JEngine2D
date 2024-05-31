@@ -11,7 +11,7 @@ import engine.world.components.Transform;
 import engine.world.objects.GameObjFactory;
 import engine.world.objects.GameObject;
 
-import static engine.utils.EConstants.*;
+import static engine.utils.engine.EConstants.*;
 
 public class PosGizmo extends Gizmo {
 

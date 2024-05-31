@@ -8,7 +8,7 @@ package engine.serialization;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import engine.graphics.SpriteSheet;
-import engine.utils.ResourceUtils;
+import engine.utils.engine.ResourceUtils;
 
 import java.io.FileWriter;
 import java.io.IOException;

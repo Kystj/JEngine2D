@@ -1,4 +1,4 @@
-package engine.utils;
+package engine.utils.engine;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -23,6 +23,13 @@ public interface EConstants {
     // ImGui
     int X_SPACING = 10;
     int COLUMN_WIDTH_LARGE = 160;
+
+    Vector2f[] TEXTURE_COORDINATES = new Vector2f[]{
+            new Vector2f(1, 1),
+            new Vector2f(1, 0),
+            new Vector2f(0, 0),
+            new Vector2f(0, 1)
+    };
 
 
     Vector4f GREEN_BUTTON = new Vector4f(0.0f, 1.0f, 0.0f, 0.5f);

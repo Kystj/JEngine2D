@@ -20,13 +20,13 @@ import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.graphics.Renderer;
 import engine.serialization.LevelSerializer;
-import engine.utils.EConstants.EventType;
+import engine.utils.engine.EConstants;
 import engine.world.levels.Level;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
-import static engine.utils.EConstants.DEFAULT_CELL_SIZE;
-import static engine.utils.EConstants.GRID_COLOR;
+import static engine.utils.engine.EConstants.DEFAULT_CELL_SIZE;
+import static engine.utils.engine.EConstants.GRID_COLOR;
 import static org.lwjgl.opengl.GL11.*;
 
 public class GameEditor implements EventListener {
@@ -48,7 +48,7 @@ public class GameEditor implements EventListener {
 
     @Override
     public void onEvent(Event event, Level level) {
-        if (event.getEventType() == EventType.Load_New_Scene) {
+        if (event.getEventType() == EConstants.EventType.Load_New_Scene) {
             Logger.info("Loaded '" + level.getName() + "'", true);
             loadNewLevel(level);
         }
@@ -56,14 +56,14 @@ public class GameEditor implements EventListener {
 
     @Override
     public void onEvent(Event event) {
-        if (event.getEventType() == EventType.Save) {
+        if (event.getEventType() == EConstants.EventType.Save) {
             showPopup = true;
         }
     }
 
     public void init() {
-        EventDispatcher.addListener(EventType.Load_New_Scene, this);
-        EventDispatcher.addListener(EventType.Save, this);
+        EventDispatcher.addListener(EConstants.EventType.Load_New_Scene, this);
+        EventDispatcher.addListener(EConstants.EventType.Save, this);
         DebugRenderer.init();
     }
 
@@ -108,6 +108,7 @@ public class GameEditor implements EventListener {
         defaultContentWindow.imgui();
         defaultDetailsWindow.imgui();
         Import_Utils.imgui();
+        AnimationEditor.imgui();
         DebugPanel.imgui();
     }
 
