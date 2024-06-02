@@ -81,7 +81,7 @@ public class MainMenuBar {
 
     private void importMenuItem() {
         if (ImGui.menuItem("Import", "Ctrl+i")) {
-            ImportWindow.bIsImportOpen.set(true);
+            AssetWindow.IS_IMPORT_WIN_OPEN.set(true);
         }
     }
 
@@ -108,11 +108,11 @@ public class MainMenuBar {
             }
 
             if (ImGui.menuItem(" View Assets", "Ctrl+a")) {
-                ImportWindow.setIsOpen(true);
+                AssetWindow.setIsOpen(true);
             }
 
             if (ImGui.menuItem(" Content Window", "Ctrl+c")) {
-                ContentWindow.setIsOpen(true);
+                GameEditor.defaultContentWindow.setIsOpen(true);
             }
 
             ImGui.endMenu();

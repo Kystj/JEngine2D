@@ -63,7 +63,8 @@ public class EngineWindow implements EventListener {
 
     private final ImGuiController ImGui_Controller = new ImGuiController();
     public static GameEditor Game_Editor;
-    
+
+
     public static EngineWindow get() {
         if (EngineWindow.engine == null) {
             EngineWindow.engine = new EngineWindow();
@@ -109,7 +110,7 @@ public class EngineWindow implements EventListener {
         // Create the window
         this.windowWidth = (int) getDefaultScreenSize().x;
         this.windowHeight = (int) getDefaultScreenSize().y;
-        this.aspectRatio =  DEFAULT_ASPECT_RATIO;
+        this.aspectRatio = DEFAULT_ASPECT_RATIO;
 
         // Prints the Window size to the console
         logLaunchInfo();
@@ -228,7 +229,7 @@ public class EngineWindow implements EventListener {
         if (Enabled_Engine_Mode == LaunchMode) {
             clear();
             Game_Editor.renderLevel();
-        } else if (Enabled_Engine_Mode == EditorMode) {
+        } else {
             Game_Editor.renderEditor();
 
             // Render the editor scene to the framebuffer
@@ -265,12 +266,13 @@ public class EngineWindow implements EventListener {
     public void setAspectRatio(float aspectRatio) {
         this.aspectRatio = aspectRatio;
     }
-    
-    
 
 
     private void pollUserEvents() {
         glfwPollEvents();
+        if (Enabled_Engine_Mode == LaunchMode && KeyInputs.keyPressed(GLFW_KEY_ESCAPE)) {
+            EventDispatcher.dispatchEvent(new Event(Stop));
+        }
     }
 
 

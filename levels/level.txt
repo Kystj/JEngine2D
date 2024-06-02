@@ -1,104 +1,6 @@
 [
   {
-    "name": "GameObject_00010000000000000000000",
-    "componentsList": [
-      {
-        "Class": "engine.world.components.Sprite",
-        "Class properties": {
-          "color": {
-            "x": 1.0,
-            "y": 1.0,
-            "z": 1.0,
-            "w": 1.0
-          },
-          "spriteTexture": {
-            "textureID": 3,
-            "filePath": "assets/spritesheets/groundTiles.png",
-            "textureWidth": 576,
-            "textureHeight": 192
-          },
-          "uvCoordinates": [
-            {
-              "x": 0.22222222,
-              "y": 0.8333334
-            },
-            {
-              "x": 0.22222222,
-              "y": 0.6666667
-            },
-            {
-              "x": 0.16666667,
-              "y": 0.6666667
-            },
-            {
-              "x": 0.16666667,
-              "y": 0.8333334
-            }
-          ],
-          "transform": {
-            "position": {
-              "x": 480.80005,
-              "y": 341.0
-            },
-            "scale": {
-              "x": 123.8,
-              "y": 66.4
-            },
-            "rotation": 64.2,
-            "zIndex": 0
-          },
-          "componentID": 0
-        }
-      },
-      {
-        "Class": "engine.physics.components.BoxCollider",
-        "Class properties": {
-          "dimensions": {
-            "x": 2.3841858E-7,
-            "y": 2.3841858E-7
-          },
-          "colliderOrigin": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "localPosition": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "colliderColor": {
-            "x": 1.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "colliderRotation": 0.0,
-          "componentID": 1
-        }
-      },
-      {
-        "Class": "engine.physics.components.RigidBody",
-        "Class properties": {
-          "b2BodyType": "STATIC",
-          "linearVelocity": {
-            "x": 0.0,
-            "y": 0.0
-          },
-          "angularVelocity": 0.0,
-          "linearDamping": 0.0,
-          "angularDamping": 0.0,
-          "allowSleep": true,
-          "isAwake": true,
-          "fixedRotation": false,
-          "continuousCollision": true,
-          "gravityScale": 1.0,
-          "mass": 0.0,
-          "componentID": 2
-        }
-      }
-    ],
-    "objectUID": 0
-  },
-  {
-    "name": "GameObject_11",
+    "name": "GameObject_0020",
     "componentsList": [
       {
         "Class": "engine.world.components.Sprite",
@@ -117,26 +19,26 @@
           },
           "uvCoordinates": [
             {
-              "x": 0.33333334,
-              "y": 0.6666667
+              "x": 0.11111111,
+              "y": 1.0
             },
             {
-              "x": 0.33333334,
-              "y": 0.5
+              "x": 0.11111111,
+              "y": 0.8333334
             },
             {
-              "x": 0.2777778,
-              "y": 0.5
+              "x": 0.055555556,
+              "y": 0.8333334
             },
             {
-              "x": 0.2777778,
-              "y": 0.6666667
+              "x": 0.055555556,
+              "y": 1.0
             }
           ],
           "transform": {
             "position": {
-              "x": 987.0,
-              "y": 416.0
+              "x": 1098.0,
+              "y": 608.0
             },
             "scale": {
               "x": 32.0,
@@ -145,7 +47,7 @@
             "rotation": 0.0,
             "zIndex": 0
           },
-          "componentID": 3
+          "componentID": 0
         }
       },
       {
@@ -169,7 +71,7 @@
             "z": 0.0
           },
           "colliderRotation": 0.0,
-          "componentID": 4
+          "componentID": 1
         }
       },
       {
@@ -189,10 +91,280 @@
           "continuousCollision": true,
           "gravityScale": 1.0,
           "mass": 0.0,
-          "componentID": 5
+          "componentID": 2
+        }
+      }
+    ],
+    "objectUID": 0
+  },
+  {
+    "name": "GameObject_131",
+    "componentsList": [
+      {
+        "Class": "engine.world.components.Sprite",
+        "Class properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "spriteTexture": {
+            "textureID": 4,
+            "filePath": "assets/spritesheets/groundTiles1.png",
+            "textureWidth": 576,
+            "textureHeight": 192
+          },
+          "uvCoordinates": [
+            {
+              "x": 0.055555556,
+              "y": 1.0
+            },
+            {
+              "x": 0.055555556,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.0,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.0,
+              "y": 1.0
+            }
+          ],
+          "transform": {
+            "position": {
+              "x": 715.0,
+              "y": 512.0
+            },
+            "scale": {
+              "x": 32.0,
+              "y": 32.0
+            },
+            "rotation": 0.0,
+            "zIndex": 0
+          },
+          "componentID": 3
         }
       }
     ],
     "objectUID": 1
+  },
+  {
+    "name": "GameObject_2",
+    "componentsList": [
+      {
+        "Class": "engine.world.components.Sprite",
+        "Class properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "spriteTexture": {
+            "textureID": 3,
+            "filePath": "assets/spritesheets/groundTiles.png",
+            "textureWidth": 576,
+            "textureHeight": 192
+          },
+          "uvCoordinates": [
+            {
+              "x": 0.33333334,
+              "y": 1.0
+            },
+            {
+              "x": 0.33333334,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 1.0
+            }
+          ],
+          "transform": {
+            "position": {
+              "x": 1504.0,
+              "y": 3072.0
+            },
+            "scale": {
+              "x": 32.0,
+              "y": 32.0
+            },
+            "rotation": 0.0,
+            "zIndex": 0
+          },
+          "componentID": 4
+        }
+      }
+    ],
+    "objectUID": 2
+  },
+  {
+    "name": "GameObject_3",
+    "componentsList": [
+      {
+        "Class": "engine.world.components.Sprite",
+        "Class properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "spriteTexture": {
+            "textureID": 3,
+            "filePath": "assets/spritesheets/groundTiles.png",
+            "textureWidth": 576,
+            "textureHeight": 192
+          },
+          "uvCoordinates": [
+            {
+              "x": 0.33333334,
+              "y": 1.0
+            },
+            {
+              "x": 0.33333334,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 1.0
+            }
+          ],
+          "transform": {
+            "position": {
+              "x": 1504.0,
+              "y": 3072.0
+            },
+            "scale": {
+              "x": 32.0,
+              "y": 32.0
+            },
+            "rotation": 0.0,
+            "zIndex": 0
+          },
+          "componentID": 5
+        }
+      }
+    ],
+    "objectUID": 3
+  },
+  {
+    "name": "GameObject_4",
+    "componentsList": [
+      {
+        "Class": "engine.world.components.Sprite",
+        "Class properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "spriteTexture": {
+            "textureID": 3,
+            "filePath": "assets/spritesheets/groundTiles.png",
+            "textureWidth": 576,
+            "textureHeight": 192
+          },
+          "uvCoordinates": [
+            {
+              "x": 0.33333334,
+              "y": 1.0
+            },
+            {
+              "x": 0.33333334,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 1.0
+            }
+          ],
+          "transform": {
+            "position": {
+              "x": 1504.0,
+              "y": 3072.0
+            },
+            "scale": {
+              "x": 32.0,
+              "y": 32.0
+            },
+            "rotation": 0.0,
+            "zIndex": 0
+          },
+          "componentID": 6
+        }
+      }
+    ],
+    "objectUID": 4
+  },
+  {
+    "name": "GameObject_5",
+    "componentsList": [
+      {
+        "Class": "engine.world.components.Sprite",
+        "Class properties": {
+          "color": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0,
+            "w": 1.0
+          },
+          "spriteTexture": {
+            "textureID": 3,
+            "filePath": "assets/spritesheets/groundTiles.png",
+            "textureWidth": 576,
+            "textureHeight": 192
+          },
+          "uvCoordinates": [
+            {
+              "x": 0.33333334,
+              "y": 1.0
+            },
+            {
+              "x": 0.33333334,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 0.8333334
+            },
+            {
+              "x": 0.2777778,
+              "y": 1.0
+            }
+          ],
+          "transform": {
+            "position": {
+              "x": -11424.0,
+              "y": 2880.0
+            },
+            "scale": {
+              "x": 32.0,
+              "y": 32.0
+            },
+            "rotation": 0.0,
+            "zIndex": 0
+          },
+          "componentID": 7
+        }
+      }
+    ],
+    "objectUID": 5
   }
 ]

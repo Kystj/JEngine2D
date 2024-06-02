@@ -2,7 +2,6 @@ package engine.utils.imgui;
 
 import engine.graphics.Texture;
 import engine.utils.engine.ResourceUtils;
-import imgui.ImVec2;
 
 public interface GConstants {
 
@@ -17,7 +16,6 @@ public interface GConstants {
     Texture STOP_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/stop.png");
     Texture WIREFRAME_BUTTON_TEXTURE = ResourceUtils.getOrCreateTexture("assets/buttons/frame.png");
 
-    ImVec2 ANIMATION_VIEWPORT_SIZE = new ImVec2(512, 512);
 
 
 }

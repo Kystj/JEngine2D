@@ -1,0 +1,8 @@
+{
+  "SpriteWidth": 19,
+  "SpriteHeight": 25,
+  "NumOfSprites": 8,
+  "FilePathOfTexture": "C:\\Dev\\StellarSprite2D\\JEngine2D\\assets\\spritesheets\\runVFX.png",
+  "SpriteSpacing": 0,
+  "AssetType": "run"
+}

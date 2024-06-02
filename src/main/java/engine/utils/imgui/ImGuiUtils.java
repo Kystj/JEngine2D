@@ -19,9 +19,10 @@ import imgui.flag.ImGuiStyleVar;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import org.lwjgl.glfw.GLFW;
 
-import static engine.utils.engine.EConstants.X_SPACING;
 import static engine.utils.engine.EConstants.TEXTURE_COORDINATES;
+import static engine.utils.engine.EConstants.X_SPACING;
 import static engine.utils.imgui.GConstants.*;
 
 public class ImGuiUtils {
@@ -279,6 +280,40 @@ public class ImGuiUtils {
 
             }
             ImGui.endPopup();
+        }
+    }
+
+    public static void renderKeyDropdown() {
+        // Display dropdown menu with key names
+        if (ImGui.beginCombo("##SelectKey ", " Select ")) { // getKeyString(GLFW.GLFW_KEY_SPACE
+            for (int key = GLFW.GLFW_KEY_SPACE; key <= GLFW.GLFW_KEY_LAST; key++) {
+                if (ImGui.selectable(getKeyString(key), key == GLFW.GLFW_KEY_SPACE)) {
+                    // Do something when a key is selected
+                }
+                if (key == GLFW.GLFW_KEY_SPACE) {
+                    ImGui.setItemDefaultFocus(); // Set focus to the selected item
+                }
+            }
+            ImGui.endCombo();
+        }
+    }
+
+    public static void renderSFXDropdown() {
+        // Display dropdown menu with key names
+        if (ImGui.beginCombo("##SelectSFX ", " Select ")) {
+
+            ImGui.endCombo();
+        }
+    }
+
+
+    private static String getKeyString(int key) {
+        switch (key) {
+            case GLFW.GLFW_KEY_SPACE: return "Space";
+            case GLFW.GLFW_KEY_APOSTROPHE: return "Apostrophe";
+            case GLFW.GLFW_KEY_COMMA: return "Comma";
+            // Add other key cases as needed
+            default: return "Unknown";
         }
     }
 

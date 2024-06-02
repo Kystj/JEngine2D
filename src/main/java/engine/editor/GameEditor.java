@@ -11,16 +11,20 @@ import engine.debugging.info.Logger;
 import engine.debugging.ui.DebugPanel;
 import engine.editor.controls.EditorControls;
 import engine.editor.controls.ObjectPicker;
+import engine.editor.ui.AssetWindow;
 import engine.editor.ui.ContentWindow;
 import engine.editor.ui.DetailsWindow;
-import engine.editor.ui.ImportWindow;
+
 import engine.eventsystem.Event;
 import engine.eventsystem.EventDispatcher;
 import engine.eventsystem.EventListener;
 import engine.graphics.EngineWindow;
 import engine.graphics.Renderer;
+import engine.graphics.SpriteSheet;
+import engine.graphics.Texture;
 import engine.serialization.LevelSerializer;
 import engine.utils.engine.EConstants;
+import engine.utils.engine.ResourceUtils;
 import engine.world.levels.Level;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
@@ -32,8 +36,8 @@ import static org.lwjgl.opengl.GL11.*;
 public class GameEditor implements EventListener {
 
     public static Level current_Level;
-    private static final ImportWindow Import_Utils = new ImportWindow();
-    private final ContentWindow defaultContentWindow = new ContentWindow();
+    private static final AssetWindow AssetWindow = new AssetWindow();
+    public static final ContentWindow defaultContentWindow = new ContentWindow();
     private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
     public  static ObjectPicker Object_Picker =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
@@ -64,6 +68,12 @@ public class GameEditor implements EventListener {
     public void init() {
         EventDispatcher.addListener(EConstants.EventType.Load_New_Scene, this);
         EventDispatcher.addListener(EConstants.EventType.Save, this);
+
+        ResourceUtils.addSpriteSheet("run", new SpriteSheet(
+                new Texture("assets/spritesheets/runVFX.png") , 19, 25, 0, "Player")
+        );
+
+
         DebugRenderer.init();
     }
 
@@ -107,7 +117,7 @@ public class GameEditor implements EventListener {
     public void imgui() {
         defaultContentWindow.imgui();
         defaultDetailsWindow.imgui();
-        Import_Utils.imgui();
+        AssetWindow.imgui();
         AnimationEditor.imgui();
         DebugPanel.imgui();
     }

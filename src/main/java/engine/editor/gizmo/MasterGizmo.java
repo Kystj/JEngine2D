@@ -60,9 +60,11 @@ public class MasterGizmo implements EventListener {
     @Override
     public void onEvent(Event event) {
         if (event.getEventType() == EConstants.EventType.Save) {
-            activeGizmo.activeGameObject = null;
-            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
-            this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+            if (activeGizmo != null) {
+                activeGizmo.activeGameObject = null;
+                this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+                this.currentLevel.removeGameObject(GIZMO_GAME_OBJECT_UID);
+            }
         }
     }
 

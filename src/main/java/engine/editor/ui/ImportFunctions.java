@@ -14,13 +14,15 @@ import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import imgui.type.ImString;
 
-import java.util.Iterator;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
-/**
- * The AssetManager class handles the import and removal of SpriteSheets,
- * storing them in a map along with associated asset types.
- */
+
 public class ImportFunctions {
 
     // Input fields for the asset properties
@@ -35,12 +37,24 @@ public class ImportFunctions {
     public boolean bTypeErrorPopup = false;           // Flag that is used to generate an error alert related to the type name
     public boolean bValErrorPopup = false;
 
+    private final List<String> filesInDirectory = new ArrayList<>();
+    private final String baseDirectory = Paths.get("assets").toAbsolutePath().toString();  // Set the base directory to "assets"
+    private String currentDirectory = baseDirectory;
+    private int selectedFileIndex = -1;
 
-    /**
-     * Renders the input form for importing SpriteSheets using ImGui.
-     */
-    public void renderInputForm(ImBoolean isOpen) {
+    private void updateFileList(String directoryPath) {
+        if (directoryPath == null || directoryPath.isEmpty()) {
+            return;
+        }
+        try {
+            filesInDirectory.clear();
+            Files.list(Paths.get(directoryPath)).forEach(path -> filesInDirectory.add(path.getFileName().toString()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void renderInputForm(ImBoolean isOpen, Map<SpriteSheet, String> spriteSheets) {
         int itemSpacing = 10;
 
         ImGui.begin("Import Form", isOpen);
@@ -49,12 +63,55 @@ public class ImportFunctions {
         ImGui.setCursorPosX(itemSpacing);
         ImGui.text("File Path:");
         ImGui.setCursorPosX(itemSpacing);
-        ImGui.inputText("##FilePath", filePath, 256);
+        ImGui.inputText("##FilePath", filePath);
+
+        // Update the file list when the path changes
+        updateFileList(currentDirectory);
+
+        ImGui.setCursorPosX(itemSpacing);
+        ImGui.text("Choose File:");
+        ImGui.setCursorPosX(itemSpacing);
+
+
+        if (ImGui.beginCombo("##FileDropdown", selectedFileIndex >= 0 ? filesInDirectory.get(selectedFileIndex) : "")) {
+            // Allow navigation to parent directory if not at base directory
+            if (!currentDirectory.equals(baseDirectory)) {
+                if (ImGui.selectable("..")) {
+                    Path parentPath = Paths.get(currentDirectory).getParent();
+                    if (parentPath != null && parentPath.startsWith(baseDirectory)) {
+                        currentDirectory = parentPath.toString();
+                        selectedFileIndex = -1;
+                        updateFileList(currentDirectory);
+                    }
+                }
+            }
+
+            for (int i = 0; i < filesInDirectory.size(); i++) {
+                boolean isSelected = (i == selectedFileIndex);
+                String fileOrDir = filesInDirectory.get(i);
+
+                if (ImGui.selectable(fileOrDir, isSelected)) {
+                    Path selectedPath = Paths.get(currentDirectory, fileOrDir);
+                    if (Files.isDirectory(selectedPath)) {
+                        currentDirectory = selectedPath.toString();
+                        selectedFileIndex = -1;
+                        updateFileList(currentDirectory);
+                    } else {
+                        selectedFileIndex = i;
+                        filePath.set(selectedPath.toString());
+                    }
+                }
+                if (isSelected) {
+                    ImGui.setItemDefaultFocus();
+                }
+            }
+            ImGui.endCombo();
+        }
 
         ImGui.setCursorPosX(itemSpacing);
         ImGui.text("Type or Name:");
         ImGui.setCursorPosX(itemSpacing);
-        ImGui.inputText("##Type", assetType, 256);
+        ImGui.inputText("##Type", assetType);
 
         ImGui.setCursorPosX(itemSpacing);
         ImGui.text("Sprite Width:");
@@ -80,17 +137,14 @@ public class ImportFunctions {
         ImGui.setCursorPosX(itemSpacing);
         if (ImGui.button("Submit")) {
             // Check if file path is not empty before adding
-            if (!filePath.isEmpty()) {
+            if (!filePath.get().isEmpty()) {
                 addSpriteSheet();
             }
         }
-
         ImGui.end();
     }
 
-    /**
-     * Adds a new SpriteSheet based on the input form data and updates the map.
-     */
+
     private void addSpriteSheet() {
         String filePath = String.valueOf(this.filePath);
         String type = String.valueOf(assetType);
@@ -105,6 +159,7 @@ public class ImportFunctions {
             return;
         }
 
+
         // Add new SpriteSheet to the ResourceManager
         ResourceUtils.addSpriteSheet(filePath,
                 new SpriteSheet(new Texture(filePath),
@@ -115,7 +170,7 @@ public class ImportFunctions {
         SpriteSheetSerializer.saveSpriteSheet(ResourceUtils.getSpriteSheet(filePath));
 
         // Update the map with the new SpriteSheet and its asset type
-        ImportWindow.getSprite_Sheets().put(
+        AssetWindow.getSpriteSheets().put(
                 ResourceUtils.getSpriteSheet(filePath),
                 type
         );
@@ -124,53 +179,17 @@ public class ImportFunctions {
         refreshFields();
     }
 
-    /**
-     * Renders the form for removing existing SpriteSheets using ImGui.
-     */
-    public void renderRemoveForm(ImBoolean isOpen) {
-        ImGui.begin("Remove", isOpen);
-
-        // Display a combo box with the list of existing SpriteSheets
-        ImGui.setCursorPos(ImGui.getWindowSizeX() / 6, 50);
-        if (ImGui.beginCombo("##MapKeysCombo", "Select SpriteSheet")) {
-            // Iterate over existing SpriteSheets
-            Iterator<Map.Entry<SpriteSheet, String>> iterator = ImportWindow.getSprite_Sheets().entrySet().iterator();
-
-            while (iterator.hasNext()) {
-                Map.Entry<SpriteSheet, String> entry = iterator.next();
-                SpriteSheet key = entry.getKey();
-
-                // Display selectable options for each SpriteSheet
-                String filePath = key.getFilePathOfTexture();
-                String option = key.getAssetType();
-
-                // TODO: Change. This should get the file info dynamically
-                String directory = "spritesheets";
-                String fileType = "png";
-
-                if (ImGui.selectable(option)) {
-                    // Remove the selected SpriteSheet from the map
-                    iterator.remove();
-                    ResourceUtils.deleteFile(filePath);
-                    ResourceUtils.removeGSONReferenceFile(filePath, directory, fileType);
-                }
-            }
-            ImGui.endCombo();
-        }
-        ImGui.end();
-    }
-
 
     private boolean checkAndHandleErrors(String fileName, String type, int spriteWidth, int spriteHeight, int amount) {
         // Prevents adding duplicate sprite sheets or sprite sheets with the same file path
-        if (ImportWindow.getSprite_Sheets().get(ResourceUtils.getSpriteSheet(fileName)) != null) {
+        if (AssetWindow.getSpriteSheets().get(ResourceUtils.getSpriteSheet(fileName)) != null) {
             bFileErrorPopup = true;
             refreshFields();
             return true;
         }
 
         // Prevents adding duplicate sprite sheets or sprite sheets with the same name
-        for (String val : ImportWindow.getSprite_Sheets().values()) {
+        for (String val : AssetWindow.getSpriteSheets().values()) {
             if (val.equals(type)) {
                 refreshFields();
                 bTypeErrorPopup = true;
@@ -187,7 +206,6 @@ public class ImportFunctions {
 
         return false;
     }
-
 
     private void refreshFields() {
         filePath = new ImString();

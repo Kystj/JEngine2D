@@ -12,7 +12,8 @@ import engine.world.objects.GameObjFactory;
 import engine.world.objects.GameObject;
 import imgui.ImGui;
 import imgui.ImVec2;
-import imgui.flag.ImGuiCol;
+import imgui.flag.ImGuiMouseButton;
+import imgui.flag.ImGuiPopupFlags;
 import imgui.type.ImBoolean;
 import org.joml.Vector2f;
 
@@ -20,24 +21,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import static engine.utils.engine.EConstants.RED_BUTTON;
 import static engine.utils.engine.EConstants.X_SPACING;
 
 public class ContentWindow {
 
-    private static final Map<SpriteSheet, String> Sprite_Sheets = new HashMap<>();
-    private static ImBoolean bIsOpen = new ImBoolean(true);
+    private static final Map<SpriteSheet, String> SPRITE_SHEETS = new HashMap<>();
+    private final ImBoolean isOpen = new ImBoolean(false);
+    private boolean showTabContextMenu = false;
+    public boolean openInAnimationEditor = false;
 
     public void imgui() {
 
         // Create the main window
-        if (bIsOpen.get()) {
-            ImGui.begin("Content", bIsOpen);
+        if (isOpen.get()) {
+            ImGui.begin("Content", isOpen);
             ImGui.setCursorPosX(X_SPACING);
             // Create tabs to represent different asset types
             if (ImGui.beginTabBar("Tabs")) {
                 // Create an iterator for the Sprite_Sheets map
-                Iterator<Map.Entry<SpriteSheet, String>> iterator = Sprite_Sheets.entrySet().iterator();
+                Iterator<Map.Entry<SpriteSheet, String>> iterator = SPRITE_SHEETS.entrySet().iterator();
                 while (iterator.hasNext()) {
                     // Get the next entry
                     Map.Entry<SpriteSheet, String> entry = iterator.next();
@@ -46,15 +48,16 @@ public class ContentWindow {
 
                     // Begin a tab item for the current SpriteSheet
                     if (ImGui.beginTabItem(tabName)) {
-                        ImGui.setCursorPosX(X_SPACING);
-                        ImGui.pushStyleColor(ImGuiCol.Button, RED_BUTTON.x, RED_BUTTON.y, RED_BUTTON.z, RED_BUTTON.w);
+                        if (ImGui.isItemClicked(ImGuiMouseButton.Right)) {
+                            showTabContextMenu = true;
+                        }
 
-                        if (ImGui.button("-")) {
-                            // Remove the current entry using the iterator
+                        if (!ImGui.isItemHovered()) {
+                            showTabContextMenu = false;
+                        }
+                        if (showTabContextMenu()) {
                             iterator.remove();
                         }
-                        ImGui.popStyleColor();
-
                         // Populate buttons or other controls in the second column for the current SpriteSheet
                         generateAssetButtons(spriteSheet);
 
@@ -70,6 +73,24 @@ public class ContentWindow {
             // End the main window
             ImGui.end();
         }
+
+        if (openInAnimationEditor) {
+            openInAnimationEditor = isOpen.get();
+        }
+    }
+
+    private boolean showTabContextMenu() {
+        boolean removeFlag = false;
+        if (showTabContextMenu) {
+            ImGui.openPopup("TabContextMenu");
+        }
+        if (ImGui.beginPopup("TabContextMenu", ImGuiPopupFlags.MouseButtonRight)) {
+            if (ImGui.menuItem("Delete")) {
+                removeFlag = true;
+            }
+            ImGui.endPopup();
+        }
+        return removeFlag;
     }
 
 
@@ -108,6 +129,7 @@ public class ContentWindow {
                 temp.setUvCoordinates(sprite.getUvCoordinates());
                 GameObject obj = GameObjFactory.generateGameObject(temp, 32, 32);
                 EditorControls.setActiveAsset(obj);
+
             }
 
             // Pop the unique ID for ImGui elements
@@ -130,13 +152,13 @@ public class ContentWindow {
         }
     }
 
-    public static Map<SpriteSheet, String> getSprite_Sheets() {
-        return Sprite_Sheets;
+    public static Map<SpriteSheet, String> getSpriteSheets() {
+        return SPRITE_SHEETS;
     }
 
 
-    public static void setIsOpen(boolean isOpen) {
-        bIsOpen.set(isOpen);
+    public void setIsOpen(boolean isOpen) {
+        this.isOpen.set(isOpen);
     }
 }
-/*End of AssetPanel class*/
+/*End of ContentWindow class*/
