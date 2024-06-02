@@ -66,28 +66,30 @@ public class DetailsWindow implements EventListener {
             bIsOpen.set(true);
             activeGameObject = gameObject;
 
-            initialScale.set(activeGameObject.getTransform().getScale());
-            initialPosition.set(activeGameObject.getTransform().getPosition());
+            if (activeGameObject != null) {
+                initialScale.set(activeGameObject.getTransform().getScale());
+                initialPosition.set(activeGameObject.getTransform().getPosition());
 
-            if (activeGameObject.getComponent(RigidBody.class) != null) {
-                if (activeGameObject.getComponent(RigidBody.class).getBodyType() == KINEMATIC) {
-                    b2BodyTypeIndex = 2;
-                } else if (activeGameObject.getComponent(RigidBody.class).getBodyType() == STATIC) {
-                    b2BodyTypeIndex = 1;
+                if (activeGameObject.getComponent(RigidBody.class) != null) {
+                    if (activeGameObject.getComponent(RigidBody.class).getBodyType() == KINEMATIC) {
+                        b2BodyTypeIndex = 2;
+                    } else if (activeGameObject.getComponent(RigidBody.class).getBodyType() == STATIC) {
+                        b2BodyTypeIndex = 1;
+                    } else {
+                        b2BodyTypeIndex = 0;
+                    }
                 } else {
                     b2BodyTypeIndex = 0;
                 }
-            } else {
-                b2BodyTypeIndex = 0;
-            }
 
 
-            if (activeGameObject.getComponent(BoxCollider.class) != null) {
-                colliderValueIndex = 1;
-            } else if (activeGameObject.getComponent(CircleCollider.class) != null) {
-                colliderValueIndex = 2;
-            } else {
-                colliderValueIndex = 0;
+                if (activeGameObject.getComponent(BoxCollider.class) != null) {
+                    colliderValueIndex = 1;
+                } else if (activeGameObject.getComponent(CircleCollider.class) != null) {
+                    colliderValueIndex = 2;
+                } else {
+                    colliderValueIndex = 0;
+                }
             }
         }
     }
@@ -136,8 +138,8 @@ public class DetailsWindow implements EventListener {
 
         private void updateZIndex ( int oldZIndex){
             if (activeGameObject.getZIndex() != oldZIndex) {
-                GameEditor.current_Level.removeGameObject(activeGameObject.getUID());
-                GameEditor.current_Level.addGameObject(activeGameObject);
+                GameEditor.CURRENT_LEVEL.removeGameObject(activeGameObject.getUID());
+                GameEditor.CURRENT_LEVEL.addGameObject(activeGameObject);
             }
         }
 
@@ -252,7 +254,7 @@ public class DetailsWindow implements EventListener {
                     default:
                         Logger.info("No collider added");
                 }
-                GameEditor.current_Level.getPhysics().add(activeGameObject);
+                GameEditor.CURRENT_LEVEL.getPhysics().add(activeGameObject);
             }
 
             // End ImGui columns

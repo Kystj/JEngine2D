@@ -35,14 +35,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GameEditor implements EventListener {
 
-    public static Level current_Level;
-    private static final AssetWindow AssetWindow = new AssetWindow();
-    public static final ContentWindow defaultContentWindow = new ContentWindow();
-    private final DetailsWindow defaultDetailsWindow = new DetailsWindow();
-    public  static ObjectPicker Object_Picker =
+    public static Level CURRENT_LEVEL;
+    public  static ObjectPicker OBJECT_PICKER =
             new ObjectPicker( EngineWindow.get().getWindowWidth(), EngineWindow.get().getWindowHeight());
+
+    private final DetailsWindow detailsWindow = new DetailsWindow();
     private final EditorControls editorControls = new EditorControls();
-    private boolean showPopup = false;
 
 
     @Override
@@ -61,7 +59,7 @@ public class GameEditor implements EventListener {
     @Override
     public void onEvent(Event event) {
         if (event.getEventType() == EConstants.EventType.Save) {
-            showPopup = true;
+           Logger.warning(" Level: " + CURRENT_LEVEL.getName() + " has been saved!", true);
         }
     }
 
@@ -79,29 +77,29 @@ public class GameEditor implements EventListener {
 
     public void loadNewLevel(Level level) {
         LevelSerializer.load(level);
-        current_Level = level;
-        current_Level.init();
+        CURRENT_LEVEL = level;
+        CURRENT_LEVEL.init();
         editorControls.setLevel(level);
     }
 
 
     public void tick(float deltaTime) {
-        current_Level.tick(deltaTime);
+        CURRENT_LEVEL.tick(deltaTime);
         editorControls.tick(deltaTime);
     }
 
     public void physicsTick(float deltaTime) {
-        current_Level.getPhysics().tick(deltaTime);
+        CURRENT_LEVEL.getPhysics().tick(deltaTime);
     }
 
 
     public void renderEditor() {
         glDisable(GL_BLEND);
 
-        Object_Picker.bind();
+        OBJECT_PICKER.bind();
         Renderer.setPickingShader();
-        current_Level.render();
-        Object_Picker.unbind();
+        CURRENT_LEVEL.render();
+        OBJECT_PICKER.unbind();
 
         glEnable(GL_BLEND);
 
@@ -110,13 +108,13 @@ public class GameEditor implements EventListener {
 
 
     public void renderLevel() {
-        current_Level.render();
+        CURRENT_LEVEL.render();
     }
 
 
     public void imgui() {
-        defaultContentWindow.imgui();
-        defaultDetailsWindow.imgui();
+        ContentWindow.imgui();
+        detailsWindow.imgui();
         AssetWindow.imgui();
         AnimationEditor.imgui();
         DebugPanel.imgui();
@@ -124,16 +122,16 @@ public class GameEditor implements EventListener {
 
 
     public void addToScene(GameObject obj) {
-        current_Level.addGameObject(obj);
+        CURRENT_LEVEL.addGameObject(obj);
     }
 
 
 
     public void drawGridLines() {
-        Vector2f cameraPos = current_Level.getOrthoCamera().position;
+        Vector2f cameraPos = CURRENT_LEVEL.getOrthoCamera().position;
 
         // Calculate the size of the grid based on the camera's size
-        Vector2f projectionSize = current_Level.getOrthoCamera().size;
+        Vector2f projectionSize = CURRENT_LEVEL.getOrthoCamera().size;
 
         // Determine the number of rows and columns in the grid
         int numColumns = (int) (projectionSize.x / DEFAULT_CELL_SIZE);

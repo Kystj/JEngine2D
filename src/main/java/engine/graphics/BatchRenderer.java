@@ -129,8 +129,8 @@ public class BatchRenderer implements Comparable<BatchRenderer> {
         // Use shader
         shader = Renderer.getActiveShader();
         shader.use();
-        shader.uploadMat4f("uProjection", GameEditor.current_Level.getOrthoCamera().getProjectionMatrix());
-        shader.uploadMat4f("uView", GameEditor.current_Level.getOrthoCamera().calculateViewMatrix());
+        shader.uploadMat4f("uProjection", GameEditor.CURRENT_LEVEL.getOrthoCamera().getProjectionMatrix());
+        shader.uploadMat4f("uView", GameEditor.CURRENT_LEVEL.getOrthoCamera().calculateViewMatrix());
 
         // Bind textures
         bindTextures();

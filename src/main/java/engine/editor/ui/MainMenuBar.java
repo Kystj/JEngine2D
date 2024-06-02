@@ -66,7 +66,7 @@ public class MainMenuBar {
 
     private void saveMenuItem() {
         if (ImGui.menuItem("Save", "Ctrl+s")) {
-            LevelSerializer.save(GameEditor.current_Level);
+            LevelSerializer.save(GameEditor.CURRENT_LEVEL);
             EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Save));
         }
     }
@@ -108,11 +108,11 @@ public class MainMenuBar {
             }
 
             if (ImGui.menuItem(" View Assets", "Ctrl+a")) {
-                AssetWindow.setIsOpen(true);
+                AssetWindow.setIsAssetWinOpen(true);
             }
 
             if (ImGui.menuItem(" Content Window", "Ctrl+c")) {
-                GameEditor.defaultContentWindow.setIsOpen(true);
+                ContentWindow.setIsContentWinOpen(true);
             }
 
             ImGui.endMenu();

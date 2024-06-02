@@ -22,12 +22,12 @@ import static engine.utils.imgui.ImGuiUtils.renderRightClickContext;
 
 public class AssetWindow {
 
-    private static final ImBoolean IS_OPEN = new ImBoolean(false);
+    private static final ImBoolean IS_ASSET_WIN_OPEN = new ImBoolean(true);
     protected final static ImportFunctions IMPORT_FUNCTIONS = new ImportFunctions();
     public static final ImBoolean IS_IMPORT_WIN_OPEN = new ImBoolean(false);
     private static final Map<SpriteSheet, String> SPRITE_SHEETS = new HashMap<>();
 
-    private final Vector2f[] texCords = new Vector2f[]{
+    private static final Vector2f[] texCords = new Vector2f[]{
             new Vector2f(1, 1),
             new Vector2f(1, 0),
             new Vector2f(0, 0),
@@ -40,15 +40,15 @@ public class AssetWindow {
     }
 
 
-    public void imgui() {
+    public static void imgui() {
         //checkForErrors();
 
         if (IS_IMPORT_WIN_OPEN.get()) {
             IMPORT_FUNCTIONS.renderInputForm(IS_IMPORT_WIN_OPEN, SPRITE_SHEETS);
         }
 
-        if (IS_OPEN.get()) {
-            ImGui.begin("Assets", IS_OPEN, ImGuiWindowFlags.MenuBar);
+        if (IS_ASSET_WIN_OPEN.get()) {
+            ImGui.begin("Assets", IS_ASSET_WIN_OPEN, ImGuiWindowFlags.MenuBar);
             ImGui.beginMenuBar();
             if (ImGui.menuItem("Import")) {
                 AssetWindow.IS_IMPORT_WIN_OPEN.set(true);
@@ -62,7 +62,7 @@ public class AssetWindow {
     }
 
 
-    public void iterateSpriteSheets() {
+    public static void iterateSpriteSheets() {
         Map<String, SpriteSheet> spriteSheets = ResourceUtils.getSpriteSheets();
 
         ImGui.spacing();
@@ -104,8 +104,8 @@ public class AssetWindow {
     }
 
 
-    public static void setIsOpen(boolean isOpen) {
-        IS_OPEN.set(isOpen);
+    public static void setIsAssetWinOpen(boolean isAssetWinOpen) {
+        IS_ASSET_WIN_OPEN.set(isAssetWinOpen);
     }
 
     public static Map<SpriteSheet, String> getSpriteSheets() {

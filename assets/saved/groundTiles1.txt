@@ -2,7 +2,7 @@
   "SpriteWidth": 32,
   "SpriteHeight": 32,
   "NumOfSprites": 108,
-  "FilePathOfTexture": "assets/spritesheets/groundTiles1.png",
+  "FilePathOfTexture": "C:\\Dev\\StellarSprite2D\\JEngine2D\\assets\\spritesheets\\groundTiles1.png",
   "SpriteSpacing": 0,
-  "AssetType": "Dirt"
+  "AssetType": "g"
 }

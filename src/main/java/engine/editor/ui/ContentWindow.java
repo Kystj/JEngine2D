@@ -26,15 +26,15 @@ import static engine.utils.engine.EConstants.X_SPACING;
 public class ContentWindow {
 
     private static final Map<SpriteSheet, String> SPRITE_SHEETS = new HashMap<>();
-    private final ImBoolean isOpen = new ImBoolean(false);
-    private boolean showTabContextMenu = false;
-    public boolean openInAnimationEditor = false;
+    private static ImBoolean IS_CONTENT_WIN_OPEN = new ImBoolean(true);
+    private static boolean showTabContextMenu = false;
+    public static boolean openInAnimationEditor = false;
 
-    public void imgui() {
+    public static void imgui() {
 
         // Create the main window
-        if (isOpen.get()) {
-            ImGui.begin("Content", isOpen);
+        if (IS_CONTENT_WIN_OPEN.get()) {
+            ImGui.begin("Content", IS_CONTENT_WIN_OPEN);
             ImGui.setCursorPosX(X_SPACING);
             // Create tabs to represent different asset types
             if (ImGui.beginTabBar("Tabs")) {
@@ -75,11 +75,11 @@ public class ContentWindow {
         }
 
         if (openInAnimationEditor) {
-            openInAnimationEditor = isOpen.get();
+            openInAnimationEditor = IS_CONTENT_WIN_OPEN.get();
         }
     }
 
-    private boolean showTabContextMenu() {
+    private static boolean showTabContextMenu() {
         boolean removeFlag = false;
         if (showTabContextMenu) {
             ImGui.openPopup("TabContextMenu");
@@ -94,7 +94,7 @@ public class ContentWindow {
     }
 
 
-    private void generateAssetButtons(SpriteSheet sprites) {
+    private static void generateAssetButtons(SpriteSheet sprites) {
         ImVec2 windowPos = new ImVec2();
         ImGui.getWindowPos(windowPos);
 
@@ -157,8 +157,8 @@ public class ContentWindow {
     }
 
 
-    public void setIsOpen(boolean isOpen) {
-        this.isOpen.set(isOpen);
+    public static void setIsContentWinOpen(boolean isOpen) {
+        IS_CONTENT_WIN_OPEN.set(isOpen);
     }
 }
 /*End of ContentWindow class*/

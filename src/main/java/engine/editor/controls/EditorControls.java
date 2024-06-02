@@ -20,7 +20,7 @@ import engine.world.levels.Level;
 import engine.world.objects.GameObject;
 import org.joml.Vector2f;
 
-import static engine.editor.GameEditor.Object_Picker;
+import static engine.editor.GameEditor.OBJECT_PICKER;
 import static engine.utils.engine.EConstants.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
@@ -120,8 +120,8 @@ public class EditorControls implements EventListener {
             int x = (int) MouseInputs.getScreenX();
             int y = (int) MouseInputs.getScreenY();
 
-            int gameObjectId = Object_Picker.readObjectIDByPixel(x, y);
-            GameObject pickedObj = GameEditor.current_Level.getGameObject(gameObjectId);
+            int gameObjectId = OBJECT_PICKER.readObjectIDByPixel(x, y);
+            GameObject pickedObj = GameEditor.CURRENT_LEVEL.getGameObject(gameObjectId);
 
             if (pickedObj != null && gameObjectId != GIZMO_GAME_OBJECT_UID) {
                 EventDispatcher.dispatchEvent(new Event(EConstants.EventType.Active_Object), pickedObj);

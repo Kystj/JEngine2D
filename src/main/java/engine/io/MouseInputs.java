@@ -102,7 +102,7 @@ public class MouseInputs {
     public static float getOrthoX() {
          float currentX = getX() - viewportPos.x;
         currentX = (currentX / viewportSize.x) * 2.0f - 1.015f;
-        OrthoCamera camera = GameEditor.current_Level.getOrthoCamera();
+        OrthoCamera camera = GameEditor.CURRENT_LEVEL.getOrthoCamera();
 
         Vector4f tmp = new Vector4f(currentX, 0, 0, 1);
         tmp.mul(camera.getInverseProjection()).mul(camera.getInverseView());
@@ -114,7 +114,7 @@ public class MouseInputs {
     public static float getOrthoY() {
         float currentY = getY() - viewportPos.y;
         currentY = -((currentY / viewportSize.y) * 2.0f - 1.0f);
-        OrthoCamera camera = GameEditor.current_Level.getOrthoCamera();
+        OrthoCamera camera = GameEditor.CURRENT_LEVEL.getOrthoCamera();
 
         Vector4f tmp = new Vector4f(0, currentY, 0, 1);
         tmp.mul(camera.getInverseProjection()).mul(camera.getInverseView());

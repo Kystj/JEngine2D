@@ -107,8 +107,8 @@ public class DebugRenderer {
 
         // Use the debug shader
         Debug_Shader.use();
-        Debug_Shader.uploadMat4f("uProjection", GameEditor.current_Level.getOrthoCamera().getProjectionMatrix());
-        Debug_Shader.uploadMat4f("uView", GameEditor.current_Level.getOrthoCamera().calculateViewMatrix());
+        Debug_Shader.uploadMat4f("uProjection", GameEditor.CURRENT_LEVEL.getOrthoCamera().getProjectionMatrix());
+        Debug_Shader.uploadMat4f("uView", GameEditor.CURRENT_LEVEL.getOrthoCamera().calculateViewMatrix());
 
         // Bind the vertex array object (VAO) and enable vertex attributes
         glBindVertexArray(VAO_ID);
