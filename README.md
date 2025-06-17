@@ -1,12 +1,4 @@
-!! THIS IS NO LONGER BEING WORKED ON. I PLAN TO UPLOAD THE MOST RECENT VERSION OF THE ENGINE SOON. IT IS MISSING SOME MORE ADVANCED AND USER FREINDLY ENGINE FEATURES BUT CAN SERVE AS A GOOD BASE TO EXPAND ON !!
-
-
-
-
-
-
-
-
+Note: This project is no longer actively maintained. I plan to upload the latest available version of the engine soon. While it may lack some of the more advanced or user-friendly features, it should still serve as a solid foundation for further development and customization.
 
 ## Java 2D Game Engine with GLFW and ImGui
 
